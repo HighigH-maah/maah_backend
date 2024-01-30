@@ -13,7 +13,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-@EqualsAndHashCode //모든 칼럼을 비교하여 내용 같으면 같음
+@EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
 @ToString
