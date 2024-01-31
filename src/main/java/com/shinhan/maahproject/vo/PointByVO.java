@@ -26,8 +26,6 @@ import lombok.ToString;
 @Table(name = "point_by")
 public class PointByVO {
 	@EmbeddedId
-	@OneToOne
-	@JoinColumn(name="point_by_id")
 	private PointByMultikey member_by_number_month;
 	@NonNull
 	@Column(nullable = false)

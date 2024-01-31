@@ -1,5 +1,6 @@
 package com.shinhan.maahproject.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import jakarta.persistence.Embeddable;
@@ -15,9 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Embeddable
-public class PointHiMultikey {
-	@ManyToOne
-	@JoinColumn(name="member_hi_number")
-	private MemberCardHiVO member_card_hi;
-	private Timestamp point_by_month;
+public class PointHiMultikey implements Serializable  {
+	private String member_hi_number;
+	private Timestamp point_hi_month;
 }
