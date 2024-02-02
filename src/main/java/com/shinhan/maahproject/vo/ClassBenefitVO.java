@@ -28,8 +28,8 @@ import lombok.ToString;
 @Table(name = "class_benefit")
 public class ClassBenefitVO {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int class_benefit_code;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long class_benefit_code;
 	@NonNull
 	@Column(nullable = false)
 	private String class_benefit_name;

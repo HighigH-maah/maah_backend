@@ -2,9 +2,10 @@ package com.shinhan.maahproject.vo;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -13,7 +14,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -32,7 +32,7 @@ public class MemberAccountVO {
 	
 	//member와 연결
 	@ManyToOne
-	//JoinColumn 이름이 생략되면, '변수 이름_대상 객체의 아이디'로 이름이 생성된다.
+	@JsonBackReference
 	@JoinColumn(name="member_account_member_id")
 	private MemberVO member;
 	
