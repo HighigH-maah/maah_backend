@@ -2,9 +2,6 @@ package com.shinhan.maahproject.vo;
 
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,15 +25,21 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "class_benefit")
-public class ClassBenefitVO {
+@Table(name = "store_and_coupon")
+public class StoreCouponVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer class_benefit_code;
+	private int store_code;
 	@NonNull
 	@Column(nullable = false)
-	private String class_benefit_name;
-	private Integer class_benefit_min_range;
-	private Double class_benefit_save_percent;
-
+	private String store_name;
+	private String store_category;
+	private String store_address;
+	private Double store_latitude;
+	private Double store_longitude;
+	private String store_coupon_image_path;
+	private String store_image_path;
+	private String store_stamp_image_path;
+	private String store_coupon_policy;
+	private String store_operation_time;
 }

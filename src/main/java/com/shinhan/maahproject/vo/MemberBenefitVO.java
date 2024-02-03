@@ -1,15 +1,12 @@
 package com.shinhan.maahproject.vo;
 
-import java.sql.Timestamp;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
+import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,20 +20,27 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "member_benefit_member_id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "class_benefit")
-public class ClassBenefitVO {
+@Table(name = "member_benefit")
+public class MemberBenefitVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer class_benefit_code;
-	@NonNull
-	@Column(nullable = false)
-	private String class_benefit_name;
-	private Integer class_benefit_min_range;
-	private Double class_benefit_save_percent;
-
+	private Long member_benefit_code;
+	
+	@ManyToOne
+	@JoinColumn(name="member_benefit_member_id")
+	private MemberVO member_benefit_member_id;
+	
+	@ManyToOne
+	@JoinColumn(name="member_benefit_by_benefit_code")
+	private ByBenefitVO member_benefit_by_benefit_code;
+	
+	private int member_benefit_used_amount;
+	private Boolean member_benefit_is_complete;
+	private Integer member_benefit_priority_range;
+	
 }

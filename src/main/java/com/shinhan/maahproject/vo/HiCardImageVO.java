@@ -2,10 +2,6 @@ package com.shinhan.maahproject.vo;
 
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,15 +24,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "class_benefit")
-public class ClassBenefitVO {
+@Table(name = "hi_card_image")
+public class HiCardImageVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer class_benefit_code;
-	@NonNull
-	@Column(nullable = false)
-	private String class_benefit_name;
-	private Integer class_benefit_min_range;
-	private Double class_benefit_save_percent;
-
+	private int hi_card_image_code;
+	private String hi_card_image_front_path;
+	private String hi_card_image_rear_path;
+	private String hi_card_image_name;
 }

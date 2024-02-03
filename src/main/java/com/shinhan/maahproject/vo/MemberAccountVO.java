@@ -3,6 +3,7 @@ package com.shinhan.maahproject.vo;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "member_account_member_id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -32,9 +33,8 @@ public class MemberAccountVO {
 	
 	//member와 연결
 	@ManyToOne
-	@JsonBackReference
 	@JoinColumn(name="member_account_member_id")
-	private MemberVO member;
+	private MemberVO member_account_member_id;
 	
 	private int member_account_balance;
 	private Timestamp member_account_regdate;

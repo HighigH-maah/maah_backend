@@ -1,15 +1,16 @@
 package com.shinhan.maahproject.vo;
 
 import java.sql.Timestamp;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,15 +29,31 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "class_benefit")
-public class ClassBenefitVO {
+@Table(name = "by_card")
+public class ByCardVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer class_benefit_code;
+	private int by_code;
 	@NonNull
 	@Column(nullable = false)
-	private String class_benefit_name;
-	private Integer class_benefit_min_range;
-	private Double class_benefit_save_percent;
+	private String by_name;
+	private Timestamp by_regdate;
+	@NonNull
+	@Column(nullable = false)
+	private Double by_overdue_rate;
+	private int by_year_price;
+	private int by_min_limit;
+	private String by_category_list;
+	@NonNull
+	@Column(nullable = false)
+	private int by_status;
+	@NonNull
+	@Column(nullable = false)
+	private String by_image_path;
+	private Boolean by_is_transport;
+	
+	@OneToMany(mappedBy = "by_relation_benefit_key.by_card_code", fetch = FetchType.LAZY)
+	private List<ByRelationBenefitVO> benefits;
+
 
 }

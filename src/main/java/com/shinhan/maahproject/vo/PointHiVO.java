@@ -1,15 +1,10 @@
 package com.shinhan.maahproject.vo;
 
-import java.sql.Timestamp;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,15 +23,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "class_benefit")
-public class ClassBenefitVO {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer class_benefit_code;
+@Table(name = "point_hi")
+public class PointHiVO {
+	@EmbeddedId
+	private PointHiMultikey member_hi_number_month;
 	@NonNull
 	@Column(nullable = false)
-	private String class_benefit_name;
-	private Integer class_benefit_min_range;
-	private Double class_benefit_save_percent;
+	private int point_hi_amount;
 
 }

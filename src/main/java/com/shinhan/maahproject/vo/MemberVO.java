@@ -63,8 +63,16 @@ public class MemberVO {
 
 	private String member_address;
 
-	@JsonManagedReference
-	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "member_account_member_id", fetch = FetchType.LAZY)
 	private List<MemberAccountVO> memberAccounts;
+	
+	@OneToMany(mappedBy = "member_coupon_member_id", fetch = FetchType.LAZY)
+	private List<MemberCouponVO> memberCoupons;
+	
+	@OneToMany(mappedBy = "member_hi_owner", fetch = FetchType.LAZY)
+	private List<MemberCardHiVO> memberHiCard;
+	
+	@OneToMany(mappedBy = "member_benefit_member_id", fetch = FetchType.LAZY)
+	private List<MemberBenefitVO> memberBenefits;
 
 }
