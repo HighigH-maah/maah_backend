@@ -33,6 +33,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "member_card_hi")
 public class MemberCardHiVO {
+	
 	@Id
 	private String member_hi_number;
 	@NonNull
