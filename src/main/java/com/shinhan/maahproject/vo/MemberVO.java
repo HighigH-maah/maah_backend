@@ -69,7 +69,8 @@ public class MemberVO {
 	@OneToMany(mappedBy = "member_coupon_member_id", fetch = FetchType.LAZY)
 	private List<MemberCouponVO> memberCoupons;
 	
-	@OneToMany(mappedBy = "member_hi_owner", fetch = FetchType.LAZY)
+	//member_hi_owner
+	@OneToMany(mappedBy = "memberHiOwner", fetch = FetchType.LAZY)
 	private List<MemberCardHiVO> memberHiCard;
 	
 	@OneToMany(mappedBy = "member_benefit_member_id", fetch = FetchType.LAZY)

@@ -30,8 +30,8 @@ public class TempHiVO {
 	private String temp_hi_number;
 	@ManyToOne
 	@JoinColumn(name ="member_hi_number")
-	private MemberCardHiVO member_card_hi;
-	private int temp_hi_status;
+	private MemberCardHiVO memberCardHi;
+	private int tempHiStatus;
 	private Timestamp temp_hi_expdate;
 	private String temp_hi_cvc;
 }

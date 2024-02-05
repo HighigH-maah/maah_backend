@@ -10,6 +10,7 @@ import java.util.List;
 
 
 public interface MemberCardHiRepository extends JpaRepository<MemberCardHiVO, String> {
-	MemberCardHiVO findByMemberHiOwner(String memberHiOwner);
+	//MemberCardHiVO findByMemberHiOwner(MemberVO memberHiOwner);
 
+	MemberCardHiVO findByMemberHiOwner(String member_id);
 }

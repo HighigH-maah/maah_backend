@@ -42,7 +42,8 @@ public class MemberCardHiVO {
 	
 	@ManyToOne
 	@JoinColumn(name = "member_hi_owner")
-	private MemberVO member_hi_owner;
+//	@Column(name = "member_hi_owner")
+	private MemberVO memberHiOwner;
 	
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "member_hi_account_number", referencedColumnName = "member_account_number"),
