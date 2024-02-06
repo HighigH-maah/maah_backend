@@ -8,15 +8,15 @@ import lombok.Data;
 
 @Data
 public class ByCardDTO {
-	private int by_code;
-	private String by_name;
-	private Timestamp by_regdate;
-	private Double by_overdue_rate;
-	private int by_year_price;
-	private int by_min_limit;
-	private String by_category_list;
-	private int by_status;
-	private String by_image_path;
-	private Boolean by_is_transport;
+	private int byCode;
+	private String byName;
+	private Timestamp byRegdate;
+	private Double byOverdueRate;
+	private int byYearPrice;
+	private int byMinLimit;
+	private String byCategoryList;
+	private int byStatus;
+	private String byImagePath;
+	private Boolean byIsTransport;
 	
 }

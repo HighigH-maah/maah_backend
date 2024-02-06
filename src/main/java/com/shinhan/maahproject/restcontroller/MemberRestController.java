@@ -34,13 +34,14 @@ public class MemberRestController {
 		return member;
 	}
 	
-	@GetMapping(value="/member.do/{member_id}")
-	public MemberDTO getMember2(@PathVariable String member_id) {
-		
-		MemberDTO member = mService.getMember(member_id);
-		log.info(member.toString());
-
-		return member;
+//	@GetMapping(value="/member.do/{member_id}")
+//	public MemberDTO getMember2(@PathVariable String member_id) {
+//		
+//		MemberDTO member = mService.getMember(member_id);
+//		log.info(member.toString());
+//
+//		return member;
+//	}
 
 	@PostMapping(value="/getTempCard.do", consumes = "application/json")
 	public VirtualCardInfoDTO getVirtualCard(@RequestBody MemberDTO memberId) {
