@@ -37,11 +37,11 @@ public class ByCardService {
 	    List<ByCardDTO> ByCardList = new ArrayList<>();
 	    Iterable<ByCardVO> byCardVOIterable = bRepo.findAll();
 	    for (ByCardVO byCardVO : byCardVOIterable) {
-	    	log.info(byCardVO.toString());
-	    	List<Object[]> brbMultiList = brbRepo.selectByByCardCode(byCardVO);
-	    	for(Object brbMulti:brbMultiList) {
-	    		ByBenefitVO tempvo = (ByBenefitVO) brbMulti;
-	    		log.info(tempvo.getByBenefitDesc());
+//	    	log.info(byCardVO.toString());
+	    	List<ByRelationBenefitVO> brbMultiList = brbRepo.findByCards(byCardVO);
+	    	for(ByRelationBenefitVO brbMulti:brbMultiList) {
+	    		log.info(brbMulti.toString());
+	    		
 	    	}
 	    	
 	    	
