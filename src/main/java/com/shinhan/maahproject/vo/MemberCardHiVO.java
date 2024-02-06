@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -23,10 +22,10 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-@EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
+//@EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString(exclude = {"member_hi_owner", "card_apply_code"})
+//@ToString(exclude = {"memberHiOwner", "cardApplyCode"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -35,44 +34,43 @@ import lombok.ToString;
 public class MemberCardHiVO {
 	
 	@Id
-	private String member_hi_number;
+	private String memberHiNumber;
 	@NonNull
 	@Column(nullable = false)
-	private String member_hi_password;
+	private String memberHiPassword;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_hi_owner")
-//	@Column(name = "member_hi_owner")
 	private MemberVO memberHiOwner;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "member_hi_account_number", referencedColumnName = "member_account_number"),
 			@JoinColumn(name = "member_hi_account_bank_code", referencedColumnName = "member_account_bank_code") })
-	private MemberAccountVO member_account_key;
+	private MemberAccountVO memberAccountKey;
 	
 	@NonNull
 	@Column(nullable = false)
-	private int member_hi_status;
+	private int memberHiStatus;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_hi_image_code")
-	private HiCardImageVO hi_image_code;
-	private Timestamp member_hi_regdate;
-	private Timestamp member_hi_expdate;
-	private int member_hi_paydate;
+	private HiCardImageVO hiImageCode;
+	private Timestamp memberHiRegdate;
+	private Timestamp memberHiExpdate;
+	private int memberHiPaydate;
 	@NonNull
 	@Column(nullable = false)
-	private String member_hi_cvc;
+	private String memberHiCvc;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_hi_apply_code")
-	private CardApplyVO card_apply_code;
-	private Boolean member_hi_is_transport;
-	private String member_hi_nickname;
+	private CardApplyVO cardApplyCode;
+	private Boolean memberHiIsTransport;
+	private String memberHiNickname;
 	
-	@OneToMany(mappedBy = "member_hi_number_month.member_hi", fetch = FetchType.LAZY)
-	private List<PointHiVO> point_his;
+	@OneToMany(mappedBy = "memberHiNumberMonth.memberHi", fetch = FetchType.LAZY)
+	private List<PointHiVO> pointHis;
 	
-	@OneToMany(mappedBy = "member_card_hi", fetch = FetchType.LAZY)
-	private List<CardHistoryVO> card_his;
+	@OneToMany(mappedBy = "memberCardHi", fetch = FetchType.LAZY)
+	private List<CardHistoryVO> cardHis;
 }

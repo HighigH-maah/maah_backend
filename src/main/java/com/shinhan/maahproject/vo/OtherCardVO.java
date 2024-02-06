@@ -27,16 +27,16 @@ import lombok.ToString;
 public class OtherCardVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int other_code;
+	private int otherCode;
 	
-	private String other_name;
-	private Integer other_year_price;
-	private String other_category_list;
-	private int other_status;
-	private String other_image_path;
+	private String otherName;
+	private Integer otherYearPrice;
+	private String otherCategoryList;
+	private int otherStatus;
+	private String otherImagePath;
 	@ManyToOne
 	@JoinColumn(name="other_company")
-	private BankVO other_company;
+	private BankVO otherCompany;
 	
 	
 }

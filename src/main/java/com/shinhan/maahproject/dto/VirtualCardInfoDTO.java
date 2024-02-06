@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class VirtualCardInfoDTO {
-	private String temp_hi_number;
-	private Timestamp temp_hi_expdate;
-	private String temp_hi_cvc;
+	private String tempHiNumber;
+	private Timestamp tempHiExpdate;
+	private String tempHiCvc;
 }

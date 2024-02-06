@@ -28,8 +28,8 @@ import lombok.ToString;
 public class HiCardImageVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int hi_card_image_code;
-	private String hi_card_image_front_path;
-	private String hi_card_image_rear_path;
-	private String hi_card_image_name;
+	private int hiCardImageCode;
+	private String hiCardImageFrontPath;
+	private String hiCardImageRearPath;
+	private String hiCardImageName;
 }

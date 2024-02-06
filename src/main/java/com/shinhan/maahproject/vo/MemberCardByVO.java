@@ -26,7 +26,7 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString(exclude = {"connect_hi_card", "member", "apply_code"})
+@ToString(exclude = {"connectHiCard", "member", "applyCode"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -34,54 +34,54 @@ import lombok.ToString;
 @Table(name = "member_card_by")
 public class MemberCardByVO {
 	@Id
-	private String member_by_number;
+	private String memberByNumber;
 	@NonNull
 	@Column(nullable = false)
-	private String member_by_password;
+	private String memberByPassword;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_by_connect_hi")
-	private MemberCardHiVO connect_hi_card;
+	private MemberCardHiVO connectHiCard;
 	
-	private int member_by_limit;
+	private int memberByLimit;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_by_owner")
 	private MemberVO member;
 	
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "member_by_account_number", referencedColumnName = "member_account_number"),
 			@JoinColumn(name = "member_by_account_bank_code", referencedColumnName = "member_account_bank_code") })
-	private MemberAccountVO member_account_key;
+	private MemberAccountVO memberAccountKey;
 	
 	@NonNull
 	@Column(nullable = false)
-	private int member_by_status;
+	private int memberByStatus;
 	@NonNull
 	@ManyToOne
 	@JoinColumn(name="member_by_code", nullable = false)
-	private ByCardVO by_card;
-	private Timestamp member_by_regdate;
-	private Timestamp member_by_expdate;
-	private int member_by_paydate;
+	private ByCardVO byCard;
+	private Timestamp memberByRegdate;
+	private Timestamp memberByExpdate;
+	private int memberByPaydate;
 	@NonNull
 	@Column(nullable = false)
-	private String member_by_cvc;
+	private String memberByCvc;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_by_apply_code")
-	private CardApplyVO apply_code;
+	private CardApplyVO applyCode;
 	
-	private int member_by_rank;
-	private int member_by_point_goal;
-	private Boolean member_by_is_transport;
-	private String member_card_by_nickname;
+	private int memberByRank;
+	private int memberByPointGoal;
+	private Boolean memberByIsTransport;
+	private String memberCardByNickname;
 	
-	@OneToMany(mappedBy = "member_by_number_month.member_by_number", fetch = FetchType.LAZY)
-	private List<PointByVO> point_bys;
+	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
+	private List<PointByVO> pointBys;
 	
-	@OneToMany(mappedBy = "member_card_by", fetch = FetchType.LAZY)
-	private List<CardHistoryVO> card_his;
+	@OneToMany(mappedBy = "memberCardBy", fetch = FetchType.LAZY)
+	private List<CardHistoryVO> cardHis;
 	
 }

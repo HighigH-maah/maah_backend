@@ -21,7 +21,7 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString(exclude = "member_coupon_member_id")
+@ToString(exclude = "memberCouponMemberId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -30,26 +30,26 @@ import lombok.ToString;
 public class MemberCouponVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int member_coupon_code;
+	private int memberCouponCode;
 	
 	@ManyToOne
 	@JoinColumn(name="member_coupon_member_id")
-	private MemberVO member_coupon_member_id;
+	private MemberVO memberCouponMemberId;
 	
 	@ManyToOne
 	@JoinColumn(name="coupon_store_code")
-	private StoreCouponVO coupon_store;
-	private Integer coupon_status;
+	private StoreCouponVO couponStore;
+	private Integer couponStatus;
 	
-	private Timestamp stamp_one;
-	private Timestamp stamp_two;
-	private Timestamp stamp_three;
-	private Timestamp stamp_four;
-	private Timestamp stamp_five;
-	private Timestamp stamp_six;
-	private Timestamp stamp_seven;
-	private Timestamp stamp_eight;
-	private Timestamp stamp_nine;
-	private Timestamp stamp_ten;
+	private Timestamp stampOne;
+	private Timestamp stampTwo;
+	private Timestamp stampThree;
+	private Timestamp stampFour;
+	private Timestamp stampFive;
+	private Timestamp stampSix;
+	private Timestamp stampSeven;
+	private Timestamp stampEight;
+	private Timestamp stampNine;
+	private Timestamp stampTen;
 	
 }
