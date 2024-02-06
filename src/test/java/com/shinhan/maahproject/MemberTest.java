@@ -126,7 +126,7 @@ public class MemberTest {
 	@Test
 	void MemberFind() {
 		mRepo.findAll().forEach((member) -> {
-			log.info(member.getClass_benefit().toString());
+			log.info(member.getClassBenefit().toString());
 			log.info(member.toString());
 		});
 	}

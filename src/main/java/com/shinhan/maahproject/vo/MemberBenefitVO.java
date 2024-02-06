@@ -2,6 +2,7 @@ package com.shinhan.maahproject.vo;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +21,7 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString(exclude = "member_benefit_member_id")
+@ToString(exclude = "memberBenefitMemberId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,18 +30,18 @@ import lombok.ToString;
 public class MemberBenefitVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long member_benefit_code;
+	private Long memberBenefitCode;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_benefit_member_id")
-	private MemberVO member_benefit_member_id;
+	private MemberVO memberBenefitMemberId;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_benefit_by_benefit_code")
-	private ByBenefitVO member_benefit_by_benefit_code;
+	private ByBenefitVO memberBenefitByBenefitCode;
 	
-	private int member_benefit_used_amount;
-	private Boolean member_benefit_is_complete;
-	private Integer member_benefit_priority_range;
+	private int memberBenefitUsedAmount;
+	private Boolean memberBenefitIsComplete;
+	private Integer memberBenefitPriorityRange;
 	
 }

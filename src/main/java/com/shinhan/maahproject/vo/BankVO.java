@@ -24,8 +24,8 @@ import lombok.ToString;
 @Table(name = "bank")
 public class BankVO {
 	@Id
-	private String bank_code;
+	private String bankCode;
 	@NonNull
 	@Column(nullable = false)
-	private String bank_name;
+	private String bankName;
 }

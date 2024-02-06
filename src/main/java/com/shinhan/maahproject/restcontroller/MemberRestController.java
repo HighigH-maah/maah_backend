@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.MemberDTO;
+import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
 import com.shinhan.maahproject.service.MemberService;
+import com.shinhan.maahproject.service.VirtualCardInfoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,10 +22,13 @@ public class MemberRestController {
 	@Autowired
 	MemberService mService;
 	
+	@Autowired
+	VirtualCardInfoService vService;
+	
 	@PostMapping(value="/member.do", consumes = "application/json")
-	public MemberDTO getMember(@RequestBody MemberDTO member_id) {
+	public MemberDTO getMember(@RequestBody MemberDTO memberId) {
 		
-		MemberDTO member = mService.getMember(member_id.getMember_id());
+		MemberDTO member = mService.getMember(memberId.getMemberId());
 		log.info(member.toString());
 
 		return member;
@@ -36,5 +41,10 @@ public class MemberRestController {
 		log.info(member.toString());
 
 		return member;
+
+	@PostMapping(value="/getTempCard.do", consumes = "application/json")
+	public VirtualCardInfoDTO getVirtualCard(@RequestBody MemberDTO memberId) {
+		VirtualCardInfoDTO vCard = vService.getVirtualCardInfo(memberId.getMemberId());
+		return vCard;
 	}
 }

@@ -3,6 +3,7 @@ package com.shinhan.maahproject.vo;
 import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -27,11 +28,11 @@ import lombok.ToString;
 @Table(name = "temp_hi")
 public class TempHiVO {
 	@Id
-	private String temp_hi_number;
-	@ManyToOne
+	private String tempHiNumber;
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name ="member_hi_number")
-	private MemberCardHiVO member_card_hi;
-	private int temp_hi_status;
-	private Timestamp temp_hi_expdate;
-	private String temp_hi_cvc;
+	private MemberCardHiVO memberCardHi;
+	private int tempHiStatus;
+	private Timestamp tempHiExpdate;
+	private String tempHiCvc;
 }

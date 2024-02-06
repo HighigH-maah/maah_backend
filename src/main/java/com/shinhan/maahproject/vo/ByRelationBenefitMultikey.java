@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 public class ByRelationBenefitMultikey {
 	@ManyToOne
 	@JoinColumn(name="by_relate_benefit_code")
-	private ByBenefitVO by_relate_benefit_code;
+	private ByBenefitVO byRelateBenefitCode;
 	@ManyToOne
 	@JoinColumn(name="by_card_code")
-	private ByCardVO by_card_code;
+	private ByCardVO byCardCode;
 	
 	@Override//card는 이미 안다고 가정, 혜택 코드만 주기
 	public String toString() {
-	    return by_relate_benefit_code.toString();
+	    return byRelateBenefitCode.toString();
 	}
 }

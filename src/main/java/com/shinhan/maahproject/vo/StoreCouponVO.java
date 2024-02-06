@@ -29,17 +29,17 @@ import lombok.ToString;
 public class StoreCouponVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int store_code;
+	private int storeCode;
 	@NonNull
 	@Column(nullable = false)
-	private String store_name;
-	private String store_category;
-	private String store_address;
-	private Double store_latitude;
-	private Double store_longitude;
-	private String store_coupon_image_path;
-	private String store_image_path;
-	private String store_stamp_image_path;
-	private String store_coupon_policy;
-	private String store_operation_time;
+	private String storeName;
+	private String storeCategory;
+	private String storeAddress;
+	private Double storeLatitude;
+	private Double storeLongitude;
+	private String storeCouponImagePath;
+	private String storeImagePath;
+	private String storeStampImagePath;
+	private String storeCouponPolicy;
+	private String storeOperationTime;
 }
