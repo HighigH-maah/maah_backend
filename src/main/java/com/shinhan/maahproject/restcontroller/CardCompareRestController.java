@@ -3,6 +3,7 @@ package com.shinhan.maahproject.restcontroller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +26,13 @@ public class CardCompareRestController {
 	ByCardService bService;
 	
 	@PostMapping(value="/compare.do",consumes = "application/json")
-	public OtherCardDTO getOtherCard(@RequestBody OtherCardDTO other_code) {
-		OtherCardDTO other = oService.getOtherCard(other_code.getOther_code());
+	public OtherCardDTO getOtherCard(@RequestBody OtherCardDTO otherCode) {
+		OtherCardDTO other = oService.getOtherCard(otherCode.getOtherCode());
 		log.info(other.toString());
 		return other;
 	}
 	
-	@PostMapping(value="/allbycards.do",consumes = "application/json")
+	@GetMapping(value="/allbycards.do")
 	public List<ByCardDTO> getAllByCard(){
 		return  bService.getAllByCard();
 	}
