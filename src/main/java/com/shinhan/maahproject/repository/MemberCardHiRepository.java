@@ -9,7 +9,6 @@ import java.util.List;
 
 
 public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, String> {
-	//MemberCardHiVO findByMemberHiOwner(MemberVO memberHiOwner);
 
 	List<MemberCardHiVO> findByMemberHiOwnerAndMemberHiStatus(MemberVO memberHiOwner, int memberHiStatus);
 }
