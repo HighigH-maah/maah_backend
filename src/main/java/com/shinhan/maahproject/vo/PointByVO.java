@@ -26,9 +26,9 @@ import lombok.ToString;
 @Table(name = "point_by")
 public class PointByVO {
 	@EmbeddedId
-	private PointByMultikey member_by_number_month;
+	private PointByMultikey memberByNumberMonth;
 	@NonNull
 	@Column(nullable = false)
-	private int point_by_amount;
+	private int pointByAmount;
 	
 }

@@ -18,11 +18,11 @@ import lombok.NoArgsConstructor;
 @Data
 @Embeddable
 public class PointByMultikey implements Serializable {
-	private String member_by_number;
-	private String point_by_month;
+	private String memberByNumber;
+	private String pointByMonth;
 	
 	@Override
 	public String toString() {
-	    return point_by_month;
+	    return pointByMonth;
 	}
 }

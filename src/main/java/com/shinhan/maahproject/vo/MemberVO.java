@@ -26,7 +26,7 @@ import lombok.ToString;
 @EqualsAndHashCode // 모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString(exclude = "class_benefit, member_password, member_password_second")
+@ToString(exclude = "classBenefit, memberPassword, memberPasswordSecond")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -34,45 +34,46 @@ import lombok.ToString;
 @Table(name = "member")
 public class MemberVO {
 	@Id
-	private String member_id;
+	private String memberId;
 	@NonNull
 	@Column(nullable = false)
-	private String member_password;
+	private String memberPassword;
 	@NonNull
 	@Column(nullable = false)
-	private String member_email;
+	private String memberEmail;
 	@NonNull
 	@Column(nullable = false)
-	private Date member_birthdate;
+	private Date memberBirthdate;
 	@NonNull
 	@Column(nullable = false)
-	private String member_name;
+	private String memberName;
 	@NonNull
 	@Column(nullable = false)
-	private String member_phone_number;
+	private String memberPhoneNumber;
 	@NonNull
 	@Column(nullable = false)
-	private int member_status;
+	private int memberStatus;
 
-	private String member_password_second;
-	private int member_mileage;
+	private String memberPasswordSecond;
+	private int memberMileage;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_class")
-	private ClassBenefitVO class_benefit;
+	private ClassBenefitVO classBenefit;
 
-	private String member_address;
+	private String memberAddress;
 
-	@OneToMany(mappedBy = "member_account_member_id", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "memberAccountMemberId", fetch = FetchType.LAZY)
 	private List<MemberAccountVO> memberAccounts;
 	
-	@OneToMany(mappedBy = "member_coupon_member_id", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "memberCouponMemberId", fetch = FetchType.LAZY)
 	private List<MemberCouponVO> memberCoupons;
 	
-	@OneToMany(mappedBy = "member_hi_owner", fetch = FetchType.LAZY)
+	//member_hi_owner
+	@OneToMany(mappedBy = "memberHiOwner", fetch = FetchType.LAZY)
 	private List<MemberCardHiVO> memberHiCard;
 	
-	@OneToMany(mappedBy = "member_benefit_member_id", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "memberBenefitMemberId", fetch = FetchType.LAZY)
 	private List<MemberBenefitVO> memberBenefits;
 
 }

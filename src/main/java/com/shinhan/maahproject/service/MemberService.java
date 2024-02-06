@@ -15,9 +15,9 @@ public class MemberService {
 	@Autowired
 	MemberRepository mRepo;
 	
-	public MemberDTO getMember(String member_id) {
+	public MemberDTO getMember(String memberId) {
 		ModelMapper mapper = new ModelMapper();
-		return mRepo.findById(member_id)
+		return mRepo.findById(memberId)
 		        .map(memvo -> mapper.map(memvo, MemberDTO.class))
 		        .orElse(null);
 	}
