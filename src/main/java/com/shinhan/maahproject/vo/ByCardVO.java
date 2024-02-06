@@ -33,26 +33,26 @@ import lombok.ToString;
 public class ByCardVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int by_code;
+	private int byCode;
 	@NonNull
 	@Column(nullable = false)
-	private String by_name;
-	private Timestamp by_regdate;
+	private String byName;
+	private Timestamp byRegdate;
 	@NonNull
 	@Column(nullable = false)
-	private Double by_overdue_rate;
-	private int by_year_price;
-	private int by_min_limit;
-	private String by_category_list;
+	private Double byOverdueRate;
+	private int byYearPrice;
+	private int byMinLimit;
+	private String byCategoryList;
 	@NonNull
 	@Column(nullable = false)
-	private int by_status;
+	private int byStatus;
 	@NonNull
 	@Column(nullable = false)
-	private String by_image_path;
-	private Boolean by_is_transport;
+	private String byImagePath;
+	private Boolean byIsTransport;
 	
-	@OneToMany(mappedBy = "by_relation_benefit_key.by_card_code", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "byRelationBenefitKey.byCardCode", fetch = FetchType.LAZY)
 	private List<ByRelationBenefitVO> benefits;
 
 

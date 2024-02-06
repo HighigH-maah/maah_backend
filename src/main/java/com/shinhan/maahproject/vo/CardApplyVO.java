@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,33 +33,33 @@ import lombok.ToString;
 public class CardApplyVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int card_apply_code;
+	private int cardApplyCode;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "card_apply_member_id")
 	private MemberVO member;
 	// 암호화 필요
-	private String card_apply_member_social_number;
-	private Timestamp card_apply_date;
-	private String card_apply_id_image_path;
-	private Boolean card_apply_is_terms_of_service;
-	private Integer card_apply_annual_income;
-	private Integer card_apply_paydate;
-	private Integer card_apply_credit_point;
-	private String card_apply_source_fund;
-	private String card_apply_purpose;
-	private Boolean card_apply_is_verify;
-	private String card_apply_engname;
-	private Boolean card_apply_is_international;
+	private String cardApplyMemberSocialNumber;
+	private Timestamp cardApplyDate;
+	private String cardApplyIdImagePath;
+	private Boolean cardApplyIsTermsOfService;
+	private Integer cardApplyAnnualIncome;
+	private Integer cardApplyPaydate;
+	private Integer cardApplyCreditPoint;
+	private String cardApplySourceFund;
+	private String cardApplyPurpose;
+	private Boolean cardApplyIsVerify;
+	private String cardApplyEngname;
+	private Boolean cardApplyIsInternational;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "card_apply_account_number", referencedColumnName = "member_account_number"),
 			@JoinColumn(name = "card_apply_bank_code", referencedColumnName = "member_account_bank_code") })
-	private MemberAccountVO member_account_key;
+	private MemberAccountVO memberAccountKey;
 
-	private Boolean card_apply_is_account_verify;
-	private Integer card_apply_limit_amount;
-	private String card_apply_address;
-	private String card_apply_password;
-	private Boolean card_apply_is_transport;
+	private Boolean cardApplyIsAccountVerify;
+	private Integer cardApplyLimitAmount;
+	private String cardApplyAddress;
+	private String cardApplyPassword;
+	private Boolean cardApplyIsTransport;
 }

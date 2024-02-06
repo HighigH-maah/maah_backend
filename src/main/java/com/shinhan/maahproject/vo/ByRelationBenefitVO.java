@@ -25,6 +25,6 @@ import lombok.ToString;
 @Table(name = "by_relation_benefit")
 public class ByRelationBenefitVO {
 	@EmbeddedId
-	ByRelationBenefitMultikey by_relation_benefit_key;
+	ByRelationBenefitMultikey byRelationBenefitKey;
 
 }

@@ -31,25 +31,25 @@ import lombok.ToString;
 public class ByBenefitVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int by_benefit_code;
+	private int byBenefitCode;
 	
 	@NonNull
 	@ManyToOne
 	@JoinColumn(name="by_benefit_category_code", nullable = false)
-	private BenefitCategoryVO by_benefit_category;
+	private BenefitCategoryVO byBenefitCategory;
 	
 	private int by_benefit_min_condition;
-	private Double by_benefit_amount;
+	private Double byBenefitAmount;
 	@NonNull
 	@ManyToOne
 	@JoinColumn(name="by_benefit_apply_category_code" , nullable = false)
-	private BenefitApplyCategoryVO by_benefit_apply_category;
+	private BenefitApplyCategoryVO byBenefitApplyCategory;
 	@NonNull
 	@ManyToOne
 	@JoinColumn(name="by_benefit_way_category_code", nullable = false)
-	private BenefitWayCategoryVO by_benefit_way_category;
+	private BenefitWayCategoryVO byBenefitWayCategory;
 	
-	private int by_benefit_limit_amount;
-	private String by_benefit_desc;
-	private String by_benefit_body;
+	private int byBenefitLimitAmount;
+	private String byBenefitDesc;
+	private String byBenefitBody;
 }

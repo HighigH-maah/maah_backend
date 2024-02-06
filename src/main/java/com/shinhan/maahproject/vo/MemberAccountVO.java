@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,7 +22,7 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString(exclude = "member_account_member_id")
+@ToString(exclude = "memberAccountMemberId")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,16 +30,16 @@ import lombok.ToString;
 @Table(name = "member_account")
 public class MemberAccountVO {
 	@EmbeddedId
-	MemberAccountMultikey member_account_key;
+	MemberAccountMultikey memberAccountKey;
 	
 	//member와 연결
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_account_member_id")
-	private MemberVO member_account_member_id;
+	private MemberVO memberAccountMemberId;
 	
-	private int member_account_balance;
-	private Timestamp member_account_regdate;
-	private int member_account_status;
-	private String member_account_password;
+	private int memberAccountBalance;
+	private Timestamp memberAccountRegdate;
+	private int memberAccountStatus;
+	private String memberAccountPassword;
 
 }

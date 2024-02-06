@@ -32,11 +32,11 @@ import lombok.ToString;
 public class ClassBenefitVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer class_benefit_code;
+	private Integer classBenefitCode;
 	@NonNull
 	@Column(nullable = false)
-	private String class_benefit_name;
-	private Integer class_benefit_min_range;
-	private Double class_benefit_save_percent;
+	private String classBenefitName;
+	private Integer classBenefitMinRange;
+	private Double classBenefitSavePercent;
 
 }

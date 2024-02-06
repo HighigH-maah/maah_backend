@@ -29,9 +29,9 @@ import lombok.ToString;
 public class BenefitApplyCategoryVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int benefit_apply_code;
+	private int benefitApplyCode;
 	@NonNull
 	@Column(nullable = false)
-	private String benefit_apply_name;
+	private String benefitApplyName;
 
 }
