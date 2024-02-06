@@ -18,5 +18,5 @@ public class ByCardDTO {
 	private int byStatus;
 	private String byImagePath;
 	private Boolean byIsTransport;
-	
+	private List<String> benefitList;
 }
