@@ -1,9 +1,16 @@
 package com.shinhan.maahproject.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
 import com.shinhan.maahproject.vo.MemberCardHiVO;
+import com.shinhan.maahproject.vo.MemberVO;
 
-public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, String> {
+import java.util.List;
 
+
+public interface MemberCardHiRepository extends JpaRepository<MemberCardHiVO, String> {
+	//MemberCardHiVO findByMemberHiOwner(MemberVO memberHiOwner);
+
+	MemberCardHiVO findByMemberHiOwner(String member_id);
 }
