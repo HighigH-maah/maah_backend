@@ -18,5 +18,5 @@ public class ByCardDTO {
 	private int by_status;
 	private String by_image_path;
 	private Boolean by_is_transport;
-	private List<ByRelationBenefitVO> benefits;
+	
 }
