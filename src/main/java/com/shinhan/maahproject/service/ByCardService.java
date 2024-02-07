@@ -42,48 +42,54 @@ public class ByCardService {
 
 	@Autowired
 	OtherCardRepository oRepo;
+	
+	// 카테고리 리스트를 설명으로 바꿔주는 함수
+	private List<String> getCategoryDescriptions(String clist) {
+	    List<String> categoryToDesc = new ArrayList<>();
+
+	    if (clist != null) {
+	        String[] categoryDescList = clist.split(", ");
+	        for (String number : categoryDescList) {
+	            try {
+	                int num = Integer.parseInt(number.trim());
+	                BenefitCategoryVO bc = bcRepo.findById(num).orElse(null);
+	                if (bc != null) {
+	                    categoryToDesc.add(bc.getBenefitName().toString());
+	                } else {
+	                    // log.warn("Benefit category not found for ID: " + num);
+	                }
+	            } catch (NumberFormatException e) {
+	                // log.error("Invalid number format: " + number, e);
+	            }
+	        }
+	    }
+
+	    return categoryToDesc;
+	}
 
 	public List<ByCardDTO> getAllByCard() {
-		ModelMapper mapper = new ModelMapper();
-		List<ByCardDTO> ByCardList = new ArrayList<>();
-		Iterable<ByCardVO> byCardVOIterable = bRepo.findAll();
+	    ModelMapper mapper = new ModelMapper();
+	    List<ByCardDTO> ByCardList = new ArrayList<>();
+	    Iterable<ByCardVO> byCardVOIterable = bRepo.findAll();
 
-		for (ByCardVO byCardVO : byCardVOIterable) {
-			List<ByRelationBenefitVO> brbMultiList = brbRepo.findByCards(byCardVO);
-			String clist = byCardVO.getByCategoryList();
-			List<String> categoryToDesc = new ArrayList<>();
+	    for (ByCardVO byCardVO : byCardVOIterable) {
+	        List<ByRelationBenefitVO> brbMultiList = brbRepo.findByCards(byCardVO);
+	        List<String> categoryToDesc = getCategoryDescriptions(byCardVO.getByCategoryList());
 
-			if (clist != null) {
-				String[] categoryDescList = clist.split(", ");
-				for (String number : categoryDescList) {
-					try {
-						int num = Integer.parseInt(number.trim());
-						BenefitCategoryVO bc = bcRepo.findById(num).orElse(null);
-						if (bc != null) {
-							categoryToDesc.add(bc.getBenefitName().toString());
-						} else {
-							// log.warn("Benefit category not found for ID: " + num);
-						}
-					} catch (NumberFormatException e) {
-						// log.error("Invalid number format: " + number, e);
-					}
-				}
-			}
+	        List<String> blist = new ArrayList<>(); // 혜택 문장들을 모두 담는다
 
-			List<String> blist = new ArrayList<>(); // 혜택 문장들을 모두 담는다
+	        for (ByRelationBenefitVO brbMulti : brbMultiList) {
+	            blist.add(brbMulti.getBenefits().getByBenefitDesc());
+	        }
 
-			for (ByRelationBenefitVO brbMulti : brbMultiList) {
-				blist.add(brbMulti.getBenefits().getByBenefitDesc());
-			}
+	        ByCardDTO bDto = mapper.map(byCardVO, ByCardDTO.class);
+	        bDto.setBenefitList(blist); // 혜택을 다음과 같이 세팅
+	        bDto.setByCategoryList(categoryToDesc);
 
-			ByCardDTO bDto = mapper.map(byCardVO, ByCardDTO.class);
-			bDto.setBenefitList(blist); // 혜택을 다음과 같이 세팅
-			bDto.setByCategoryList(categoryToDesc);
-
-			ByCardList.add(bDto);
-			// log.info(ByCardList.toString());
-		}
-		return ByCardList;
+	        ByCardList.add(bDto);
+	        // log.info(ByCardList.toString());
+	    }
+	    return ByCardList;
 	}
 
 	public List<ByCardDTO> getByCardsByOther(String cardName) {
@@ -91,14 +97,17 @@ public class ByCardService {
 		List<ByCardDTO> byCardList = new ArrayList<>();
 
 		OtherCardVO otherCard = oRepo.findByOtherName(cardName);
-		log.info("찾은 다른 카드:" + otherCard.toString());
+		//log.info("찾은 다른 카드:" + otherCard.toString());
 		String otherCategoryList = otherCard.getOtherCategoryList();
 
 		Iterable<ByCardVO> byCardVOIterable = bRepo.findAll();
 		for (ByCardVO byCardVO : byCardVOIterable) {
 			String byCategories = byCardVO.getByCategoryList(); // 각각 ByCategories
+			log.info("byCategories"+byCategories);
 			if (byCategories!=null && containsAnyCategory(byCategories, otherCategoryList)) {
+				List<String> categoryToDesc = getCategoryDescriptions(byCategories);
 				ByCardDTO byCardDTO = mapper.map(byCardVO, ByCardDTO.class);
+				byCardDTO.setByCategoryList(categoryToDesc);
 				byCardList.add(byCardDTO);
 			}
 		}
