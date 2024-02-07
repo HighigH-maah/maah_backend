@@ -2,6 +2,7 @@ package com.shinhan.maahproject.vo;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -36,7 +37,7 @@ public class ByRelationBenefitVO {
 	@JoinColumn(name = "by_relate_benefit_code")
 	@MapsId("byRelateBenefitCode")
 	private ByBenefitVO benefits;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "by_card_code")
 	@MapsId("byCardCode")
 	private ByCardVO cards;
