@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shinhan.maahproject.dto.BankDTO;
 import com.shinhan.maahproject.dto.ByCardDTO;
 import com.shinhan.maahproject.dto.OtherCardDTO;
+import com.shinhan.maahproject.dto.OtherCardInputDTO;
 import com.shinhan.maahproject.service.ByCardService;
 import com.shinhan.maahproject.service.OtherCardService;
 
@@ -38,13 +40,14 @@ public class CardCompareRestController {
 		return  bService.getAllByCard();
 	}
 	
-	@GetMapping(value="/selectByCondition.do",consumes = "application/json")
+	@PostMapping(value="/selectByCondition.do", consumes = "application/json")
 	public String selectByCondition(
-			@RequestBody OtherCardDTO otherCompany) {
-		String bankName = otherCompany.getOtherCompany().getBankName();
+			@RequestBody OtherCardInputDTO otherInput) {
+		log.info("냐옹 "+otherInput.toString());
+		String bname = otherInput.getBankName();
 	
 	    
-	    return bankName;
+	    return bname;
 	}
 
 }
