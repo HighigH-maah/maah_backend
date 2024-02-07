@@ -15,6 +15,7 @@ import com.shinhan.maahproject.dto.OtherCardDTO;
 import com.shinhan.maahproject.dto.OtherCardInputDTO;
 import com.shinhan.maahproject.service.ByCardService;
 import com.shinhan.maahproject.service.OtherCardService;
+import com.shinhan.maahproject.vo.OtherCardVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,27 +28,28 @@ public class CardCompareRestController {
 	
 	@Autowired
 	ByCardService bService;
-//	
-//	@PostMapping(value="/compare.do",consumes = "application/json")
-//	public OtherCardDTO getOtherCard(@RequestBody OtherCardDTO otherCode) {
-//		OtherCardDTO other = oService.getOtherCard(otherCode.getOtherCode());
-//		log.info(other.toString());
-//		return other;
-//	}
-//	
+
 	@GetMapping(value="/allbycards.do")
 	public List<ByCardDTO> getAllByCard(){
 		return  bService.getAllByCard();
 	}
 	
 	@PostMapping(value="/selectByCondition.do", consumes = "application/json")
-	public String selectByCondition(
+	public List<OtherCardVO> selectByCondition(
 			@RequestBody OtherCardInputDTO otherInput) {
 		log.info("냐옹 "+otherInput.toString());
 		String bname = otherInput.getBankName();
+		int categoryNum = otherInput.getCategory();
 	
-	    
-	    return bname;
+		List<OtherCardVO> OCards = oService.getOtherCards(bname, categoryNum);
+		log.info(OCards.toString());
+	    return OCards;
+	}
+	
+	@PostMapping(value="/byCardsByOther.do", consumes = "application/json")
+	public List<ByCardDTO> getByCardsByOther(@RequestBody OtherCardDTO otherInput){
+		log.info("멍멍"+otherInput.toString());
+		return bService.getByCardsByOther(otherInput.getOtherName());
 	}
 
 }

@@ -8,4 +8,6 @@ import com.shinhan.maahproject.vo.OtherCardVO;
 public interface OtherCardRepository extends CrudRepository<OtherCardVO, Integer> {
 
     List<OtherCardVO> findByOtherCompanyBankNameAndOtherCategoryListContaining(String bankName, int categoryNumber);
+
+	OtherCardVO findByOtherName(String cardName);
 }
