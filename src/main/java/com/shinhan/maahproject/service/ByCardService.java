@@ -93,36 +93,40 @@ public class ByCardService {
 	}
 
 	public List<ByCardDTO> getByCardsByOther(String cardName) {
-		ModelMapper mapper = new ModelMapper();
-		List<ByCardDTO> byCardList = new ArrayList<>();
+	    ModelMapper mapper = new ModelMapper();
+	    List<ByCardDTO> byCardList = new ArrayList<>();
 
-		OtherCardVO otherCard = oRepo.findByOtherName(cardName);
-		//log.info("찾은 다른 카드:" + otherCard.toString());
-		String otherCategoryList = otherCard.getOtherCategoryList();
+	    OtherCardVO otherCard = oRepo.findByOtherName(cardName);
+	    // log.info("찾은 다른 카드:" + otherCard.toString());
+	    String otherCategoryList = otherCard.getOtherCategoryList();
+	    Iterable<ByCardVO> byCardVOIterable = bRepo.findAll();
+	    
+	    for (ByCardVO byCardVO : byCardVOIterable) {
+	        String byCategories = byCardVO.getByCategoryList(); // 각각 ByCategories
+	        log.info("byCategories" + byCategories);
+	        
+	        if (containsAnyCategory(byCategories, otherCategoryList)) {
+	            List<String> categoryToDesc = getCategoryDescriptions(byCategories);
+	            ByCardDTO byCardDTO = mapper.map(byCardVO, ByCardDTO.class);
+	            byCardDTO.setByCategoryList(categoryToDesc);
+	            byCardList.add(byCardDTO);
+	        }
+	    }
 
-		Iterable<ByCardVO> byCardVOIterable = bRepo.findAll();
-		for (ByCardVO byCardVO : byCardVOIterable) {
-			String byCategories = byCardVO.getByCategoryList(); // 각각 ByCategories
-			log.info("byCategories"+byCategories);
-			if (byCategories!=null && containsAnyCategory(byCategories, otherCategoryList)) {
-				List<String> categoryToDesc = getCategoryDescriptions(byCategories);
-				ByCardDTO byCardDTO = mapper.map(byCardVO, ByCardDTO.class);
-				byCardDTO.setByCategoryList(categoryToDesc);
-				byCardList.add(byCardDTO);
-			}
-		}
-
-		return byCardList;
+	    return byCardList;
 	}
 
 	private boolean containsAnyCategory(String byCategories, String otherCategoryList) {
-		String[] otherCategoriesArray = otherCategoryList.split(",");
-		for (String otherCategory : otherCategoriesArray) {
-			if (byCategories.contains(otherCategory.trim())) {
-				return true;
-			}
-		}
-		return false;
-	}
+	    if (byCategories == null || otherCategoryList == null) {
+	        return false;
+	    }
 
+	    String[] otherCategories = otherCategoryList.split(", ");
+	    for (String otherCategory : otherCategories) {
+	        if (byCategories.contains(otherCategory.trim())) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 }
