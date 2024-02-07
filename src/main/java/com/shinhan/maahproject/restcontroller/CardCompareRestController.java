@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.ByCardDTO;
@@ -24,17 +25,26 @@ public class CardCompareRestController {
 	
 	@Autowired
 	ByCardService bService;
-	
-	@PostMapping(value="/compare.do",consumes = "application/json")
-	public OtherCardDTO getOtherCard(@RequestBody OtherCardDTO otherCode) {
-		OtherCardDTO other = oService.getOtherCard(otherCode.getOtherCode());
-		log.info(other.toString());
-		return other;
-	}
-	
+//	
+//	@PostMapping(value="/compare.do",consumes = "application/json")
+//	public OtherCardDTO getOtherCard(@RequestBody OtherCardDTO otherCode) {
+//		OtherCardDTO other = oService.getOtherCard(otherCode.getOtherCode());
+//		log.info(other.toString());
+//		return other;
+//	}
+//	
 	@GetMapping(value="/allbycards.do")
 	public List<ByCardDTO> getAllByCard(){
 		return  bService.getAllByCard();
+	}
+	
+	@GetMapping(value="/selectByCondition.do",consumes = "application/json")
+	public String selectByCondition(
+			@RequestBody OtherCardDTO otherCompany) {
+		String bankName = otherCompany.getOtherCompany().getBankName();
+	
+	    
+	    return bankName;
 	}
 
 }

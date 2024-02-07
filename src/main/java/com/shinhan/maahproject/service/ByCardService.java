@@ -55,10 +55,10 @@ public class ByCardService {
                         if (bc != null) {
                             categoryToDesc.add(bc.getBenefitName().toString());
                         } else {
-                            log.warn("Benefit category not found for ID: " + num);
+                            //log.warn("Benefit category not found for ID: " + num);
                         }
                     } catch (NumberFormatException e) {
-                        log.error("Invalid number format: " + number, e);
+                        //log.error("Invalid number format: " + number, e);
                     }
                 }
             }
@@ -74,7 +74,7 @@ public class ByCardService {
             bDto.setByCategoryList(categoryToDesc);
 
             ByCardList.add(bDto);
-            log.info(ByCardList.toString());
+            //log.info(ByCardList.toString());
         }
         return ByCardList;
     }

@@ -1,9 +1,13 @@
 package com.shinhan.maahproject.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.BankDTO;
 import com.shinhan.maahproject.dto.OtherCardDTO;
 import com.shinhan.maahproject.repository.OtherCardRepository;
 import com.shinhan.maahproject.vo.OtherCardVO;
@@ -16,16 +20,14 @@ public class OtherCardService {
 	@Autowired
 	OtherCardRepository orepo;
 	
-	public OtherCardDTO getOtherCard(Integer otherCode) {
-		log.info(otherCode.toString());
-		ModelMapper mapper = new ModelMapper();
-		OtherCardVO oCard = orepo.findById(otherCode).orElse(null);
-		log.info(oCard.toString());
-		OtherCardDTO oDto = mapper.map(oCard, OtherCardDTO.class);
-		log.info(oDto.toString());
-		        
-		 
-		 return oDto;
-	}
+	public List<OtherCardVO> getOtherCards(String company, int category) {
+	    ModelMapper mapper = new ModelMapper();
 
+	    List<OtherCardVO> oCards = orepo.findByOtherCompanyBankNameAndOtherCategoryListContaining(company, category);
+	    
+	 
+
+	   
+	    return oCards;
+	}
 }
