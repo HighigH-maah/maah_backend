@@ -22,7 +22,7 @@ import lombok.ToString;
 @EqualsAndHashCode //모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"BenefitWayCategoryVO", "BenefitCategoryVO", "byBenefitApplyCategory"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -38,7 +38,7 @@ public class ByBenefitVO {
 	@JoinColumn(name="by_benefit_category_code", nullable = false)
 	private BenefitCategoryVO byBenefitCategory;
 	
-	private int by_benefit_min_condition;
+	private int byBenefitMinCondition;
 	private Double byBenefitAmount;
 	@NonNull
 	@ManyToOne
@@ -49,7 +49,7 @@ public class ByBenefitVO {
 	@JoinColumn(name="by_benefit_way_category_code", nullable = false)
 	private BenefitWayCategoryVO byBenefitWayCategory;
 	
-	private int byBenefitLimitAmount;
+	private Integer byBenefitLimitAmount;
 	private String byBenefitDesc;
 	private String byBenefitBody;
 }

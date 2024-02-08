@@ -1,9 +1,22 @@
 package com.shinhan.maahproject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.SdkClientException;
+
+import com.shinhan.maahproject.dto.AccountChangeDTO;
+import com.shinhan.maahproject.repository.BankRepository;
 
 import com.shinhan.maahproject.repository.ByCardRepository;
 import com.shinhan.maahproject.repository.CardApplyRepository;
@@ -16,7 +29,10 @@ import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.repository.OtherCardRepository;
 import com.shinhan.maahproject.repository.StoreCouponRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
+import com.shinhan.maahproject.utils.S3Config;
+import com.shinhan.maahproject.utils.S3Upload;
 import com.shinhan.maahproject.vo.MemberBenefitVO;
+import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberCouponVO;
 import com.shinhan.maahproject.vo.MemberVO;
 import com.shinhan.maahproject.vo.StoreCouponVO;
@@ -57,41 +73,60 @@ public class MemberTest {
 
 	@Autowired
 	MemberCardByRepository mbRepo;
-	
+
 	@Autowired
 	MemberBenefitRepository bmRepo;
-	
+
 	@Autowired
 	OtherCardRepository oRepo;
-	
+
+	@Autowired
+	S3Upload uploadService;
+
+	@Autowired
+	BankRepository bRepo;
+
 	@Test
+	void uploadTest() throws SdkClientException, IOException {
+		UUID randomUUID = UUID.randomUUID();
+		String filePath = "C:\\Users\\User\\Desktop\\image\\card3.png";
+		Path path = Paths.get(filePath);
+
+		String fileName = path.getFileName().toString();
+		System.out.println(fileName);
+		String contentType = Files.probeContentType(path);
+		byte[] fileContent = Files.readAllBytes(path);
+		MultipartFile multipartFile = new MockMultipartFile(fileName, fileName, contentType, fileContent);
+
+		// uploadService.upload(multipartFile, filePath, randomUUID.toString());
+	}
+
+	// @Test
 	void OtherCardFind() {
 		oRepo.findAll().forEach((ph) -> {
 			log.info(ph.toString());
 		});
 	}
-	
-	
-	//@Test
+
+	// @Test
 	@Transactional
 	void MemberBenefitFind() {
 		bmRepo.findAll().forEach((ph) -> {
 			log.info(ph.toString());
 		});
-		
-	}
-	
 
-	//@Test
+	}
+
+	// @Test
 	@Transactional
 	void ByCardFind() {
 		mbRepo.findAll().forEach((ph) -> {
 			log.info(ph.toString());
 		});
-		
+
 	}
 
-	//@Test
+	// @Test
 	@Transactional
 	void HiCardFind() {
 
@@ -120,12 +155,28 @@ public class MemberTest {
 	}
 
 	@Transactional // 서비스 만들어서 넣어야 함
-	@Test
+	// @Test
 	void MemberFind() {
 		mRepo.findAll().forEach((member) -> {
 			log.info(member.getClassBenefit().toString());
 			log.info(member.toString());
 		});
+	}
+
+	@Test
+	void BankCodeFind() {
+		String memberId = "user3";
+		AccountChangeDTO acdto = null;
+		MemberCardHiVO tempmhvo = null;
+
+		for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(mRepo.findById(memberId).orElse(null),
+				0)) {
+			if (hicard.getMemberHiStatus() == 0) {
+				tempmhvo = hicard; // user3의 hicard 정보가 담긴다.
+				log.info(tempmhvo.toString());
+			}
+		}
+
 	}
 
 }

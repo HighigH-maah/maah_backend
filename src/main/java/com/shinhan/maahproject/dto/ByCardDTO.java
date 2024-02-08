@@ -14,9 +14,9 @@ public class ByCardDTO {
 	private Double byOverdueRate;
 	private int byYearPrice;
 	private int byMinLimit;
-	private String byCategoryList;
+	private List<String> byCategoryList;
 	private int byStatus;
 	private String byImagePath;
 	private Boolean byIsTransport;
-	
+	private List<String> benefitList;
 }
