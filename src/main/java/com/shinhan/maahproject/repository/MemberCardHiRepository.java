@@ -13,10 +13,10 @@ import java.util.List;
 
 
 public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, String> {
-	//MemberCardHiVO findByMemberHiOwner(MemberVO memberHiOwner);
 
 	List<MemberCardHiVO> findByMemberHiOwnerAndMemberHiStatus(MemberVO memberHiOwner, int memberHiStatus);
 	
+
 	@Query("SELECT mc FROM MemberCardHiVO mc "
 	        + "JOIN FETCH mc.cardHis ch "
 	        + "JOIN FETCH mc.hiImageCode "
@@ -37,4 +37,5 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			+ "WHERE mb.member = :memberId "
 			+ "AND mb.connectHiCard = :connectHiCard")
 			Integer sumHiCardTotalLimitByMemberBYOwner (@Param("memberId") MemberVO member, @Param("connectHiCard") MemberCardHiVO connectHiCard);
+
 }
