@@ -1,4 +1,6 @@
 package com.shinhan.maahproject.dto;
+import com.shinhan.maahproject.vo.BankVO;
+
 import lombok.Data;
 
 @Data
@@ -9,4 +11,5 @@ public class OtherCardDTO {
 	private String otherCategoryList;
 	private int otherStatus;
 	private String otherImagePath;
+	private BankVO otherCompany;
 }
