@@ -13,7 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import com.amazonaws.SdkClientException;
+
+import com.shinhan.maahproject.dto.AccountChangeDTO;
+import com.shinhan.maahproject.repository.BankRepository;
+
 import com.shinhan.maahproject.repository.ByCardRepository;
 import com.shinhan.maahproject.repository.CardApplyRepository;
 import com.shinhan.maahproject.repository.HiCardImageRepository;
@@ -29,6 +34,7 @@ import com.shinhan.maahproject.repository.TempHiRepository;
 import com.shinhan.maahproject.utils.S3Config;
 import com.shinhan.maahproject.utils.S3Upload;
 import com.shinhan.maahproject.vo.MemberBenefitVO;
+import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberCouponVO;
 import com.shinhan.maahproject.vo.MemberVO;
 import com.shinhan.maahproject.vo.StoreCouponVO;
@@ -80,6 +86,9 @@ public class MemberTest {
 	
 	@Autowired
 	S3Upload uploadService;
+  
+  @Autowired
+  BankRepository bRepo;
 	
 	@Test
 	void uploadTest() throws SdkClientException, IOException {
@@ -159,6 +168,23 @@ public class MemberTest {
 			log.info(member.getClassBenefit().toString());
 			log.info(member.toString());
 		});
+	
+	@Test
+	void BankCodeFind() {
+		String memberId = "user3";
+		AccountChangeDTO acdto = null;
+		MemberCardHiVO tempmhvo = null;
+
+		for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(mRepo.findById(memberId).orElse(null),
+				0)) {
+			if (hicard.getMemberHiStatus() == 0) {
+				tempmhvo = hicard; //user3의 hicard 정보가 담긴다.
+				log.info(tempmhvo.toString());
+			}
+		}
+
 	}
+	
+
 
 }
