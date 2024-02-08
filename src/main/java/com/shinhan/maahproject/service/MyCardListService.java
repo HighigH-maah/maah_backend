@@ -21,14 +21,12 @@ import com.shinhan.maahproject.dto.MyCardHiDTO;
 import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
-import com.shinhan.maahproject.repository.PointHiRepository;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.ClassBenefitVO;
 import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
-import com.shinhan.maahproject.vo.PointHiMultikey;
-import com.shinhan.maahproject.vo.PointHiVO;
+
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -42,9 +40,6 @@ public class MyCardListService {
 
 	@Autowired
 	MemberCardHiRepository mchRepo;
-	
-	@Autowired
-	PointHiRepository phRepo;
 	
 	@Autowired
 	MemberCardByRepository mcbRepo;

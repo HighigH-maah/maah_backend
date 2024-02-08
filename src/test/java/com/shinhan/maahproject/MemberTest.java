@@ -27,7 +27,6 @@ import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberCouponRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.repository.OtherCardRepository;
-import com.shinhan.maahproject.repository.PointHiRepository;
 import com.shinhan.maahproject.repository.StoreCouponRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
 import com.shinhan.maahproject.utils.S3Config;
@@ -65,8 +64,6 @@ public class MemberTest {
 	@Autowired
 	MemberCardHiRepository mhRepo;
 
-	@Autowired
-	PointHiRepository phRepo;
 
 	@Autowired
 	TempHiRepository tRepo;
