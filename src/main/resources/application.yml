@@ -1,0 +1,12 @@
+cloud:
+  aws:
+    s3:
+      bucket: maah-s3
+    credentials:
+      access-key: ${amazon_s3_admin_access_key}
+      secret-key: ${amazon_s3_admin_secret_key}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

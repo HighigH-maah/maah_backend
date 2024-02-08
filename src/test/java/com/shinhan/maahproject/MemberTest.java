@@ -1,10 +1,19 @@
 package com.shinhan.maahproject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.SdkClientException;
 import com.shinhan.maahproject.repository.ByCardRepository;
 import com.shinhan.maahproject.repository.CardApplyRepository;
 import com.shinhan.maahproject.repository.HiCardImageRepository;
@@ -17,6 +26,8 @@ import com.shinhan.maahproject.repository.OtherCardRepository;
 import com.shinhan.maahproject.repository.PointHiRepository;
 import com.shinhan.maahproject.repository.StoreCouponRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
+import com.shinhan.maahproject.utils.S3Config;
+import com.shinhan.maahproject.utils.S3Upload;
 import com.shinhan.maahproject.vo.MemberBenefitVO;
 import com.shinhan.maahproject.vo.MemberCouponVO;
 import com.shinhan.maahproject.vo.MemberVO;
@@ -67,7 +78,26 @@ public class MemberTest {
 	@Autowired
 	OtherCardRepository oRepo;
 	
+	@Autowired
+	S3Upload uploadService;
+	
 	@Test
+	void uploadTest() throws SdkClientException, IOException {
+		UUID randomUUID = UUID.randomUUID();
+		String filePath = "C:\\Users\\User\\Desktop\\image\\card3.png";
+		Path path = Paths.get(filePath);
+		
+		String fileName = path.getFileName().toString();
+		System.out.println(fileName);
+		String contentType = Files.probeContentType(path);
+		byte[] fileContent = Files.readAllBytes(path);
+		MultipartFile multipartFile = new MockMultipartFile(fileName, fileName, contentType, fileContent);
+		
+		
+		//uploadService.upload(multipartFile, filePath, randomUUID.toString());
+	}
+	
+	//@Test
 	void OtherCardFind() {
 		oRepo.findAll().forEach((ph) -> {
 			log.info(ph.toString());
@@ -123,7 +153,7 @@ public class MemberTest {
 	}
 
 	@Transactional // 서비스 만들어서 넣어야 함
-	@Test
+	//@Test
 	void MemberFind() {
 		mRepo.findAll().forEach((member) -> {
 			log.info(member.getClassBenefit().toString());
