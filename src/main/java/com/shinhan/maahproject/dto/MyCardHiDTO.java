@@ -9,7 +9,7 @@ public class MyCardHiDTO {
 	private String memberHiNumber;
 	private String memberHiNickname;
 	private HiCardImageVO hiImageCode;
-	private Integer pointHiAmount;
+	private Integer memberHiPoint;
 	private String classBenefitName;
 	private Integer thismonthsum;
 	private Integer totalLimit;
