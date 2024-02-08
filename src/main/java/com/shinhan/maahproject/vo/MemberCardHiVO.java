@@ -68,9 +68,8 @@ public class MemberCardHiVO {
 	private Boolean memberHiIsTransport;
 	private String memberHiNickname;
 	
-	@OneToMany(mappedBy = "memberHiNumberMonth.memberHi", fetch = FetchType.LAZY)
-	private List<PointHiVO> pointHis;
-	
 	@OneToMany(mappedBy = "memberCardHi", fetch = FetchType.LAZY)
 	private List<CardHistoryVO> cardHis;
+	
+	private int memberHiPoint;
 }
