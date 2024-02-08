@@ -11,6 +11,6 @@ public class MyCardHiDTO {
 	private HiCardImageVO hiImageCode;
 	private Integer pointHiAmount;
 	private String classBenefitName;
-	private Integer thismonthsum;
+	private Integer thisMonthSum;
 	private Integer totalLimit;
 }

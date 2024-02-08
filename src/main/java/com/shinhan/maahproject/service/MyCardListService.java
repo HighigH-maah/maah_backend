@@ -89,7 +89,7 @@ public class MyCardListService {
 //		}
 		
 		MyCardHiDTO resultMyHiCard = mapper.map(mhicard, MyCardHiDTO.class);
-		resultMyHiCard.setThismonthsum(thisMounthSum);
+		resultMyHiCard.setThisMonthSum(thisMounthSum);
 		resultMyHiCard.setTotalLimit(totalLimit);
 		resultMyHiCard.setClassBenefitName(cb.getClassBenefitName());
 		
