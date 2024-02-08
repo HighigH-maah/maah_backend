@@ -3,6 +3,7 @@ package com.shinhan.maahproject.restcontroller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import com.shinhan.maahproject.dto.HiCardHistoryDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
 import com.shinhan.maahproject.service.HICardDetailService;
+import com.shinhan.maahproject.vo.BankVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +24,12 @@ public class HiCardDetailRestController {
 	
 	@Autowired
 	HICardDetailService hdService;
+	
+	@GetMapping(value="/getBankName.do")
+	public List<BankVO> getBankName(){
+		List<BankVO> bankInfo = hdService.getBankName();
+		return bankInfo;
+	}
 	
 	@PostMapping(value="/getHicardHistory.do", consumes = "application/json")
 	public List<HiCardHistoryDTO> getHicardHistory(@RequestBody MemberDTO memberId) {

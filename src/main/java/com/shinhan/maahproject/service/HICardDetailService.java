@@ -18,6 +18,7 @@ import com.shinhan.maahproject.repository.MemberAccountRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
+import com.shinhan.maahproject.vo.BankVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
@@ -46,6 +47,14 @@ public class HICardDetailService {
 	
 	@Autowired
 	CardHistoryRepository cRepo;
+	
+	public List<BankVO> getBankName(){
+		
+		List<BankVO> bankInfo = (List<BankVO>) bRepo.findAll();
+		log.info(bankInfo.toString());
+		
+		return bankInfo;
+	}
 	
 	public List<HiCardHistoryDTO> getHicardHistory(String memberId) {
 	    ModelMapper mapper = new ModelMapper();
