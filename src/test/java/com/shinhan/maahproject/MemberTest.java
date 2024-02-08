@@ -1,12 +1,24 @@
 package com.shinhan.maahproject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
+
+import com.amazonaws.SdkClientException;
 
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.repository.BankRepository;
+
 import com.shinhan.maahproject.repository.ByCardRepository;
 import com.shinhan.maahproject.repository.CardApplyRepository;
 import com.shinhan.maahproject.repository.HiCardImageRepository;
@@ -19,6 +31,8 @@ import com.shinhan.maahproject.repository.OtherCardRepository;
 import com.shinhan.maahproject.repository.PointHiRepository;
 import com.shinhan.maahproject.repository.StoreCouponRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
+import com.shinhan.maahproject.utils.S3Config;
+import com.shinhan.maahproject.utils.S3Upload;
 import com.shinhan.maahproject.vo.MemberBenefitVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberCouponVO;
@@ -71,7 +85,89 @@ public class MemberTest {
 	OtherCardRepository oRepo;
 	
 	@Autowired
-	BankRepository bRepo;
+	S3Upload uploadService;
+  
+  @Autowired
+  BankRepository bRepo;
+	
+	@Test
+	void uploadTest() throws SdkClientException, IOException {
+		UUID randomUUID = UUID.randomUUID();
+		String filePath = "C:\\Users\\User\\Desktop\\image\\card3.png";
+		Path path = Paths.get(filePath);
+		
+		String fileName = path.getFileName().toString();
+		System.out.println(fileName);
+		String contentType = Files.probeContentType(path);
+		byte[] fileContent = Files.readAllBytes(path);
+		MultipartFile multipartFile = new MockMultipartFile(fileName, fileName, contentType, fileContent);
+		
+		
+		//uploadService.upload(multipartFile, filePath, randomUUID.toString());
+	}
+	
+	//@Test
+	void OtherCardFind() {
+		oRepo.findAll().forEach((ph) -> {
+			log.info(ph.toString());
+		});
+	}
+	
+	
+	//@Test
+	@Transactional
+	void MemberBenefitFind() {
+		bmRepo.findAll().forEach((ph) -> {
+			log.info(ph.toString());
+		});
+		
+	}
+	
+
+	//@Test
+	@Transactional
+	void ByCardFind() {
+		mbRepo.findAll().forEach((ph) -> {
+			log.info(ph.toString());
+		});
+		
+	}
+
+	//@Test
+	@Transactional
+	void HiCardFind() {
+
+		mhRepo.findAll().forEach((hi) -> {
+			log.info(hi.toString());
+		});
+	}
+
+	// @Test
+	void StoreFind() {
+		mcRepo.findAll().forEach((mc) -> {
+			log.info(mc.toString());
+		});
+
+		// sRepo.save(StoreCouponVO.builder().store_name("푸하하크림빵").build());
+		sRepo.findAll().forEach((store) -> {
+			log.info(store.toString());
+		});
+	}
+
+	// @Test
+	void CardApplyFind() {
+		cRepo.findAll().forEach((apply) -> {
+			log.info(apply.toString());
+		});
+	}
+
+	@Transactional // 서비스 만들어서 넣어야 함
+	//@Test
+	void MemberFind() {
+		mRepo.findAll().forEach((member) -> {
+			log.info(member.getClassBenefit().toString());
+			log.info(member.toString());
+		});
 	
 	@Test
 	void BankCodeFind() {
@@ -86,70 +182,9 @@ public class MemberTest {
 				log.info(tempmhvo.toString());
 			}
 		}
+
 	}
 	
-//	@Test
-//	void OtherCardFind() {
-//		oRepo.findAll().forEach((ph) -> {
-//			log.info(ph.toString());
-//		});
-//	}
-//	
-//	
-//	//@Test
-//	@Transactional
-//	void MemberBenefitFind() {
-//		bmRepo.findAll().forEach((ph) -> {
-//			log.info(ph.toString());
-//		});
-//		
-//	}
-//	
-//
-//	//@Test
-//	@Transactional
-//	void ByCardFind() {
-//		mbRepo.findAll().forEach((ph) -> {
-//			log.info(ph.toString());
-//		});
-//		
-//	}
-//
-//	//@Test
-//	@Transactional
-//	void HiCardFind() {
-//
-//		mhRepo.findAll().forEach((hi) -> {
-//			log.info(hi.toString());
-//		});
-//	}
-//
-//	// @Test
-//	void StoreFind() {
-//		mcRepo.findAll().forEach((mc) -> {
-//			log.info(mc.toString());
-//		});
-//
-//		// sRepo.save(StoreCouponVO.builder().store_name("푸하하크림빵").build());
-//		sRepo.findAll().forEach((store) -> {
-//			log.info(store.toString());
-//		});
-//	}
-//
-//	// @Test
-//	void CardApplyFind() {
-//		cRepo.findAll().forEach((apply) -> {
-//			log.info(apply.toString());
-//		});
-//	}
-//
-//	@Transactional // 서비스 만들어서 넣어야 함
-//	@Test
-//	void MemberFind() {
-//		mRepo.findAll().forEach((member) -> {
-//			log.info(member.getClassBenefit().toString());
-//			log.info(member.toString());
-//		});
-//	}
+
 
 }
