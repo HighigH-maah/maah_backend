@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.dto.MyCardHiDTO;
 import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
@@ -44,7 +45,7 @@ public class MyCardListService {
 	@Autowired
 	MemberCardByRepository mcbRepo;
 	
-	public MyCardHiDTO getHiCardInfo(String memberId){
+	public MyCardHiDTO getMyCardListHi(String memberId){
 	
 		ModelMapper mapper = new ModelMapper();	
 		Map<String, Timestamp> thisMonth = getThisMonth();
@@ -111,6 +112,16 @@ public class MyCardListService {
 		thisMonth.put("endTimestamp", Timestamp.valueOf(LocalDateTime.of(endDate, endTime)));
 		
 		return thisMonth;
+	}
+
+	public List<MyCardByDTO> getMyCardListBy(String memberId) {
+		//MemberVO member = mRepo.findById(memberId).orElse(null);
+		//log.info(member.getMemberId());
+		
+		//List<MyCardByDTO> mbycards = (List<MyCardByDTO>) mcbRepo.findByMemberAndMemberByStatus(member, 0);
+		
+		
+		return null;
 	}
 	
 }
