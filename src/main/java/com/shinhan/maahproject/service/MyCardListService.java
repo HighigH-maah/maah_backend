@@ -115,11 +115,15 @@ public class MyCardListService {
 	}
 
 	public List<MyCardByDTO> getMyCardListBy(String memberId) {
-		//MemberVO member = mRepo.findById(memberId).orElse(null);
-		//log.info(member.getMemberId());
+		//ModelMapper mapper = new ModelMapper();	
+		MemberVO member = mRepo.findById(memberId).orElse(null);
+		log.info(member.getMemberId());
 		
 		//List<MyCardByDTO> mbycards = (List<MyCardByDTO>) mcbRepo.findByMemberAndMemberByStatus(member, 0);
+		//List<MemberCardByVO> mbycards2 = (List<MemberCardByVO>) mcbRepo.findByMemberAndMemberByStatus(member, 0);
 		
+		
+		//log.info(mbycards.toString());
 		
 		return null;
 	}
