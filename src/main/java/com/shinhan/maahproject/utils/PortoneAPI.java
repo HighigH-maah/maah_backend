@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 public class PortoneAPI {
+    
+    @Value("${portone.key.imp}")
+    private String imp_key;
 	
-    private String imp_key = "0633384166078527";
+    @Value("${portone.key.secret}")
+    private String imp_secret;
     
-    private String imp_secret = "6WkmonXcr4MBQZs8Gdkv6n2BuJLHmswAfdGi2DlEwNCpf8NKHEx97S3GMlGWvuHMQUoXB5a97f2eRk4l";
     
-    private String access_token;
+    private String access_token = null;
 
     /* 
 	 * 2.예금주 조회 API
@@ -95,12 +99,17 @@ public class PortoneAPI {
 			conn.setRequestProperty("content-Type", "application/json");
 			conn.setRequestProperty("Accept", "application/json");
 			
+			log.info(this.imp_key);
+			log.info(this.imp_secret);
+			
+			
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 			
 			JSONObject requestData = new JSONObject();
 			
 			requestData.put("imp_key", this.imp_key);
 			requestData.put("imp_secret", this.imp_secret);
+			
 			
 			bw.write(requestData.toString());
 			bw.flush();
@@ -135,6 +144,7 @@ public class PortoneAPI {
 		}
 		
 		return this.access_token;
-	}
+	}	
+	
 	
 }

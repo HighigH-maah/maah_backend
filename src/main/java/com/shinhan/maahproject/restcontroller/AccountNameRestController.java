@@ -2,6 +2,7 @@ package com.shinhan.maahproject.restcontroller;
 
 import java.io.UnsupportedEncodingException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,10 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AccountNameRestController {
 	
+	@Autowired
+	private PortoneAPI accountCheck;
+	
 	@PostMapping(value = "/getAccountName.do", consumes = "application/json")
 	public AccountCheckDTO getAccountName(@RequestBody AccountCheckDTO accoChack) throws UnsupportedEncodingException {
-		
-		PortoneAPI accountCheck = new PortoneAPI();
 		
 		String accountNm = accountCheck.getAcountHolderNM(accoChack.getBankCode(),accoChack.getBankName());
 		String maberNm = "한마음";
