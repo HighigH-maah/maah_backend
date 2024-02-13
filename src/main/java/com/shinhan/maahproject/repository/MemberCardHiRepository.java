@@ -38,4 +38,7 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			+ "AND mb.connectHiCard = :connectHiCard")
 			Integer sumHiCardTotalLimitByMemberBYOwner (@Param("memberId") MemberVO member, @Param("connectHiCard") MemberCardHiVO connectHiCard);
 
+
+	MemberCardHiVO findByMemberHiOwnerAndMemberHiNumberAndMemberHiStatus(MemberVO member, String cardNum, int i);
+
 }
