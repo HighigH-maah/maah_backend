@@ -11,6 +11,5 @@ import java.util.Optional;
 
 
 public interface MemberAccountRepository extends CrudRepository<MemberAccountVO, MemberAccountMultikey>{
-	
-	
+	Optional<MemberAccountVO> findByMemberAccountMemberId(MemberVO memberAccountMemberId);
 }

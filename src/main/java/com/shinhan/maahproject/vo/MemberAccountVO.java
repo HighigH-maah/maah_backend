@@ -35,6 +35,7 @@ public class MemberAccountVO {
 	//member와 연결
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_account_member_id")
+	@JsonIgnore
 	private MemberVO memberAccountMemberId;
 	
 	private int memberAccountBalance;
