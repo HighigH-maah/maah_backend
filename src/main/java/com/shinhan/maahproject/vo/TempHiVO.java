@@ -2,6 +2,8 @@ package com.shinhan.maahproject.vo;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -31,6 +33,7 @@ public class TempHiVO {
 	private String tempHiNumber;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name ="member_hi_number")
+	@JsonIgnore
 	private MemberCardHiVO memberCardHi;
 	private int tempHiStatus;
 	private Timestamp tempHiExpdate;

@@ -9,17 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.AccountChangeDTO;
+import com.shinhan.maahproject.dto.HiCardBenefitsDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
 import com.shinhan.maahproject.dto.HiCardHistoryDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
 import com.shinhan.maahproject.repository.BankRepository;
+import com.shinhan.maahproject.repository.BenefitCategoryRepository;
+import com.shinhan.maahproject.repository.ByBenefitRepository;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
+import com.shinhan.maahproject.repository.MemberBenefitRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
 import com.shinhan.maahproject.vo.BankVO;
+import com.shinhan.maahproject.vo.BenefitCategoryVO;
+import com.shinhan.maahproject.vo.ByBenefitVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
+import com.shinhan.maahproject.vo.MemberBenefitVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
 import com.shinhan.maahproject.vo.TempHiVO;
@@ -47,6 +54,44 @@ public class HICardDetailService {
 	
 	@Autowired
 	CardHistoryRepository cRepo;
+	
+	@Autowired
+ 	MemberBenefitRepository mbRepo;
+	
+ 	@Autowired
+ 	ByBenefitRepository bbRepo;
+	
+ 	@Autowired
+ 	BenefitCategoryRepository bcRepo;
+	
+	//Hi:Card 해택 가져오기
+ 	public List<HiCardBenefitsDTO> getHiCardBenefits(String memberId){
+ 		List<HiCardBenefitsDTO> hibenefitList = new ArrayList<>(); //결과를 저장할 리스트 생성
+		
+ 		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
+		
+ 		if (member != null) {
+ 			for(MemberBenefitVO mbvo : mbRepo.findByMemberBenefitMemberId(member)) {
+ 				for(ByBenefitVO bbvo : bbRepo.findByByBenefitCode(mbvo.getMemberBenefitByBenefitCode().getByBenefitCode())) {
+					
+ 					String benefitName = null;
+ 					String benefitDesc = bbvo.getByBenefitDesc();
+ 					String benefitBody = bbvo.getByBenefitBody();
+					
+ 					for(BenefitCategoryVO bcvo : bcRepo.findByBenefitCode(bbvo.getByBenefitCategory().getBenefitCode())) {
+ 						benefitName = bcvo.getBenefitName();
+ 					}
+
+ 					 // HiCardBenefitsDTO 객체 생성하여 리스트에 추가
+ 	                HiCardBenefitsDTO dto = new HiCardBenefitsDTO(benefitName, benefitDesc, benefitBody);
+ 	                hibenefitList.add(dto);
+ 				}
+				
+ 			}
+ 		}
+		
+ 		return hibenefitList;
+ 	}
 	
 	public List<BankVO> getBankName(){
 		
@@ -83,29 +128,37 @@ public class HICardDetailService {
 	}
 
 	
-	public HiCardDetailDTO getHiCardInfo(String memberId) {
-		HiCardDetailDTO hidto = new HiCardDetailDTO();
+	//Hi:Card 상세 정보 가져오기
+ 	public HiCardDetailDTO getHiCardInfo(String memberId) {
+ 		HiCardDetailDTO hidto = new HiCardDetailDTO();
 		
-		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
+ 		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
+ 		MemberCardHiVO mhicard = null;
+ 		int totalLimit = 0;
 		
-		if (member != null) {
-	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
-	            if (hicard.getMemberHiStatus() == 0) {
-	                // 하이카드 정보 설정
-	            	hidto.setHiCardImageFrontPath(hicard.getHiImageCode().getHiCardImageFrontPath());
-	            	hidto.setMemberHiNickname(hicard.getMemberHiNickname());
-	            	hidto.setMemberMileage(member.getMemberMileage());
-	            	hidto.setClassBenefitName(member.getClassBenefit().getClassBenefitName());
-	            	hidto.setCardApplyLimitAmount(hicard.getCardApplyCode().getCardApplyLimitAmount());
+		
+ 		if (member != null) {
+ 	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
+ 	        	mhicard = hicard;
+ 	        	totalLimit = mhRepo.sumHiCardTotalLimitByMemberBYOwner(member,mhicard);
+	        	
+ 	        	if (hicard.getMemberHiStatus() == 0) {
+ 	                // 하이카드 정보 설정
+ 	        		hidto.setMemberHiNumber(hicard.getMemberHiNumber());
+ 	            	hidto.setHiCardImageFrontPath(hicard.getHiImageCode().getHiCardImageFrontPath());
+ 	            	hidto.setMemberHiNickname(hicard.getMemberHiNickname());
+ 	            	hidto.setMemberMileage(member.getMemberMileage());
+ 	            	hidto.setClassBenefitName(member.getClassBenefit().getClassBenefitName());
+ 	            	hidto.setCardApplyLimitAmount(totalLimit);
 	            	
-	                log.info(hicard.toString());
-	                break; // 하이카드 정보를 찾았으므로 루프 종료
-	            }
-	        }
-	    }
+ 	                log.info(hicard.toString());
+ 	                break; // 하이카드 정보를 찾았으므로 루프 종료
+ 	            }
+ 	        }
+ 	    }
 		
-		return hidto;
-	}
+ 		return hidto;
+ 	}
 	
 	public AccountChangeDTO getHiCardAccountInfo(String memberId) {
 	    AccountChangeDTO acdto = new AccountChangeDTO(); // AccountChangeDTO 객체 생성
@@ -127,9 +180,6 @@ public class HICardDetailService {
 	            }
 	        }
 	    }
-	    
-	    
-
 	    return acdto;
 	}
 	

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.service.CertificationService;
+import com.shinhan.maahproject.vo.TempHiVO;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
