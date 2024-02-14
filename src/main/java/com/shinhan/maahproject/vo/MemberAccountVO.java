@@ -41,6 +41,7 @@ public class MemberAccountVO {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_account_bank_code")
 	@Id
+	@JsonIgnore
 	private BankVO bank;
 	
 	

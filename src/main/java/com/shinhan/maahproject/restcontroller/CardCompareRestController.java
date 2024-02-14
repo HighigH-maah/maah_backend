@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.BankDTO;
-import com.shinhan.maahproject.dto.ByCardDTO;
+import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.OtherCardDTO;
 import com.shinhan.maahproject.dto.OtherCardInputDTO;
-import com.shinhan.maahproject.service.ByCardService;
+import com.shinhan.maahproject.service.ByCardDetailService;
 import com.shinhan.maahproject.service.OtherCardService;
 import com.shinhan.maahproject.vo.OtherCardVO;
 
@@ -27,10 +27,10 @@ public class CardCompareRestController {
 	OtherCardService oService;
 	
 	@Autowired
-	ByCardService bService;
+	ByCardDetailService bService;
 
 	@GetMapping(value="/allbycards.do")
-	public List<ByCardDTO> getAllByCard(){
+	public List<ByCardDetailDTO> getAllByCard(){
 		return  bService.getAllByCard();
 	}
 	
@@ -47,7 +47,7 @@ public class CardCompareRestController {
 	}
 	
 	@PostMapping(value="/byCardsByOther.do", consumes = "application/json")
-	public List<ByCardDTO> getByCardsByOther(@RequestBody OtherCardDTO otherInput){
+	public List<ByCardDetailDTO> getByCardsByOther(@RequestBody OtherCardDTO otherInput){
 		log.info("멍멍"+otherInput.toString());
 		return bService.getByCardsByOther(otherInput.getOtherName());
 	}

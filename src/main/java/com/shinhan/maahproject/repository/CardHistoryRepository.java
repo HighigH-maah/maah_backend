@@ -9,6 +9,7 @@ import java.util.List;
 
 
 public interface CardHistoryRepository extends CrudRepository<CardHistoryVO, Long> {
-
 	List<CardHistoryVO> findByMemberCardHi(MemberCardHiVO memberCardHi);
+	 List<CardHistoryVO> findByMemberCardHiMemberHiNumber(String memberHiNumber);
+
 }

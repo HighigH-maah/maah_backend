@@ -7,7 +7,7 @@ import com.shinhan.maahproject.vo.ByRelationBenefitVO;
 import lombok.Data;
 
 @Data
-public class ByCardDTO {
+public class ByCardDetailDTO {
 	private int byCode;
 	private String byName;
 	private Timestamp byRegdate;

@@ -38,105 +38,109 @@ public class HICardDetailService {
 
 	@Autowired
 	MemberRepository mRepo;
-	
+
 	@Autowired
 	BankRepository bRepo;
-	
+
 	@Autowired
 	MemberAccountRepository maRepo;
-	
+
 	@Autowired
 	CardHistoryRepository cRepo;
-	
-	public List<BankVO> getBankName(){
-		
+
+	public List<BankVO> getBankName() {
+
 		List<BankVO> bankInfo = (List<BankVO>) bRepo.findAll();
 		log.info(bankInfo.toString());
-		
+
 		return bankInfo;
 	}
-	
+
 	public List<HiCardHistoryDTO> getHicardHistory(String memberId) {
-	    ModelMapper mapper = new ModelMapper();
-	    List<HiCardHistoryDTO> hidtoList = new ArrayList<>(); // 결과를 저장할 리스트 생성
-	    
-	    MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
-	    
-	    if (member != null) {
-	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
-	            if (hicard.getMemberHiStatus() == 0) {
-	                // 하이카드 정보 설정
-	                List<CardHistoryVO> chvoList = cRepo.findByMemberCardHi(hicard);
-	                
-	                for(CardHistoryVO chvo : chvoList) {
-	                    // 각 카드 이력을 DTO로 변환하여 리스트에 추가
-	                    HiCardHistoryDTO hidto = mapper.map(chvo, HiCardHistoryDTO.class);
-	                    hidtoList.add(hidto);
-	                }
-	                
-	                break; // 하이카드 정보를 찾았으므로 루프 종료
-	            }
-	        }
-	    }
-	    
-	    return hidtoList;
+		ModelMapper mapper = new ModelMapper();
+		List<HiCardHistoryDTO> hidtoList = new ArrayList<>(); // 결과를 저장할 리스트 생성
+
+		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
+
+		if (member != null) {
+			for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
+				if (hicard.getMemberHiStatus() == 0) {
+					// 하이카드 정보 설정
+					List<CardHistoryVO> chvoList = cRepo.findByMemberCardHi(hicard);
+
+					for (CardHistoryVO chvo : chvoList) {
+						// 각 카드 이력을 DTO로 변환하여 리스트에 추가
+						HiCardHistoryDTO hidto = mapper.map(chvo, HiCardHistoryDTO.class);
+						hidtoList.add(hidto);
+					}
+
+					break; // 하이카드 정보를 찾았으므로 루프 종료
+				}
+			}
+		}
+
+		return hidtoList;
 	}
 
-	
+	// Hi:Card 상세 정보 가져오기
 	public HiCardDetailDTO getHiCardInfo(String memberId) {
 		HiCardDetailDTO hidto = new HiCardDetailDTO();
-		
+
 		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
-		
+		MemberCardHiVO mhicard = null;
+		int totalLimit = 0;
+
 		if (member != null) {
-	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
-	            if (hicard.getMemberHiStatus() == 0) {
-	                // 하이카드 정보 설정
-	            	hidto.setHiCardImageFrontPath(hicard.getHiImageCode().getHiCardImageFrontPath());
-	            	hidto.setMemberHiNickname(hicard.getMemberHiNickname());
-	            	hidto.setMemberMileage(member.getMemberMileage());
-	            	hidto.setClassBenefitName(member.getClassBenefit().getClassBenefitName());
-	            	hidto.setCardApplyLimitAmount(hicard.getCardApplyCode().getCardApplyLimitAmount());
-	            	
-	                log.info(hicard.toString());
-	                break; // 하이카드 정보를 찾았으므로 루프 종료
-	            }
-	        }
-	    }
-		
+			for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
+				mhicard = hicard;
+				totalLimit = mhRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
+
+				if (hicard.getMemberHiStatus() == 0) {
+					// 하이카드 정보 설정
+					hidto.setMemberHiNumber(hicard.getMemberHiNumber());
+					hidto.setHiCardImageFrontPath(hicard.getHiImageCode().getHiCardImageFrontPath());
+					hidto.setMemberHiNickname(hicard.getMemberHiNickname());
+					hidto.setMemberMileage(member.getMemberMileage());
+					hidto.setClassBenefitName(member.getClassBenefit().getClassBenefitName());
+					hidto.setCardApplyLimitAmount(totalLimit);
+
+					log.info(hicard.toString());
+					break; // 하이카드 정보를 찾았으므로 루프 종료
+				}
+			}
+		}
+
 		return hidto;
 	}
-	
+
 	public AccountChangeDTO getHiCardAccountInfo(String memberId) {
-	    AccountChangeDTO acdto = new AccountChangeDTO(); // AccountChangeDTO 객체 생성
+		AccountChangeDTO acdto = new AccountChangeDTO(); // AccountChangeDTO 객체 생성
 
-	    MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
+		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
 
-	    if (member != null) {
-	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
-	            if (hicard.getMemberHiStatus() == 0) {
-	                // 하이카드 정보 설정
-	                acdto.setBankName(hicard.getMemberAccountKey().getBank().getBankName());
-	                acdto.setMemberHiAccountNumber(hicard.getMemberAccountKey().getMemberAccountNumber());
-	                acdto.setMemberHiNumber(hicard.getMemberHiNumber());
-	                log.info(hicard.toString());
-	                
-	                log.info("sys "+maRepo.findByMemberAccountNumberAndBankBankCode("01022222222", "88").toString());
-	                
-	                break; // 하이카드 정보를 찾았으므로 루프 종료
-	            }
-	        }
-	    }
-	    
-	    
+		if (member != null) {
+			for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
+				if (hicard.getMemberHiStatus() == 0) {
+					// 하이카드 정보 설정
+					acdto.setBankName(hicard.getMemberAccountKey().getBank().getBankName());
+					acdto.setMemberHiAccountNumber(hicard.getMemberAccountKey().getMemberAccountNumber());
+					acdto.setMemberHiNumber(hicard.getMemberHiNumber());
+					log.info(hicard.toString());
 
-	    return acdto;
+					log.info("sys " + maRepo.findByMemberAccountNumberAndBankBankCode("01022222222", "88").toString());
+
+					break; // 하이카드 정보를 찾았으므로 루프 종료
+				}
+			}
+		}
+
+		return acdto;
 	}
-	
+
 	public VirtualCardInfoDTO getVirtualCardInfo(String memberId) {
 		// repository로 가져오면 아직 VO라서, ModelMapper를 통과시켜서 DTO로 바꿔야 한다.
 		ModelMapper mapper = new ModelMapper();
-		
+
 		VirtualCardInfoDTO vcdto = null;
 		MemberCardHiVO tempmhvo = null;
 
@@ -155,13 +159,12 @@ public class HICardDetailService {
 			log.info(temphi.toString());
 			if (temphi.getTempHiStatus() == 0
 //					&& temphi.getTempHiExpdate().after(ts)
-					) {
+			) {
 				vcdto = mapper.map(temphi, VirtualCardInfoDTO.class);
 				log.info(vcdto.toString());
 			}
 		}
 		return vcdto;
 	}
-	
-	
+
 }
