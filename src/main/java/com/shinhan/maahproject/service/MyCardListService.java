@@ -27,6 +27,7 @@ import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.ClassBenefitVO;
+import com.shinhan.maahproject.vo.MemberAccountVO;
 import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
@@ -139,13 +140,37 @@ public class MyCardListService {
 		return myCardListBy;
 	}
 
+	@Transactional
 	public int updateHiAccount(AccountCheckDTO accch) {
+		int result = 0;
 		
-//		 accch.getMemberId()
+		log.info(accch.toString());
+		//		 accch.getMemberId()
 //		
-//		int result = mchRepo.updateHiAccount(accch);
+//		result = mchRepo.updateHiAccount(accch);
+		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerAndMemberHiStatus(mRepo.findById(accch.getMemberId()).orElse(null), 0);
 		
-		return 0;
+		
+		List<MemberAccountVO> mAccounts = maRepo.findByMemberAccountNumberAndBankBankCode(accch.getBankName(), accch.getBankCode());
+		log.info(mAccounts.toString());
+		//신규 등록 필요x
+		if(mAccounts.size()!=0) {
+			MemberAccountVO mAcc = mAccounts.get(0);
+			log.info(mAcc.toString());
+			for(MemberCardHiVO mc:mhicards) {
+				mc.setMemberAccountKey(mAcc);
+				log.info("dddd"+mc.toString());
+			}
+		}
+		//신규 등록 필요
+		else {
+			log.info("신규 등록 필요");;
+		}
+		
+		
+
+		
+		return result;
 	}
 	
 }
