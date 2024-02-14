@@ -42,8 +42,8 @@ public class HICardDetailService {
 	@Autowired
 	BankRepository bRepo;
 	
-	@Autowired
-	MemberAccountRepository maRepo;
+//	@Autowired
+//	MemberAccountRepository maRepo;
 	
 	@Autowired
 	CardHistoryRepository cRepo;

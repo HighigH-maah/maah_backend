@@ -35,7 +35,7 @@ public class MyDataRestController {
 	
 	
 	@GetMapping(value="/getTest.do")
-	public Optional<MemberAccountVO> getTest(){
+	public List<MemberAccountVO> getTest(){
 		//log.info(chService.getAccount().toString());
 		return chService.getAccount();
 	}

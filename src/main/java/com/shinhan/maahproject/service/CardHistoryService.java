@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.HiCardHistoryDTO;
+import com.shinhan.maahproject.dto.MemberAccountInnerDTO;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
+import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.MemberAccountMultikey;
 import com.shinhan.maahproject.vo.MemberAccountVO;
@@ -26,16 +28,21 @@ public class CardHistoryService {
 	@Autowired
 	MemberAccountRepository mRepo;
 	
+	@Autowired
+	MemberRepository mrRepo;
+	
 	public String getHistory(){
 		
 		return chRepo.findAll().toString();
 	}
 	
-	public Optional<MemberAccountVO> getAccount() {
+	public List<MemberAccountVO> getAccount() {
 		MemberVO memId= new MemberVO();
-		memId.setMemberId("user2");
 		
-		//log.info(mRepo.findByMemberAccountMemberId(memId).toString());
+		
+		
+		log.info(mRepo.findByMemberAccountMemberIdMemberId("user2").toString());
+		
 		
 //		Optional<MemberAccountVO> memAccount = mRepo.findByMemberAccountMemberId(memId);
 //		String memberAccountNumber = memAccount.map(MemberAccountVO::getMemberAccountKey)
@@ -43,7 +50,9 @@ public class CardHistoryService {
 //                .orElse(null);
 //
 //System.out.println("Member Account Number: " + memberAccountNumber);
-		return mRepo.findByMemberAccountMemberId(memId);
+		List<MemberAccountVO> mAccountList = mRepo.findByMemberAccountMemberIdMemberId("user2");
+
+		return mRepo.findByMemberAccountMemberIdMemberId("user2");
 	}
 	
 
