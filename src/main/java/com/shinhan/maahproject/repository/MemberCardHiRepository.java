@@ -1,6 +1,7 @@
 package com.shinhan.maahproject.repository;
 
 import org.hibernate.sql.Update;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -43,12 +44,11 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			Integer sumHiCardTotalLimitByMemberBYOwner (@Param("memberId") MemberVO member, @Param("connectHiCard") MemberCardHiVO connectHiCard);
 
 
-
-//	@Query("UPDATE MemberCardHiVO mch "
-//	        + "SET mch.memberAccountKey.memberAccountNumber = :#{#accch.bankName}, "
-//	        + "mch.memberAccountKey.memberAccountBankCode = :#{#accch.bankCode} "
-//	        + "WHERE mch.memberHiNumber = :#{#accch.cardNumber}"
-//	        + "AND mch.memberAccountKey = :#{memberAccount}")
-//	int updateHiAccount(@Param("accch") AccountCheckDTO accch, MemberAccountVO memberAccount);
+	@Modifying
+	@Query("UPDATE MemberCardHiVO mch "
+	        + "SET mch.memberAccountKey.memberAccountNumber = :#{#accch.bankName}, "
+	        + "mch.memberAccountKey.bank = :#{#accch.bankCode} "
+	        + "WHERE mch.memberHiNumber = :#{#accch.cardNumber}")
+	int updateHiAccount(@Param("accch") AccountCheckDTO accch);
 
 }
