@@ -15,4 +15,6 @@ public interface MemberAccountRepository extends CrudRepository<MemberAccountVO,
 	List<MemberAccountVO> findByMemberAccountMemberIdMemberId(String memberAccountMemberId);
 	
 	
+	List<MemberAccountVO> findByMemberAccountNumberAndBankBankCode(String memberAccountNumber, String bankCode);
+	
 }

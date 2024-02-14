@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.HiCardHistoryDTO;
-import com.shinhan.maahproject.dto.MemberAccountInnerDTO;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
 import com.shinhan.maahproject.repository.MemberRepository;

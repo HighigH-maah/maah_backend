@@ -42,8 +42,8 @@ public class HICardDetailService {
 	@Autowired
 	BankRepository bRepo;
 	
-//	@Autowired
-//	MemberAccountRepository maRepo;
+	@Autowired
+	MemberAccountRepository maRepo;
 	
 	@Autowired
 	CardHistoryRepository cRepo;
@@ -116,10 +116,13 @@ public class HICardDetailService {
 	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
 	            if (hicard.getMemberHiStatus() == 0) {
 	                // 하이카드 정보 설정
-	                acdto.setBankName(hicard.getMemberAccountKey().getMemberAccountKey().getBank().getBankName());
-	                acdto.setMemberHiAccountNumber(hicard.getMemberAccountKey().getMemberAccountKey().getMemberAccountNumber());
+	                acdto.setBankName(hicard.getMemberAccountKey().getBank().getBankName());
+	                acdto.setMemberHiAccountNumber(hicard.getMemberAccountKey().getMemberAccountNumber());
 	                acdto.setMemberHiNumber(hicard.getMemberHiNumber());
 	                log.info(hicard.toString());
+	                
+	                log.info("sys "+maRepo.findByMemberAccountNumberAndBankBankCode("01022222222", "88").toString());
+	                
 	                break; // 하이카드 정보를 찾았으므로 루프 종료
 	            }
 	        }

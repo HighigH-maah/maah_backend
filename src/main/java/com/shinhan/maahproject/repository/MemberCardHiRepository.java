@@ -1,5 +1,6 @@
 package com.shinhan.maahproject.repository;
 
+import org.hibernate.sql.Update;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +39,6 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			+ "AND mb.connectHiCard = :connectHiCard")
 			Integer sumHiCardTotalLimitByMemberBYOwner (@Param("memberId") MemberVO member, @Param("connectHiCard") MemberCardHiVO connectHiCard);
 
+	
+	
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -21,10 +22,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Embeddable
 public class MemberAccountMultikey implements Serializable {
-	@Column(name = "member_account_number")
 	private String memberAccountNumber;
-	@ManyToOne
-	@JoinColumn(name="member_account_bank_code")
-//	@JsonIgnore
-	private BankVO bank;
+	private String bank;
 }
