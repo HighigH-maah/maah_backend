@@ -12,13 +12,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.AccountCheckDTO;
 import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.dto.MyCardHiDTO;
+import com.shinhan.maahproject.repository.MemberAccountRepository;
 import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
@@ -44,6 +47,9 @@ public class MyCardListService {
 	
 	@Autowired
 	MemberCardByRepository mcbRepo;
+	
+	@Autowired
+	MemberAccountRepository maRepo;
 	
 	public MyCardHiDTO getMyCardListHi(String memberId){
 	
@@ -115,17 +121,31 @@ public class MyCardListService {
 	}
 
 	public List<MyCardByDTO> getMyCardListBy(String memberId) {
-		//ModelMapper mapper = new ModelMapper();	
+		ModelMapper mapper = new ModelMapper();	
 		MemberVO member = mRepo.findById(memberId).orElse(null);
 		log.info(member.getMemberId());
 		
 		//List<MyCardByDTO> mbycards = (List<MyCardByDTO>) mcbRepo.findByMemberAndMemberByStatus(member, 0);
-		//List<MemberCardByVO> mbycards2 = (List<MemberCardByVO>) mcbRepo.findByMemberAndMemberByStatus(member, 0);
+		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo.findByMemberAndMemberByStatusAndConnectHiCardNotNullOrderByMemberByRank(member, 0);
 		
+		List<MyCardByDTO> myCardListBy = mbycards.stream()
+		        .map(memberCardByVO -> mapper.map(memberCardByVO, MyCardByDTO.class))
+		        .collect(Collectors.toList());
 		
-		//log.info(mbycards.toString());
+		for(MyCardByDTO aa:myCardListBy) {
+			System.out.println(aa);
+		}
 		
-		return null;
+		return myCardListBy;
+	}
+
+	public int updateHiAccount(AccountCheckDTO accch) {
+		
+//		 accch.getMemberId()
+//		
+//		int result = mchRepo.updateHiAccount(accch);
+		
+		return 0;
 	}
 	
 }

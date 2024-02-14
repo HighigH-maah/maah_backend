@@ -4,6 +4,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import com.shinhan.maahproject.dto.AccountCheckDTO;
+import com.shinhan.maahproject.vo.MemberAccountMultikey;
+import com.shinhan.maahproject.vo.MemberAccountVO;
 import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
@@ -37,5 +40,13 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			+ "WHERE mb.member = :memberId "
 			+ "AND mb.connectHiCard = :connectHiCard")
 			Integer sumHiCardTotalLimitByMemberBYOwner (@Param("memberId") MemberVO member, @Param("connectHiCard") MemberCardHiVO connectHiCard);
+
+
+//	@Query("UPDATE MemberCardHiVO mch "
+//	        + "SET mch.memberAccountKey.memberAccountNumber = :#{#accch.bankName}, "
+//	        + "mch.memberAccountKey.memberAccountBankCode = :#{#accch.bankCode} "
+//	        + "WHERE mch.memberHiNumber = :#{#accch.cardNumber}"
+//	        + "AND mch.memberAccountKey = :#{memberAccount}")
+//	int updateHiAccount(@Param("accch") AccountCheckDTO accch, MemberAccountVO memberAccount);
 
 }

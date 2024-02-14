@@ -4,11 +4,17 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.AccountCheckDTO;
+import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.utils.PortoneAPI;
+import com.shinhan.maahproject.vo.BankVO;
+import com.shinhan.maahproject.vo.MemberAccountMultikey;
+import com.shinhan.maahproject.vo.MemberAccountVO;
+import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +30,7 @@ public class AccountNameRestController {
 		
 		String accountNm = accountCheck.getAcountHolderNM(accoChack.getBankCode(),accoChack.getBankName());
 		String maberNm = "한마음";
-				//accoChack.getMyName();
+				//accoChack.getMemberId();
 		accoChack.setAccountChkYn("N");
 		
 		log.info(accountNm);
@@ -39,5 +45,6 @@ public class AccountNameRestController {
 		
 		return accoChack;
 	}
+	
 
 }
