@@ -128,6 +128,33 @@ public class HICardDetailService {
 	}
 
 	
+	//특정 유저의 가상카드 유무
+	//0이 true(가상카드를 발급해야해) 1이 false(가상카드가 이미 있어)
+	public int getVirtualCardExistOrNot(String memberId) {
+		//user3의 하이카드 정보
+		MemberCardHiVO hiCardInfo = mRepo.findByMemberHiOwner(memberId).getMemberHiCard().get(0); 
+		
+		List<TempHiVO> tvoList = tRepo.findByMemberCardHiAndTempHiStatus(hiCardInfo, 0);
+		
+		if(tvoList.isEmpty()) {
+			//유저의 하이카드 번호가 없는 경우
+			return 0; //가상카드번호발급
+		}
+		else {
+			//유저의 하이카드 번호가 있고, 상태를 체크
+			//String tempMemberHiNum = tvoList.get(0).getMemberCardHi().getMemberHiNumber();
+			//get(0)을 하니까 무조건 첫번째꺼만 가져온다. 그게 아니라 사용자의 하이카드 번호를 이용해서 temphistatus를 가져와야 해
+			int tempHiStatus = tvoList.get(0).getTempHiStatus(); 
+			
+			if(tempHiStatus == 1) {
+				return 0; //가상카드번호발급
+			}
+			else {
+				return 1; //가상카드번호조회
+			}
+		}
+	}
+	
 	//Hi:Card 상세 정보 가져오기
  	public HiCardDetailDTO getHiCardInfo(String memberId) {
  		HiCardDetailDTO hidto = new HiCardDetailDTO();

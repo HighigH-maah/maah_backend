@@ -12,4 +12,5 @@ import com.shinhan.maahproject.vo.MemberVO;
 
 public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, String> {
 
+	List<MemberCardByVO> findByMemberAndMemberByStatus(MemberVO member, int memberByStatus);
 }

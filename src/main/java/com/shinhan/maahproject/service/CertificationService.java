@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.CertDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
@@ -48,7 +49,7 @@ public class CertificationService {
 	@Value("${imp_secret_cert}")
 	private String imp_secret;
 	
-	public String cert(String imp_uid, String memberId) {
+	public CertDTO cert(String imp_uid, String memberId) {
 		
 		String impKey = "본인키";
 		String impSecret = "본인키";
@@ -131,17 +132,25 @@ public class CertificationService {
 			e.printStackTrace();
 		} 
 		
-		//본인인증 후 가져온 이름과 user의 이름이 같으면 가상카드번호 발급
-		//리턴을 TempHiVO로 찍고, 화면에 찍어
+//		//본인인증 후 가져온 이름과 user의 이름이 같으면 가상카드번호 발급
+//		//리턴을 TempHiVO로 찍고, 화면에 찍어
+//		for(MemberVO mvo : mRepo.findByMemberId(memberId)) {
+//			System.out.println(name);
+//			System.out.println(mvo.getMemberName());
+//			
+//			if(name.equals(mvo.getMemberName())) {
+//				tempHiInsert(memberId);
+//			}
+//		}
+		
+		CertDTO certdto = new CertDTO();
 		for(MemberVO mvo : mRepo.findByMemberId(memberId)) {
-			if(name == mvo.getMemberName()) {
-				//TempHiVO temphi =
-				tempHiInsert(memberId);
-			}
+			certdto.setCertName(name);
+			certdto.setMemberName(mvo.getMemberName());
 		}
 		
 		//본인인증한 사람의 이름 반환
-		return name;
+		return certdto;
 	}
 	
 	@Transactional

@@ -32,6 +32,12 @@ public class HiCardDetailRestController {
 	@Autowired
 	CertificationService cService;
 	
+	@PostMapping(value="/getVirtualCardExistOrNot.do", consumes = "application/json")
+	public int getVirtualCardExistOrNot(@RequestBody MemberDTO memberId){
+		int virtualCardExistOrNot = hdService.getVirtualCardExistOrNot(memberId.getMemberId());
+		return virtualCardExistOrNot;
+	}
+	
 	@PostMapping(value="/getHiCardBenefits.do", consumes = "application/json")
 	public List<HiCardBenefitsDTO> getHiCardBenefits(@RequestBody MemberDTO memberId){
 		List<HiCardBenefitsDTO> benefitInfo = hdService.getHiCardBenefits(memberId.getMemberId());
