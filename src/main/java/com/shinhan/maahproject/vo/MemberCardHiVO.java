@@ -3,6 +3,8 @@ package com.shinhan.maahproject.vo;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,6 +46,7 @@ public class MemberCardHiVO {
 	private MemberVO memberHiOwner;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumns({ @JoinColumn(name = "member_hi_account_number", referencedColumnName = "member_account_number"),
 			@JoinColumn(name = "member_hi_account_bank_code", referencedColumnName = "member_account_bank_code") })
 	private MemberAccountVO memberAccountKey;

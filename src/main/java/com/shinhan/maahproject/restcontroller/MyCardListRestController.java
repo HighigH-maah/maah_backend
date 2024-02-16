@@ -12,10 +12,12 @@ import com.shinhan.maahproject.dto.AccountCheckDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.dto.MyCardHiDTO;
+import com.shinhan.maahproject.dto.MyCardNotByDTO;
 import com.shinhan.maahproject.service.MyCardListService;
 import com.shinhan.maahproject.vo.BankVO;
 import com.shinhan.maahproject.vo.MemberAccountMultikey;
 import com.shinhan.maahproject.vo.MemberAccountVO;
+import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -39,37 +41,22 @@ public class MyCardListRestController {
 		return mclService.getMyCardListBy(member.getMemberId());
 	}
 	
+	@PostMapping(value = "/getMyCardListNotBy.do", consumes = "application/json")
+	public List<MyCardNotByDTO> getMyCardListNotBy(@RequestBody MemberDTO member) {
+		System.out.println("1==========================");
+		return mclService.getMyCardListNotBy(member.getMemberId());
+	}
+	
 	@PutMapping(value = "/updateHiAccount.do", consumes = "application/json")
 	public int updateHiAccount(@RequestBody AccountCheckDTO accch) {
-		//System.out.println(accch);
-		
-//		BankVO bank = BankVO.builder()
-//				.bankCode(accch.getBankCode())
-//				.bankName("aa")
-//				.build();
-//		MemberAccountMultikey key = MemberAccountMultikey.builder()
-//				.memberAccountNumber(accch.getBankName())
-//				.bank(bank)
-//				.build();
-//		MemberAccountVO account = MemberAccountVO.builder()
-//				.memberAccountKey(key)
-//				.build();
-//		
-//		mchRefo.findById(accch.getCardNumber()).ifPresent(hi->{
-//			System.out.println(hi.getMemberAccountKey());
-//			hi.setMemberAccountKey(account);
-//			mchRefo.save(hi);
-//		});
-		
-//		MemberCardHiVO hi = MemberCardHiVO.builder()
-//				.memberAccountKey(account)
-//				.memberHiStatus(0)
-//				.memberHiCvc("")
-//				.memberHiPassword("")
-//				.build();
 		
 		return mclService.updateHiAccount(accch);
+	}
+	
+	@PostMapping(value = "/excludeHiCard.do", consumes = "application/json")
+	public int excludeHiCard(@RequestBody MyCardByDTO myCardBy) {
 		
+		return mclService.excludeHiCard(myCardBy);
 	}
 	
 }

@@ -9,7 +9,7 @@ import com.shinhan.maahproject.vo.ByRelationBenefitVO;
 import lombok.Data;
 
 @Data
-public class MyCardByDTO{
+public class MyCardNotByDTO{
 	
 	private String memberId;
 	
@@ -21,8 +21,6 @@ public class MyCardByDTO{
 	private ByCardVO byCard;
 	
 	private String memberHiNumber;
-	
-	private int pointByAmount;
 	
 	private int byBenefitMinCondition;
 

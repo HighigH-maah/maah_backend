@@ -3,6 +3,8 @@ package com.shinhan.maahproject.vo;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,6 +55,7 @@ public class ByCardVO {
 	private Boolean byIsTransport;
 	
 	@OneToMany(mappedBy = "byRelationBenefitKey.byCardCode", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<ByRelationBenefitVO> benefits;
 
 
