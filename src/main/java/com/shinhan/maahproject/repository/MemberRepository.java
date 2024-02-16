@@ -5,6 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.shinhan.maahproject.vo.MemberVO;
+import java.util.List;
+
 
 public interface MemberRepository extends CrudRepository<MemberVO, String> {
 	
@@ -12,4 +14,6 @@ public interface MemberRepository extends CrudRepository<MemberVO, String> {
 ////			+ "LEFT JOIN FETCH m.memberBenefits mb "
 //			+ "WHERE m.memberId = :memberId ")
 //		public MemberVO findByMemberIdWithBenefits(@Param("memberId") String memberId);
+
+	List<MemberVO> findByMemberId(String memberId);
 }

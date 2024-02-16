@@ -53,4 +53,7 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			+ "mch.memberAccountKey.bank = :#{#accch.bankCode} " + "WHERE mch.memberHiNumber = :#{#accch.cardNumber}")
 	int updateHiAccount(@Param("accch") AccountCheckDTO accch);
 
+
+	MemberCardHiVO findByMemberHiOwnerAndMemberHiNumberAndMemberHiStatus(MemberVO member, String cardNum, int i);
+
 }
