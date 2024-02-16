@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.CategoryBenefitDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
+import com.shinhan.maahproject.dto.MemberDTO;
+import com.shinhan.maahproject.dto.MyNextLevelDTO;
 import com.shinhan.maahproject.service.ByCardDetailService;
 import com.shinhan.maahproject.service.CardHistoryService;
 import com.shinhan.maahproject.service.HICardDetailService;
+import com.shinhan.maahproject.service.MemberService;
 import com.shinhan.maahproject.vo.BenefitCategoryVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.MemberAccountVO;
@@ -30,6 +33,9 @@ public class MyDataRestController {
 
 	@Autowired
 	ByCardDetailService byService;
+	
+	@Autowired
+	MemberService mService;
 
 	@GetMapping(value = "/getMyLimit.do")
 	public Long getMyLimit() {
@@ -56,5 +62,10 @@ public class MyDataRestController {
 		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo("user2"); // 멤버의 하이카드 정보
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
 		return chService.getCategoryView(HiNumber);
+	}
+	
+	@GetMapping(value="/getNextLevel.do")
+	public MyNextLevelDTO getNextLevel() {
+		return chService.tonextLevel("user2");	
 	}
 }
