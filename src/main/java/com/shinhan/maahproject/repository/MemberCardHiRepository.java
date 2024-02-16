@@ -40,5 +40,12 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 			Integer sumHiCardTotalLimitByMemberBYOwner (@Param("memberId") MemberVO member, @Param("connectHiCard") MemberCardHiVO connectHiCard);
 
 	
+	@Query("SELECT mc FROM MemberCardHiVO mc "
+			+ "JOIN FETCH mc.hiImageCode "
+			+ "WHERE mc.memberHiOwner = :memberId "
+			+ "AND mc.memberHiStatus = 0 ")
+	MemberCardHiVO findFirstMemberCardHi (@Param("memberId") MemberVO member);
+
+
 	
 }
