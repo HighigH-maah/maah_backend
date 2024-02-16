@@ -22,6 +22,7 @@ import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.dto.MyCardHiDTO;
 import com.shinhan.maahproject.dto.MyCardNotByDTO;
 import com.shinhan.maahproject.repository.BankRepository;
+import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
 import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
@@ -62,6 +63,9 @@ public class MyCardListService {
 
 	@Autowired
 	PointByRepository pbRepo;
+	
+	@Autowired
+	CardHistoryRepository chRepo;
 
 	public MyCardHiDTO getMyCardListHi(String memberId) {
 
@@ -70,26 +74,37 @@ public class MyCardListService {
 
 		MemberVO member = mRepo.findById(memberId).orElse(null);
 
-		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerWithHiImageCode(member,
-				thisMonth.get("startTimestamp"), thisMonth.get("endTimestamp"));
-
+		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerWithHiImageCode(member
+//				,thisMonth.get("startTimestamp"), thisMonth.get("endTimestamp")
+				);
+		
+		
 		ClassBenefitVO cb = member.getClassBenefit();
 		// log.info(cb.toString());
 
-		MemberCardHiVO mhicard = null;
+//		MemberCardHiVO mhicard = null;
 
 		int thisMounthSum = 0;
-		int totalLimit = 0;
+//		int totalLimit = 0;
+		MemberCardHiVO mhicard = mhicards.get(0);
+		
+		int totalLimit = mchRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
+		thisMounthSum = chRepo.findByMemberCardHi(mhicard).stream()
+		        .mapToInt(CardHistoryVO::getCardHistoryAmount)
+		        .sum();
+				
 
-		for (MemberCardHiVO mc : mhicards) {
-			mhicard = mc;
-			totalLimit = mchRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
-			for (CardHistoryVO cardHistory : mc.getCardHis()) {
-				thisMounthSum += cardHistory.getCardHistoryAmount();
-			}
 
-			break;
-		}
+		
+//		for (MemberCardHiVO mc : mhicards) {
+//			mhicard = mc;
+//			totalLimit = mchRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
+//			for (CardHistoryVO cardHistory : mc.getCardHis()) {
+//				thisMounthSum += cardHistory.getCardHistoryAmount();
+//			}
+//
+//			break;
+//		}
 
 //		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo.findAll();
 //		

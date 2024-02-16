@@ -43,12 +43,13 @@ public class MemberCardHiVO {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_hi_owner")
+	@JsonIgnore
 	private MemberVO memberHiOwner;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnore
 	@JoinColumns({ @JoinColumn(name = "member_hi_account_number", referencedColumnName = "member_account_number"),
 			@JoinColumn(name = "member_hi_account_bank_code", referencedColumnName = "member_account_bank_code") })
+	@JsonIgnore
 	private MemberAccountVO memberAccountKey;
 	
 	@NonNull
@@ -67,12 +68,13 @@ public class MemberCardHiVO {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="member_hi_apply_code")
+	@JsonIgnore
 	private CardApplyVO cardApplyCode;
 	private Boolean memberHiIsTransport;
 	private String memberHiNickname;
 	
-	@OneToMany(mappedBy = "memberCardHi", fetch = FetchType.LAZY)
-	private List<CardHistoryVO> cardHis;
+//	@OneToMany(mappedBy = "memberCardHi", fetch = FetchType.LAZY)
+//	private List<CardHistoryVO> cardHis;
 	
 	private int memberHiPoint;
 }
