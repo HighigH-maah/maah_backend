@@ -54,7 +54,7 @@ public class MyCardListRestController {
 	
 	@PostMapping(value = "/excludeHiCard.do", consumes = "application/json")
 	public int excludeHiCard(@RequestBody MyCardByDTO myCardBy) {
-		
+		log.info("exclude");
 		return mclService.excludeHiCard(myCardBy);
 	}
 	

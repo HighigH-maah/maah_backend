@@ -17,5 +17,5 @@ public interface PointByRepository extends CrudRepository<PointByVO, PointByMult
 	
 	List<PointByVO> findByMemberByNumberAndPointByMonth(MemberCardByVO memberByNumber, String pointByMonth);
 
-	List<PointByVO> findByMemberByNumberMonthMemberByNumberAndMemberByNumberMonthPointByMonth(String memberByNumber, String pointByMonth);
+//	List<PointByVO> findByMemberByNumberMonthMemberByNumberAndMemberByNumberMonthPointByMonth(String memberByNumber, String pointByMonth);
 }

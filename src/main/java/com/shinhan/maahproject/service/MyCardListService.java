@@ -268,7 +268,7 @@ public class MyCardListService {
 		
 		MemberCardByVO memByCard = mcbList.get(0);
 		
-		//System.out.println("aaaaaaaaaaaaaaaaa"+MemByCard.getConnectHiCard().getMemberHiNumber());
+		System.out.println("aaaaaaaaaaaaaaaaa"+memByCard.getConnectHiCard().getMemberHiNumber());
 		
 		memByCard.setConnectHiCard(null);
 		
