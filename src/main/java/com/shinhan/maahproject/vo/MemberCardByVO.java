@@ -85,6 +85,7 @@ public class MemberCardByVO {
 	private Boolean memberByIsTransport;
 	private String memberCardByNickname;
 	
+
 //	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
 //	@JsonIgnore
 //	private List<PointByVO> pointBys;

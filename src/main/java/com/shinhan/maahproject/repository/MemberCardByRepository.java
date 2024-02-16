@@ -24,6 +24,9 @@ public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, S
 	
 	List<MemberCardByVO> findByMemberAndMemberByStatusAndConnectHiCardNotNullOrderByMemberByRank(MemberVO member, int memberByStatus);
 
+
+	List<MemberCardByVO> findByMemberAndMemberByStatus(MemberVO member, int memberByStatus);
+
 	List<MemberCardByVO> findByMemberAndMemberByStatusAndConnectHiCardNullOrderByMemberByRank(MemberVO member, int memberByStatus);
 
 	List<MemberCardByVO> findByMemberAndMemberByStatusOrderByMemberByRank(MemberVO member, int memberByStatus);

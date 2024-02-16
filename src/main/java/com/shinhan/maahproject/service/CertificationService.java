@@ -7,6 +7,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Random;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,10 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.CertDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.repository.MemberRepository;
+import com.shinhan.maahproject.repository.TempHiRepository;
+import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
+import com.shinhan.maahproject.vo.TempHiVO;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -28,13 +38,18 @@ public class CertificationService {
 	@Autowired
 	MemberRepository mRepo;
 	
+	@Autowired
+	TempHiRepository thRepo;
+	
+
+	
 	@Value("${imp_key_cert}")
 	private String imp_key;
 
 	@Value("${imp_secret_cert}")
 	private String imp_secret;
 	
-	public String cert(String imp_uid, String memberId) {
+	public CertDTO cert(String imp_uid, String memberId) {
 		
 		String impKey = "본인키";
 		String impSecret = "본인키";
@@ -117,14 +132,65 @@ public class CertificationService {
 			e.printStackTrace();
 		} 
 		
-		//본인인증 후 가져온 이름과 user의 이름이 같으면 가상카드번호 발급
+//		//본인인증 후 가져온 이름과 user의 이름이 같으면 가상카드번호 발급
+//		//리턴을 TempHiVO로 찍고, 화면에 찍어
+//		for(MemberVO mvo : mRepo.findByMemberId(memberId)) {
+//			System.out.println(name);
+//			System.out.println(mvo.getMemberName());
+//			
+//			if(name.equals(mvo.getMemberName())) {
+//				tempHiInsert(memberId);
+//			}
+//		}
+		
+		CertDTO certdto = new CertDTO();
 		for(MemberVO mvo : mRepo.findByMemberId(memberId)) {
-			if(name == mvo.getMemberName()) {
-				log.info(name);
-			}
+			certdto.setCertName(name);
+			certdto.setMemberName(mvo.getMemberName());
 		}
 		
 		//본인인증한 사람의 이름 반환
-		return name;
+		return certdto;
+	}
+	
+	@Transactional
+	public TempHiVO tempHiInsert(String memberId) {
+		
+		//8자리 랜덤 숫자 생성
+	    String randomEightNum = generateRandomNumber(8);
+	    //3자리 랜덤 숫자 생성
+	    String randomThreeNum = generateRandomNumber(3);
+	    
+	    // 현재 날짜 가져오기
+	    LocalDateTime currentDate = LocalDateTime.now();
+	    // 7일 추가
+	    LocalDateTime expDate = currentDate.plus(7, ChronoUnit.DAYS);
+	    // LocalDateTime을 Timestamp로 변환
+	    Timestamp timestamp = Timestamp.valueOf(expDate);
+		
+		//8숫자 랜덤, 3숫자 랜덤, 오늘날짜 + 7일
+		MemberVO m = mRepo.findByMemberHiOwner(memberId);
+		MemberCardHiVO mc = m.getMemberHiCard().get(0);
+		TempHiVO temphi = TempHiVO.builder()
+				.tempHiNumber(randomEightNum)
+				.memberCardHi(mc)
+				.tempHiCvc(randomThreeNum)
+				.tempHiStatus(0)
+				.tempHiExpdate(timestamp)
+				.build();
+		thRepo.save(temphi);
+		
+		return temphi;
+	}
+	
+	//랜덤 숫자 생성 함수
+	public static String generateRandomNumber(int length) {
+	    Random random = new Random();
+	    StringBuilder stringBuilder = new StringBuilder(length);
+	    for (int i = 0; i < length; i++) {
+	        int randomNumber = random.nextInt(10); // 0부터 9까지의 랜덤한 숫자 생성
+	        stringBuilder.append(randomNumber);
+	    }
+	    return stringBuilder.toString();
 	}
 }
