@@ -8,7 +8,8 @@ import lombok.Data;
 public class MyCardHiDTO {
 	private String memberHiNumber;
 	private String memberHiNickname;
-	private HiCardImageVO hiImageCode;
+	//private HiCardImageVO hiImageCode;
+	private String hiCardImageFrontPath;
 	private Integer memberHiPoint;
 	private String classBenefitName;
 	private Integer thisMonthSum;

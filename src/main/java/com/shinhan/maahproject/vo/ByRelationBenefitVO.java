@@ -1,5 +1,7 @@
 package com.shinhan.maahproject.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,6 +42,7 @@ public class ByRelationBenefitVO {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "by_card_code")
 	@MapsId("byCardCode")
+	@JsonIgnore
 	private ByCardVO cards;
 
 }
