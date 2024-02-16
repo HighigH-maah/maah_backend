@@ -14,7 +14,6 @@ import com.shinhan.maahproject.vo.MemberCardByVO;
 
 
 public interface CardHistoryRepository extends CrudRepository<CardHistoryVO, Long> {
-
 	List<CardHistoryVO> findByMemberCardHi(MemberCardHiVO memberCardHi);
 	
 	@Query("SELECT SUM(ch.cardHistoryAmount) FROM CardHistoryVO ch " +
@@ -24,4 +23,8 @@ public interface CardHistoryRepository extends CrudRepository<CardHistoryVO, Lon
 	Integer findByMemberCardBy(@Param("startDate") Timestamp startDate,
             @Param("endDate") Timestamp endDate,
             @Param("memberCardBy") MemberCardByVO memberCardBy);
+
+	 List<CardHistoryVO> findByMemberCardHiMemberHiNumber(String memberHiNumber);
+
+
 }

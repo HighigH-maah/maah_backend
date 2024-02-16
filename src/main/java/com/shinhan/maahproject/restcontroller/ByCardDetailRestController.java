@@ -23,6 +23,7 @@ public class ByCardDetailRestController {
 	@Autowired
 	ByCardDetailService bdService;
 	
+
 	@PostMapping(value="/getByCardAccountInfo.do", consumes = "application/json")
 	public AccountChangeDTO getAccountInfo(@RequestBody MemberDTO memberId) {
 		AccountChangeDTO byCardAccountInfo = bdService.getByCardAccountInfo(memberId.getMemberId());

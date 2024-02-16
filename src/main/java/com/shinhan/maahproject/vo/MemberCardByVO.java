@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -89,6 +88,7 @@ public class MemberCardByVO {
 //	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
 //	@JsonIgnore
 //	private List<PointByVO> pointBys;
+
 	
 //	@OneToMany(mappedBy = "memberCardBy", fetch = FetchType.LAZY)
 //	@JsonIgnore

@@ -28,3 +28,22 @@ public class PointByMultikey implements Serializable {
 	    return pointByMonth;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

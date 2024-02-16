@@ -1,12 +1,13 @@
 package com.shinhan.maahproject.dto;
 
+import java.util.List;
+
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 import lombok.Data;
 
 @Data
 public class ByCardDetailDTO {
-
 
 	public ByCardDetailDTO(String memberByNumber, int byCode, String byName, String memberCardByNickname, String byImagePath,
 			int pointByAmount, String pointByMonth, int byBenefitMinCondition, String connectHiCard) {
@@ -22,6 +23,10 @@ public class ByCardDetailDTO {
 		this.connectHiCard = connectHiCard;
 	}
 	
+	
+	
+	private List<String> byCategoryList;
+	private List<String> benefitList;
 	private String memberByNumber;
 	private int byCode;
 	private String byName;
@@ -33,3 +38,7 @@ public class ByCardDetailDTO {
 	private String connectHiCard;
 	
 }
+	
+
+	
+

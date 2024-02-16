@@ -50,27 +50,26 @@ public class ByCardDetailService {
 	@Autowired
 	PointByRepository pbRepo;
 	
-	
 	//By:Card 계좌 정보
-	public AccountChangeDTO getByCardAccountInfo(String memberId) {
-	    AccountChangeDTO acdto = new AccountChangeDTO(); // AccountChangeDTO 객체 생성
+		public AccountChangeDTO getByCardAccountInfo(String memberId) {
+		    AccountChangeDTO acdto = new AccountChangeDTO(); // AccountChangeDTO 객체 생성
 
-	    MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
+		    MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
 
-	    if (member != null) {
-	        for (MemberCardByVO bycard : mbRepo.findByMemberAndMemberByStatus(member, 0)) {
-	            if (bycard.getMemberByStatus() == 0) {
-	                // 바이카드 정보 설정
-	            	acdto.setBankName(bycard.getMemberAccountKey().getBank().getBankName()); //bankName
-	            	acdto.setMemberByAccountNumber(bycard.getMemberAccountKey().getMemberAccountNumber());//accountNumber
-	            	acdto.setMemberByNumber(bycard.getMemberByNumber()); //memberByNumber
-	            	
-	                break; // 하이카드 정보를 찾았으므로 루프 종료
-	            }
-	        }
-	    }
-	    return acdto;
-	}
+		    if (member != null) {
+		        for (MemberCardByVO bycard : mbRepo.findByMemberAndMemberByStatus(member, 0)) {
+		            if (bycard.getMemberByStatus() == 0) {
+		                // 바이카드 정보 설정
+		            	acdto.setBankName(bycard.getMemberAccountKey().getBank().getBankName()); //bankName
+		            	acdto.setMemberByAccountNumber(bycard.getMemberAccountKey().getMemberAccountNumber());//accountNumber
+		            	acdto.setMemberByNumber(bycard.getMemberByNumber()); //memberByNumber
+		            	
+		                break; // 하이카드 정보를 찾았으므로 루프 종료
+		            }
+		        }
+		    }
+		    return acdto;
+		}
 	
 	//By:Card 상세 정보 가져오기
 	public Map<Integer, List<ByCardDetailDTO>> getAllByCardInfo(String memberId) {
@@ -85,7 +84,7 @@ public class ByCardDetailService {
 		if (member != null) {
 			for(MemberCardByVO bycard : mbRepo.findByMemberAndMemberByStatus(member, 0)) {
 				if(bycard.getMemberByStatus() == 0) {
-					String memberByNumber = bycard.getMemberByNumber(); //memberByNumber
+					String memberByNumber = bycard.getMemberByNumber(); 
 					int byCode = bycard.getByCard().getByCode(); //byCode
 					String byName = bycard.getByCard().getByName(); //byName
 					String memberCardByNickname = bycard.getMemberCardByNickname(); //memberCardByNickname
@@ -99,7 +98,7 @@ public class ByCardDetailService {
 					
 					for(PointByVO pbvo : pbRepo.findByMemberByNumberAndPointByMonth(bycard, currentYearMonth)) {
 						pointByMonth = pbvo.getPointByMonth(); //pointByMonth
-						pointByAmount = pbvo.getPointByAmount(); //pointByAmount
+						pointByAmount= pbvo.getPointByAmount(); //pointByAmount
 					}
 					
 					// ByBenefitMinCondition의 최솟값 구하기
@@ -117,7 +116,7 @@ public class ByCardDetailService {
 	                	connectHiCard = connectHiCardNum.getMemberHiNumber();//connectHiCard
 	                }
 	                
-	                ByCardDetailDTO dto = new ByCardDetailDTO(memberByNumber, byCode, byName, memberCardByNickname, byImagePath, pointByAmount, pointByMonth, byBenefitMinCondition, connectHiCard);
+	                ByCardDetailDTO dto = new ByCardDetailDTO(memberByNumber,byCode, byName, memberCardByNickname, byImagePath, pointByAmount, pointByMonth, byBenefitMinCondition, connectHiCard);
 	                bycardInfoList.add(dto);
 	                
 	                if(byCardDetaildtoMap.get(dto.getByCode())==null){
