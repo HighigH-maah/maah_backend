@@ -55,7 +55,7 @@ public class ByCardVO {
 	private Boolean byIsTransport;
 	
 	@OneToMany(mappedBy = "byRelationBenefitKey.byCardCode", fetch = FetchType.LAZY)
-	@JsonIgnore
+//	@JsonIgnore
 	private List<ByRelationBenefitVO> benefits;
 
 

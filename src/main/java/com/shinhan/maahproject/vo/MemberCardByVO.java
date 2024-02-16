@@ -57,7 +57,7 @@ public class MemberCardByVO {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumns({ @JoinColumn(name = "member_by_account_number", referencedColumnName = "member_account_number"),
 			@JoinColumn(name = "member_by_account_bank_code", referencedColumnName = "member_account_bank_code") })
-	@JsonIgnore
+//	@JsonIgnore
 	private MemberAccountVO memberAccountKey;
 	
 	@NonNull
@@ -85,12 +85,12 @@ public class MemberCardByVO {
 	private Boolean memberByIsTransport;
 	private String memberCardByNickname;
 	
-	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private List<PointByVO> pointBys;
+//	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
+//	@JsonIgnore
+//	private List<PointByVO> pointBys;
 	
-	@OneToMany(mappedBy = "memberCardBy", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private List<CardHistoryVO> cardHis;
+//	@OneToMany(mappedBy = "memberCardBy", fetch = FetchType.LAZY)
+//	@JsonIgnore
+//	private List<CardHistoryVO> cardHis;
 	
 }

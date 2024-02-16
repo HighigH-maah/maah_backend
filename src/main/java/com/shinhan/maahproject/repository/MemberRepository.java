@@ -8,8 +8,8 @@ import com.shinhan.maahproject.vo.MemberVO;
 
 public interface MemberRepository extends CrudRepository<MemberVO, String> {
 	
-	@Query("SELECT m FROM MemberVO m "
-			+ "JOIN FETCH m.memberBenefits mb "
-			+ "WHERE m.memberId = :memberId ")
-		public MemberVO findByMemberIdWithBenefits(@Param("memberId") String memberId);
+//	@Query("SELECT m FROM MemberVO m "
+////			+ "LEFT JOIN FETCH m.memberBenefits mb "
+//			+ "WHERE m.memberId = :memberId ")
+//		public MemberVO findByMemberIdWithBenefits(@Param("memberId") String memberId);
 }

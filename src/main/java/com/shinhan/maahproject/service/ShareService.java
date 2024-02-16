@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.ByCardDTO;
+import com.shinhan.maahproject.dto.MemberCardByDTO;
 import com.shinhan.maahproject.dto.MemberCardHiShareDTO;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
 import com.shinhan.maahproject.repository.ByCardRepository;
@@ -48,21 +49,25 @@ public class ShareService {
 	BenefitCategoryRepository bcRepo;
 
 	public Object getMemberHiCard(String memberId) {
-		MemberVO member = mRepo.findByMemberIdWithBenefits(memberId);
+		MemberVO member = mRepo.findById(memberId).orElse(null);
 
 		ModelMapper mapper = new ModelMapper();
 
+//		log.info(member.toString());
 		MemberCardHiVO hicard = mhRepo.findFirstMemberCardHi(member);
-
+		log.info(hicard.toString());
 		MemberCardHiShareDTO hiShare = MemberCardHiShareDTO.builder().memberHiNickname(hicard.getMemberHiNickname())
 				.memberHiPoint(hicard.getMemberHiPoint()).hiImageCode(hicard.getHiImageCode()).build();
 
 		MemberCardByVO bycard = getMemberByCard(hicard);
+//		MemberCardByDTO bydto = MemberCardByDTO.
+		
+		MemberCardByDTO bydto = mapper.map(bycard, MemberCardByDTO.class);
 //		List<ByRelationBenefitVO> benefits = bycard.getByCard().getBenefits();
 //		log.info(benefits.toString());
 		HashMap<String, Object> hiAndBy = new HashMap<>();
 		hiAndBy.put("hicard", hiShare);
-		hiAndBy.put("bycard", bycard);
+		hiAndBy.put("bycard", bydto);
 		return hiAndBy;
 	}
 
@@ -73,7 +78,7 @@ public class ShareService {
 		//JPA 설정. hicard를 가져올 떄 Fetch LAZY가 KEY가 아닌 곳과 연결되어있으면 작동하지 않음
 		//그렇기 때문에 hicard에서 cardhistory를 접근하는데, 이 경우 bycard를 새로 조회할 때 같은 이유로 cardhistory가 불러와지고,
 		//cardHistory는 hi, by에 모두 연결되어있기 때문에 무한참조 발생
-		hicard.setCardHis(null);
+//		hicard.setCardHis(null);
 		List<MemberCardByVO> memberByList = mbRepo.findByConnectHiCard(hicard);
 		
 		
