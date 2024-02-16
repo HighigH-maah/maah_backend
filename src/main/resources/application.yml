@@ -10,3 +10,8 @@ cloud:
       auto: false
     stack:
       auto: false
+      
+portone:
+  key:
+    imp: ${portone_imp_key}
+    secret: ${portone_secret_key}
