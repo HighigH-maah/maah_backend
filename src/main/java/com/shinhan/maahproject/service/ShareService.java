@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.BenefitDTO;
 import com.shinhan.maahproject.dto.ByCardDTO;
 import com.shinhan.maahproject.dto.MemberCardByDTO;
 import com.shinhan.maahproject.dto.MemberCardHiShareDTO;
@@ -59,47 +60,57 @@ public class ShareService {
 		MemberCardHiShareDTO hiShare = MemberCardHiShareDTO.builder().memberHiNickname(hicard.getMemberHiNickname())
 				.memberHiPoint(hicard.getMemberHiPoint()).hiImageCode(hicard.getHiImageCode()).build();
 
-		MemberCardByVO bycard = getMemberByCard(hicard);
-//		MemberCardByDTO bydto = MemberCardByDTO.
+		List<MemberCardByDTO> byCardDtoList = getMemberByCard(hicard);
 		
-		MemberCardByDTO bydto = mapper.map(bycard, MemberCardByDTO.class);
-//		List<ByRelationBenefitVO> benefits = bycard.getByCard().getBenefits();
-//		log.info(benefits.toString());
+		
+
 		HashMap<String, Object> hiAndBy = new HashMap<>();
 		hiAndBy.put("hicard", hiShare);
-		hiAndBy.put("bycard", bydto);
+		hiAndBy.put("bycard", byCardDtoList);
 		return hiAndBy;
 	}
 
-	public MemberCardByVO getMemberByCard(MemberCardHiVO hicard) {
+	public List<MemberCardByDTO> getMemberByCard(MemberCardHiVO hicard) {
 		ModelMapper mapper = new ModelMapper();
 		List<ByCardDTO> ByCardList = new ArrayList<>();
-		
-		//JPA 설정. hicard를 가져올 떄 Fetch LAZY가 KEY가 아닌 곳과 연결되어있으면 작동하지 않음
-		//그렇기 때문에 hicard에서 cardhistory를 접근하는데, 이 경우 bycard를 새로 조회할 때 같은 이유로 cardhistory가 불러와지고,
-		//cardHistory는 hi, by에 모두 연결되어있기 때문에 무한참조 발생
+
+		// JPA 설정. hicard를 가져올 떄 Fetch LAZY가 KEY가 아닌 곳과 연결되어있으면 작동하지 않음
+		// 그렇기 때문에 hicard에서 cardhistory를 접근하는데, 이 경우 bycard를 새로 조회할 때 같은 이유로
+		// cardhistory가 불러와지고,
+		// cardHistory는 hi, by에 모두 연결되어있기 때문에 무한참조 발생
 //		hicard.setCardHis(null);
 		List<MemberCardByVO> memberByList = mbRepo.findByConnectHiCard(hicard);
-		
-		
-//	    for (ByCardVO byCardVO : byCardVOIterable) {
-//	        List<ByRelationBenefitVO> brbMultiList = brbRepo.findByCards(byCardVO);
-//	        List<String> categoryToDesc = getCategoryDescriptions(byCardVO.getByCategoryList());
-//
-//	        List<String> blist = new ArrayList<>(); // 혜택 문장들을 모두 담는다
-//
-//	        for (ByRelationBenefitVO brbMulti : brbMultiList) {
-//	            blist.add(brbMulti.getBenefits().getByBenefitDesc());
-//	        }
-//
-//	        ByCardDTO bDto = mapper.map(byCardVO, ByCardDTO.class);
-//	        bDto.setBenefitList(blist); // 혜택을 다음과 같이 세팅
-//	        bDto.setByCategoryList(categoryToDesc);
-//
-//	        ByCardList.add(bDto);
-//	        // log.info(ByCardList.toString());
-//	    }
-		return memberByList.get(0);
+
+		List<MemberCardByDTO> memberByDtoList = new ArrayList<>();
+
+		// 바이카드 리스트에서 바이DTO 리스트로 변경
+		for (MemberCardByVO bycard : memberByList) {
+			MemberCardByDTO bydto = mapper.map(bycard, MemberCardByDTO.class);
+			ByCardDTO byCardDto = bydto.getByCard();
+			List<ByRelationBenefitVO> rblist = bycard.getByCard().getBenefits();
+
+			//바이카드 DTO 생성 혜택 리스트 뽑기
+			List<BenefitDTO> benefitList = new ArrayList<>();
+
+			for (ByRelationBenefitVO rb : rblist) {
+				BenefitDTO bDto = BenefitDTO.builder()
+						.byBenefitDesc(rb.getBenefits().getByBenefitDesc())
+						.benefitCode(rb.getBenefits().getByBenefitCategory().getBenefitCode())
+						.build();
+				benefitList.add(bDto);
+			}
+			byCardDto.setBenefitList(benefitList);
+			byCardDto.setByCategoryList(bydto.getByCard().getByCategoryList());
+			
+			
+			//멤버 바이 DTO에 넣기
+			bydto.setByCard(byCardDto);
+			
+			//멤버 바이 DTO List에 넣기
+			memberByDtoList.add(bydto);
+		}
+
+		return memberByDtoList;
 	}
 
 	// 카테고리 리스트를 설명으로 바꿔주는 함수

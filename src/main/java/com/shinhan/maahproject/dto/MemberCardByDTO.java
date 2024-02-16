@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class MemberCardByDTO {
 	private String memberByNumber;
-	private ByCardVO byCard;
+	private ByCardDTO byCard;
 	private int memberByRank;
 	private int memberByPointGoal;
 	private Boolean memberByIsTransport;
