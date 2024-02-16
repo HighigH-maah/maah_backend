@@ -3,6 +3,7 @@ package com.shinhan.maahproject.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Embeddable
 public class PointByMultikey implements Serializable {
+
 	private String memberByNumber;
 	private String pointByMonth;
 	
@@ -26,3 +28,22 @@ public class PointByMultikey implements Serializable {
 	    return pointByMonth;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

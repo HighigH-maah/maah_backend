@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -78,7 +77,7 @@ public class MemberCardByVO {
 	private Boolean memberByIsTransport;
 	private String memberCardByNickname;
 	
-	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "memberByNumber", fetch = FetchType.LAZY)
 	private List<PointByVO> pointBys;
 	
 	@OneToMany(mappedBy = "memberCardBy", fetch = FetchType.LAZY)

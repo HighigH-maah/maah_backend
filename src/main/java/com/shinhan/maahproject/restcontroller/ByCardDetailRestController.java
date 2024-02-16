@@ -22,9 +22,9 @@ public class ByCardDetailRestController {
 	@Autowired
 	ByCardDetailService bdService;
 	
-	@PostMapping(value="/getByCardInfo.do", consumes = "application/json")
-	public ByCardDetailDTO getByCardInfo(@RequestBody MemberDTO memberId) {
-		ByCardDetailDTO byCardInfo = bdService.getByCardInfo(memberId.getMemberId());
+	@PostMapping(value="/getAllByCardInfo.do", consumes = "application/json")
+	public Map<Integer, List<ByCardDetailDTO>> getByCardInfo(@RequestBody MemberDTO memberId) {
+		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo(memberId.getMemberId());
 		return byCardInfo;
 	}
 	
