@@ -43,7 +43,6 @@ public class MyCardListRestController {
 	
 	@PostMapping(value = "/getMyCardListNotBy.do", consumes = "application/json")
 	public List<MyCardNotByDTO> getMyCardListNotBy(@RequestBody MemberDTO member) {
-		System.out.println("1==========================");
 		return mclService.getMyCardListNotBy(member.getMemberId());
 	}
 	
@@ -57,6 +56,12 @@ public class MyCardListRestController {
 	public int excludeHiCard(@RequestBody MyCardByDTO myCardBy) {
 		
 		return mclService.excludeHiCard(myCardBy);
+	}
+	
+	@PostMapping(value = "/addHiCard.do", consumes = "application/json")
+	public int addHiCard(@RequestBody MyCardNotByDTO myCardNotBy) {
+		
+		return mclService.addHiCard(myCardNotBy);
 	}
 	
 }

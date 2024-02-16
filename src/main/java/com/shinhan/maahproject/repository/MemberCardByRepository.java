@@ -30,12 +30,7 @@ public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, S
 	List<MemberCardByVO> findByMemberAndMemberByStatusAndConnectHiCardNullOrderByMemberByRank(MemberVO member, int memberByStatus);
 
 	List<MemberCardByVO> findByMemberAndMemberByStatusOrderByMemberByRank(MemberVO member, int memberByStatus);
-//	@Query("SELECT mb FROM MemberCardByVO mb "
-////			+ "JOIN FETCH mb.pointBys "
-//			+ "JOIN FETCH mb.byCard bc "
-////			+ "JOIN FETCH bc.benefits "
-//			+ "WHERE mb.member = :memberId "
-//			+ "AND mb.memberByStatus = 0 "
-//			+ "AND connectHiCard IS NOT NULL")
-//	List<MemberCardByVO> findByMemberByCard(@Param("memberId") MemberVO member);
+	
+	List<MemberCardByVO> findByMemberByNumber(String memberByNumber);
+
 }
