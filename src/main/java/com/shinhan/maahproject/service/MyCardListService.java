@@ -132,20 +132,16 @@ public class MyCardListService {
 		return thisMonth;
 	}
 
-//	@Transactional
+
 	public List<MyCardByDTO> getMyCardListBy(String memberId) {
 		ModelMapper mapper = new ModelMapper();
 		MemberVO member = mRepo.findById(memberId).orElse(null);
-		// log.info(member.getMemberId());
 
-		LocalDateTime now = LocalDateTime.now();
-		YearMonth ym = YearMonth.from(now);
-
-		String poinByMonth = ym.toString().replaceAll("-", "");
-		//System.out.println(poinByMonth);
-
-		// List<MyCardByDTO> mbycards = (List<MyCardByDTO>)
-		// mcbRepo.findByMemberAndMemberByStatus(member, 0);
+//		LocalDateTime now = LocalDateTime.now();
+//		YearMonth ym = YearMonth.from(now);
+//
+//		String poinByMonth = ym.toString().replaceAll("-", "");
+		
 		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo
 				.findByMemberAndMemberByStatusAndConnectHiCardNotNullOrderByMemberByRank(member, 0);
 		
@@ -158,40 +154,37 @@ public class MyCardListService {
 		List<MyCardByDTO> myCardListBy = mbycards.stream()
 				.map(memberCardByVO -> mapper.map(memberCardByVO, MyCardByDTO.class)).collect(Collectors.toList());
 		
-//		log.info(myCardListBy.toString());
 //		List<PointByVO> pointBys = pbRepo
 //				.findByMemberByNumberMonthMemberByNumberAndMemberByNumberMonthPointByMonth(memberId, memberId);
 
 //		for (MyCardByDTO aa : myCardListBy) {
 //			System.out.println(aa);
 //		}
-//		return null;
+
 		return myCardListBy;
 	}
 	
 	public List<MyCardNotByDTO> getMyCardListNotBy(String memberId) {
-//		ModelMapper mapper = new ModelMapper();
-//		MemberVO member = mRepo.findById(memberId).orElse(null);
-//		
-//		System.out.println("==========================================================");
+		ModelMapper mapper = new ModelMapper();
+		MemberVO member = mRepo.findById(memberId).orElse(null);
+		
+		System.out.println("==========================================================");
+		List<MemberCardByVO> mNotbycards = (List<MemberCardByVO>) mcbRepo
+				.findByMemberAndMemberByStatusAndConnectHiCardNullOrderByMemberByRank(member, 0);
+		
 //		List<MemberCardByVO> mNotbycards = (List<MemberCardByVO>) mcbRepo
-//				.findByMemberAndMemberByStatusAndConnectHiCardNullOrderByMemberByRank(member, 0);
-//		
-////		List<MemberCardByVO> mNotbycards = (List<MemberCardByVO>) mcbRepo
-////				.findByMemberAndMemberByStatusOrderByMemberByRank(member, 0);
-//		
-//		System.out.println(mNotbycards.toString());
-//		
-//		List<MyCardNotByDTO> myCardListNotBy = mNotbycards.stream()
-//				.map(memberCardByVO -> mapper.map(memberCardByVO, MyCardNotByDTO.class)).collect(Collectors.toList());
-//		
-//		System.out.println(myCardListNotBy.toString());
-//		
+//				.findByMemberAndMemberByStatusOrderByMemberByRank(member, 0);
+		
+		System.out.println(mNotbycards.toString());
+		
+		List<MyCardNotByDTO> myCardListNotBy = mNotbycards.stream()
+				.map(memberCardByVO -> mapper.map(memberCardByVO, MyCardNotByDTO.class)).collect(Collectors.toList());
+		
 //		for (MyCardNotByDTO aa : myCardListNotBy) {
 //			System.out.println(aa);
 //		}
 		
-		return null;
+		return myCardListNotBy;
 	}
 
 	@Transactional
@@ -254,16 +247,18 @@ public class MyCardListService {
 
 		return result;
 	}
-
+	
 	public int excludeHiCard(MyCardByDTO myCardBy) {
 		
-		int result = 0;
+		List<MemberCardByVO> mcbList = mcbRepo.findByMemberByNumber(myCardBy.getMemberByNumber());
 		
-		MemberVO member = mRepo.findById(myCardBy.getMemberId()).orElse(null);
+		MemberCardByVO MemByCard = mcbList.get(0);
 		
-		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0);
+		System.out.println("aaaaaaaaaaaaaaaaa"+MemByCard.getConnectHiCard().getMemberHiNumber());
 		
-		MemberCardHiVO mhicard = mhicards.get(0);
+		//MemByCard.setConnectHiCard(null);
+		
+		//System.out.println("ccccccccccccccccc"+MemByCard.getConnectHiCard().getMemberHiNumber());
 	
 		return 0;
 	}

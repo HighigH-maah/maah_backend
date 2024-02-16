@@ -43,7 +43,6 @@ public class MyCardListRestController {
 	
 	@PostMapping(value = "/getMyCardListNotBy.do", consumes = "application/json")
 	public List<MyCardNotByDTO> getMyCardListNotBy(@RequestBody MemberDTO member) {
-		System.out.println("1==========================");
 		return mclService.getMyCardListNotBy(member.getMemberId());
 	}
 	
