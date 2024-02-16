@@ -13,7 +13,7 @@ import com.shinhan.maahproject.dto.BankDTO;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.OtherCardDTO;
 import com.shinhan.maahproject.dto.OtherCardInputDTO;
-import com.shinhan.maahproject.service.ByCardDetailService;
+import com.shinhan.maahproject.service.ByCardService;
 import com.shinhan.maahproject.service.OtherCardService;
 import com.shinhan.maahproject.vo.OtherCardVO;
 
@@ -27,7 +27,7 @@ public class CardCompareRestController {
 	OtherCardService oService;
 	
 	@Autowired
-	ByCardDetailService bService;
+	ByCardService bService;
 
 	@GetMapping(value="/allbycards.do")
 	public List<ByCardDetailDTO> getAllByCard(){

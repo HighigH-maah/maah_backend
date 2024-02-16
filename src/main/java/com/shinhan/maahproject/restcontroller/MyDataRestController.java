@@ -12,7 +12,7 @@ import com.shinhan.maahproject.dto.CategoryBenefitDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
-import com.shinhan.maahproject.service.ByCardDetailService;
+import com.shinhan.maahproject.service.ByCardService;
 import com.shinhan.maahproject.service.CardHistoryService;
 import com.shinhan.maahproject.service.HICardDetailService;
 import com.shinhan.maahproject.service.MemberService;
@@ -32,7 +32,7 @@ public class MyDataRestController {
 	CardHistoryService chService;
 
 	@Autowired
-	ByCardDetailService byService;
+	ByCardService byService;
 	
 	@Autowired
 	MemberService mService;
