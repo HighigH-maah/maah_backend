@@ -54,4 +54,5 @@ public class CardHistoryVO {
 	@NonNull
 	@Column(nullable = false)
 	private int cardHistoryStatus;
+	private Integer cardHistoryCategory;
 }
