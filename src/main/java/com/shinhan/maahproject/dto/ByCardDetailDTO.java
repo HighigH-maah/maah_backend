@@ -5,8 +5,10 @@ import java.util.List;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ByCardDetailDTO {
 
 	public ByCardDetailDTO(String memberByNumber, int byCode, String byName, String memberCardByNickname, String byImagePath,
