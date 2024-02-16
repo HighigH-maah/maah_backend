@@ -70,7 +70,7 @@ public class HiCardDetailRestController {
 //		return hiCardInfo;
 //	}
 	
-	@PostMapping(value="/getAccountInfo.do", consumes = "application/json")
+	@PostMapping(value="/getHiCardAccountInfo.do", consumes = "application/json")
 	public AccountChangeDTO getAccountInfo(@RequestBody MemberDTO memberId) {
 		AccountChangeDTO hiCardAccountInfo = hdService.getHiCardAccountInfo(memberId.getMemberId());
 		return hiCardAccountInfo;

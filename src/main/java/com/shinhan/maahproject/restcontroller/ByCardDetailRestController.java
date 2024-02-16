@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.ByCardBenefitsDTO;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
@@ -22,9 +23,15 @@ public class ByCardDetailRestController {
 	@Autowired
 	ByCardDetailService bdService;
 	
-	@PostMapping(value="/getByCardInfo.do", consumes = "application/json")
-	public ByCardDetailDTO getByCardInfo(@RequestBody MemberDTO memberId) {
-		ByCardDetailDTO byCardInfo = bdService.getByCardInfo(memberId.getMemberId());
+	@PostMapping(value="/getByCardAccountInfo.do", consumes = "application/json")
+	public AccountChangeDTO getAccountInfo(@RequestBody MemberDTO memberId) {
+		AccountChangeDTO byCardAccountInfo = bdService.getByCardAccountInfo(memberId.getMemberId());
+		return byCardAccountInfo;
+	}
+	
+	@PostMapping(value="/getAllByCardInfo.do", consumes = "application/json")
+	public Map<Integer, List<ByCardDetailDTO>> getByCardInfo(@RequestBody MemberDTO memberId) {
+		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo(memberId.getMemberId());
 		return byCardInfo;
 	}
 	
@@ -33,10 +40,4 @@ public class ByCardDetailRestController {
 		Map<Integer, List<ByCardBenefitsDTO>> byCardBenefits = bdService.getAllByCardBenefits(memberId.getMemberId());
 		return byCardBenefits;
 	}
-	
-//	@PostMapping(value="/getByCardBenefits.do", consumes = "application/json")
-//	public ByCardBenefitsDTO getByCardBenefits(@RequestBody MemberDTO memberId) {
-//		ByCardBenefitsDTO byCardBenefits = bdService.getByCardBenefits(memberId.getMemberId());
-//		return byCardBenefits;
-//	}
 }

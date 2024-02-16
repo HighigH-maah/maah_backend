@@ -16,11 +16,4 @@ public class ByCardBenefitsDTO {
         this.byBenefitDesc = byBenefitDesc;
         this.byBenefitBody = byBenefitBody;
     }
-
-//	public void addBenefit(String benefitName2,String byBenefitDesc, String byBenefitBody) {
-//		this.benefitName = benefitName2;
-//        this.byBenefitDesc = byBenefitDesc;
-//        this.byBenefitBody = byBenefitBody;
-//		
-//	}
 }

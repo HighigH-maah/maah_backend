@@ -78,7 +78,7 @@ public class MemberCardByVO {
 	private Boolean memberByIsTransport;
 	private String memberCardByNickname;
 	
-	@OneToMany(mappedBy = "memberByNumberMonth.memberByNumber", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "memberByNumber", fetch = FetchType.LAZY)
 	private List<PointByVO> pointBys;
 	
 	@OneToMany(mappedBy = "memberCardBy", fetch = FetchType.LAZY)
