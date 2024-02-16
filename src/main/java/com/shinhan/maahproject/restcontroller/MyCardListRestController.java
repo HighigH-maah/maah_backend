@@ -58,4 +58,10 @@ public class MyCardListRestController {
 		return mclService.excludeHiCard(myCardBy);
 	}
 	
+	@PostMapping(value = "/addHiCard.do", consumes = "application/json")
+	public int addHiCard(@RequestBody MyCardNotByDTO myCardNotBy) {
+		
+		return mclService.addHiCard(myCardNotBy);
+	}
+	
 }

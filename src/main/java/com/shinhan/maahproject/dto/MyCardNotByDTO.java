@@ -24,6 +24,6 @@ public class MyCardNotByDTO{
 	
 	private int byBenefitMinCondition;
 	
-	private Integer thisMonthTotal; //이번달 사용금액
+	private Integer thisMonthSum; //이번달 사용금액
 
 }
