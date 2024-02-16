@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class HiCardDetailDTO {
+	
 	private String memberHiNumber;
 	private String hiCardImageFrontPath;
 	private String memberHiNickname;

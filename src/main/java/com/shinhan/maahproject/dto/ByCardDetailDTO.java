@@ -1,22 +1,23 @@
 package com.shinhan.maahproject.dto;
-import java.sql.Timestamp;
-import java.util.List;
 
-import com.shinhan.maahproject.vo.ByRelationBenefitVO;
+import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 import lombok.Data;
 
 @Data
 public class ByCardDetailDTO {
-	private int byCode;
+
+
+	private String memberByNumber;
 	private String byName;
-	private Timestamp byRegdate;
-	private Double byOverdueRate;
-	private int byYearPrice;
-	private int byMinLimit;
-	private List<String> byCategoryList;
-	private int byStatus;
 	private String byImagePath;
-	private Boolean byIsTransport;
-	private List<String> benefitList;
+	private String memberCardByNickname;
+	private int pointByAmount; //byCard 포인트
+	private int byBenefitMinCondition; //byCard 전월실적
+	private MemberCardHiVO connectHiCard;
+	
+	private String benefitName;
+	private String byBenefitDesc;
+	private String byBenefitBody;
+	
 }

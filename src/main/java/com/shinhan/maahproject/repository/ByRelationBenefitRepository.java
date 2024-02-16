@@ -13,7 +13,7 @@ import java.util.List;
 public interface ByRelationBenefitRepository extends CrudRepository<ByRelationBenefitVO, ByRelationBenefitMultikey> {
 	List<ByRelationBenefitVO> findByCards(ByCardVO cards);
 	
-//	List<ByRelationBenefitVO> findByByCardCode(ByCardVO byCardCode);
+	//List<ByRelationBenefitVO> findByByCardCode(ByCardVO byCardCode);
 	
 
 }
