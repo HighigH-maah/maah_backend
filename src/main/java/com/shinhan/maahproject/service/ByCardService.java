@@ -82,7 +82,7 @@ public class ByCardService {
 	            blist.add(brbMulti.getBenefits().getByBenefitDesc());
 	        }
 
-	        ByCardDTO bDto = mapper.map(byCardVO, ByCardDTO.class);
+	        ByCardDetailDTO bDto = mapper.map(byCardVO, ByCardDTO.class);
 	        bDto.setBenefitList(blist); // 혜택을 다음과 같이 세팅
 	        bDto.setByCategoryList(categoryToDesc);
 

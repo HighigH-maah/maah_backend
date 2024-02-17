@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.CertDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
+import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.repository.TempHiRepository;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
@@ -40,6 +41,9 @@ public class CertificationService {
 	
 	@Autowired
 	TempHiRepository thRepo;
+	
+	@Autowired
+	MemberCardHiRepository mhRepo;
 	
 
 	
@@ -169,8 +173,10 @@ public class CertificationService {
 	    Timestamp timestamp = Timestamp.valueOf(expDate);
 		
 		//8숫자 랜덤, 3숫자 랜덤, 오늘날짜 + 7일
-		MemberVO m = mRepo.findByMemberHiOwner(memberId);
-		MemberCardHiVO mc = m.getMemberHiCard().get(0);
+		MemberVO member = mRepo.findByMemberHiOwner(memberId);
+		MemberCardHiVO mc = mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0).get(0);
+		
+		//MemberCardHiVO mc = m.getMemberHiCard().get(0);
 		TempHiVO temphi = TempHiVO.builder()
 				.tempHiNumber(randomEightNum)
 				.memberCardHi(mc)
