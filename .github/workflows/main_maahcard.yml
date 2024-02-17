@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: "${{ github.workspace }}/build/libs/maah_backend_private-0.0.1-SNAPSHOT.jar"
+          path: "${{ github.workspace }}/build/libs/maah_backend-0.0.1-SNAPSHOT.jar"
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
