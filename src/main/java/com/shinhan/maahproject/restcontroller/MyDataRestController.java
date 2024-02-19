@@ -1,6 +1,7 @@
 package com.shinhan.maahproject.restcontroller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.shinhan.maahproject.dto.CategoryBenefitDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
+import com.shinhan.maahproject.service.ByCardDetailService;
 import com.shinhan.maahproject.service.ByCardService;
 import com.shinhan.maahproject.service.CardHistoryService;
 import com.shinhan.maahproject.service.HICardDetailService;
@@ -33,16 +35,21 @@ public class MyDataRestController {
 
 	@Autowired
 	ByCardService byService;
-	
+
 	@Autowired
 	MemberService mService;
+
+	@Autowired
+	ByCardDetailService bdService;
 
 	@GetMapping(value = "/getMyLimit.do")
 	public Long getMyLimit() {
 		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo("user2"); // 멤버의 하이카드 정보
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
-
-		return chService.getHistory(HiNumber);
+		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo("user2");
+		
+		return chService.getHistory(HiNumber, byCardInfo);
+		// return chService.getHistory(HiNumber);
 	}
 
 	@GetMapping(value = "/getTest.do")
@@ -54,7 +61,8 @@ public class MyDataRestController {
 	public Long getLastHistory() {
 		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo("user2"); // 멤버의 하이카드 정보
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
-		return chService.getLastMonthHistory(HiNumber);
+		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo("user2");
+		return chService.getLastMonthHistory(HiNumber,byCardInfo);
 	}
 
 	@GetMapping(value = "/getCategoryView.do")
@@ -63,9 +71,9 @@ public class MyDataRestController {
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
 		return chService.getCategoryView(HiNumber);
 	}
-	
-	@GetMapping(value="/getNextLevel.do")
+
+	@GetMapping(value = "/getNextLevel.do")
 	public MyNextLevelDTO getNextLevel() {
-		return chService.tonextLevel("user2");	
+		return chService.tonextLevel("user2");
 	}
 }

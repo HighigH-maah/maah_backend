@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.CategoryBenefitDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
@@ -22,11 +23,13 @@ import com.shinhan.maahproject.repository.BenefitCategoryRepository;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.ClassBenefitRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
+import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.vo.BenefitCategoryVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.ClassBenefitVO;
 import com.shinhan.maahproject.vo.MemberAccountVO;
+import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,22 +53,32 @@ public class CardHistoryService {
 	@Autowired
 	ClassBenefitRepository cbRepo;
 
-	public Long getHistory(String memberHiNumber) {
-		Long historyAmount = 0L; // actual usage
-		Long limitedAmount = 0L; // card limit
-		// 하이카드에 대한 결제건만 (바이카드 추가 필요)
+	@Autowired
+	MemberCardByRepository mcbRepo;
+
+	// Hi와 By 한도 현황 및 남은 금액
+	public Long getHistory(String memberHiNumber, Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
+		Long historyAmount = 0L; // actual usage (Hi+By)
+		Long limitedAmount = 0L; // card limit (By들의 한도)
+
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
 		LocalDate currentDate = LocalDate.now();
-		for (CardHistoryVO amount : chList) {
-			log.info("getCardHistoryId : " + amount.getCardHistoryId());
-			log.info("amount : " + amount.getCardHistoryAmount());
-			LocalDate cardHistoryDate = convertTimestampToLocalDate(amount.getCardHistoryDate());
-			if (isWithinCurrentMonth(currentDate, cardHistoryDate)) {
-				log.info("셀 수 있는 기간입니다 : " + cardHistoryDate);
-				historyAmount += amount.getCardHistoryAmount();
+
+		// 바이카드 사용 이력
+		for (Map.Entry<Integer, List<ByCardDetailDTO>> entry : byCardInfo.entrySet()) {
+			for (ByCardDetailDTO cardDetailDTO : entry.getValue()) {
+				String ByNumber = cardDetailDTO.getMemberByNumber(); // 바이카드 넘버를 가져옴
+				MemberCardByVO mbvo = mcbRepo.findById(ByNumber).orElse(null); // 멤버카드VO 가져옴
+				List<CardHistoryVO> chByHistory = chRepo.findByMemberCardhistoryB(ByNumber); // 이제 history에 접근
+				// 각각의 바이카드 한도 누적
+				limitedAmount += mbvo.getMemberByLimit();
+				// 바이카드 이용 내역 축적
+				historyAmount += CalculateAmountBySamePeriod(currentDate, chByHistory);
 			}
 		}
-		return historyAmount;
+		// 하이카드 이용 내역 축적
+		historyAmount += CalculateAmountBySamePeriod(currentDate, chList);
+		return limitedAmount - historyAmount;
 	}
 
 	private LocalDate convertTimestampToLocalDate(Timestamp timestamp) {
@@ -89,21 +102,48 @@ public class CardHistoryService {
 		return false;
 	}
 
-	public Long getLastMonthHistory(String memberHiNumber) {
+	// Hi & By 저번달 사용 내역
+	public Long getLastMonthHistory(String memberHiNumber, Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
 		Long historyAmount = 0L; // actual usage
 		LocalDate currentDate = LocalDate.now();
-		// 하이카드에 대한 결제건만 (바이카드 추가 필요)
-		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
-		for (CardHistoryVO amount : chList) {
-			log.info("getCardHistoryId : " + amount.getCardHistoryId());
-			log.info("amount : " + amount.getCardHistoryAmount());
-			LocalDate cardHistoryDate = convertTimestampToLocalDate(amount.getCardHistoryDate());
-			if (isSameYearAndPreviousMonth(currentDate, cardHistoryDate)) {
-				log.info("저번달, 셀 수 있는 기간입니다 : " + cardHistoryDate);
-				historyAmount += amount.getCardHistoryAmount();
+		// 바이카드 이용 내역 축적
+		for (Map.Entry<Integer, List<ByCardDetailDTO>> entry : byCardInfo.entrySet()) {
+			for (ByCardDetailDTO cardDetailDTO : entry.getValue()) {
+				String ByNumber = cardDetailDTO.getMemberByNumber(); // 바이카드 넘버를 가져옴
+				MemberCardByVO mbvo = mcbRepo.findById(ByNumber).orElse(null); // 멤버카드VO 가져옴
+				List<CardHistoryVO> chByHistory = chRepo.findByMemberCardhistoryB(ByNumber); // 이제 history에 접근
+				historyAmount += CalculateAmountByPrevious(currentDate, chByHistory);
 			}
 		}
+
+		// 하이카드 이용 내역 축적
+		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+		historyAmount += CalculateAmountByPrevious(currentDate, chList);
 		return historyAmount;
+	}
+
+	// 같은 년도, 같은 달 이용 내역 축적
+	public Long CalculateAmountBySamePeriod(LocalDate currentDate, List<CardHistoryVO> history) {
+		Long totalAmount = 0L;
+		for (CardHistoryVO amount : history) {
+			LocalDate cardHistoryDate = convertTimestampToLocalDate(amount.getCardHistoryDate());
+			if (isWithinCurrentMonth(currentDate, cardHistoryDate)) {
+				totalAmount += amount.getCardHistoryAmount();
+			}
+		}
+		return totalAmount;
+	}
+
+	// 같은 년도, 전 달 이용 내역 축적
+	public Long CalculateAmountByPrevious(LocalDate currentDate, List<CardHistoryVO> history) {
+		Long totalAmount = 0L;
+		for (CardHistoryVO amount : history) {
+			LocalDate cardHistoryDate = convertTimestampToLocalDate(amount.getCardHistoryDate());
+			if (isSameYearAndPreviousMonth(currentDate, cardHistoryDate)) {
+				totalAmount += amount.getCardHistoryAmount();
+			}
+		}
+		return totalAmount;
 	}
 
 	// 카테고리 비율 계산
@@ -116,7 +156,6 @@ public class CardHistoryService {
 
 		for (CardHistoryVO cardHistory : chList) {
 			LocalDate cardHistoryDate = convertTimestampToLocalDate(cardHistory.getCardHistoryDate());
-			log.info("cardHistoryDate" + cardHistoryDate);
 
 			// 이번 달에 해당하는 데이터만 계산
 			if (isWithinCurrentMonth(currentDate, cardHistoryDate)) {
