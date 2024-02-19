@@ -173,10 +173,16 @@ public class CertificationService {
 	    Timestamp timestamp = Timestamp.valueOf(expDate);
 		
 		//8숫자 랜덤, 3숫자 랜덤, 오늘날짜 + 7일
-		MemberVO member = mRepo.findByMemberHiOwner(memberId);
-		MemberCardHiVO mc = mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0).get(0);
-		
-		//MemberCardHiVO mc = m.getMemberHiCard().get(0);
+//<<<<<<< HEAD
+//		MemberVO member = mRepo.findByMemberHiOwner(memberId);
+//		MemberCardHiVO mc = mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0).get(0);
+//		
+//		//MemberCardHiVO mc = m.getMemberHiCard().get(0);
+//=======
+		MemberVO m = mRepo.findById(memberId).orElse(null);
+		mhRepo.findFirstMemberCardHi(m);
+		MemberCardHiVO mc = mhRepo.findFirstMemberCardHi(m);
+//>>>>>>> refs/heads/main
 		TempHiVO temphi = TempHiVO.builder()
 				.tempHiNumber(randomEightNum)
 				.memberCardHi(mc)

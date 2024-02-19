@@ -18,7 +18,7 @@ public class MyCardByDTO{
 	
 	private String byImagePath;
 	private List<ByBenefitVO> benefits;
-	private ByCardVO byCard;
+//	private ByCardVO byCard;
 	
 	private String memberHiNumber;
 	

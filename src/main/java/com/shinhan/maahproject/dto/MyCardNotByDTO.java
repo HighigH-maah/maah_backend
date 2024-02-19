@@ -18,10 +18,12 @@ public class MyCardNotByDTO{
 	
 	private String byImagePath;
 	private List<ByBenefitVO> benefits;
-	private ByCardVO byCard;
+//	private ByCardVO byCard;
 	
 	private String memberHiNumber;
 	
 	private int byBenefitMinCondition;
+	
+	private Integer thisMonthSum; //이번달 사용금액
 
 }
