@@ -22,9 +22,9 @@ public interface MemberRepository extends CrudRepository<MemberVO, String> {
 
 	
 	@Query("SELECT m FROM MemberVO m "
-			+ "JOIN FETCH m.memberHiCard mc "
-			+ "WHERE m.memberId = :memberId "
-			+ "AND mc.memberHiStatus = 0")
+//			+ "JOIN FETCH m.memberHiCard mc "
+			+ "WHERE m.memberId = :memberId ")
+//			+ "AND mc.memberHiStatus = 0")
 	MemberVO findByMemberHiOwner(@Param("memberId") String memberId);
 }
 
