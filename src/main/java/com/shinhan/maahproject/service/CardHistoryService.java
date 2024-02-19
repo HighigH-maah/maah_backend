@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.CategoryBenefitDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
+import com.shinhan.maahproject.dto.MyDataLimitDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
@@ -57,9 +58,11 @@ public class CardHistoryService {
 	MemberCardByRepository mcbRepo;
 
 	// Hi와 By 한도 현황 및 남은 금액
-	public Long getHistory(String memberHiNumber, Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
+	public MyDataLimitDTO getHistory(String memberHiNumber, Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
 		Long historyAmount = 0L; // actual usage (Hi+By)
 		Long limitedAmount = 0L; // card limit (By들의 한도)
+
+		MyDataLimitDTO myLimit = new MyDataLimitDTO();
 
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
 		LocalDate currentDate = LocalDate.now();
@@ -78,7 +81,9 @@ public class CardHistoryService {
 		}
 		// 하이카드 이용 내역 축적
 		historyAmount += CalculateAmountBySamePeriod(currentDate, chList);
-		return limitedAmount - historyAmount;
+		myLimit.setHistoryAmount(historyAmount);
+		myLimit.setLimitedAmount(limitedAmount);
+		return myLimit;
 	}
 
 	private LocalDate convertTimestampToLocalDate(Timestamp timestamp) {
@@ -147,34 +152,27 @@ public class CardHistoryService {
 	}
 
 	// 카테고리 비율 계산
-	public List<CategoryBenefitDTO> getCategoryView(String memberHiNumber) {
-		// 하이카드에 대한 결제건만 (바이카드 추가 필요)
-		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+	public List<CategoryBenefitDTO> getCategoryView(String memberHiNumber,
+			Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
 		Iterable<BenefitCategoryVO> bcList = bcRepo.findAll();
 		Map<Integer, Long> usageByCategory = new HashMap<>();
 		LocalDate currentDate = LocalDate.now();
 
-		for (CardHistoryVO cardHistory : chList) {
-			LocalDate cardHistoryDate = convertTimestampToLocalDate(cardHistory.getCardHistoryDate());
-
-			// 이번 달에 해당하는 데이터만 계산
-			if (isWithinCurrentMonth(currentDate, cardHistoryDate)) {
-				log.info("In it" + cardHistoryDate);
-				int cateHistoryCategory = cardHistory.getCardHistoryCategory(); // Assuming this method exists
-				long cardHistoryAmount = cardHistory.getCardHistoryAmount();
-
-				for (BenefitCategoryVO benefitCategory : bcList) {
-					int benefitCode = benefitCategory.getBenefitCode();
-
-					if (cateHistoryCategory == benefitCode) {
-						usageByCategory.put(benefitCode,
-								usageByCategory.getOrDefault(benefitCode, 0L) + cardHistoryAmount);
-						break;
-					}
-				}
+		for (Map.Entry<Integer, List<ByCardDetailDTO>> entry : byCardInfo.entrySet()) {
+			for (ByCardDetailDTO cardDetailDTO : entry.getValue()) {
+				String ByNumber = cardDetailDTO.getMemberByNumber(); // 바이카드 넘버를 가져옴
+				MemberCardByVO mbvo = mcbRepo.findById(ByNumber).orElse(null); // 멤버카드VO 가져옴
+				List<CardHistoryVO> chByHistory = chRepo.findByMemberCardhistoryB(ByNumber); // 이제 history에 접근
+				// 바이카드 카테고리 누적
+				usageByCategory = calculateCategory(bcList,currentDate,chByHistory,usageByCategory);
 			}
 		}
 
+	
+		// 하이카드 카테고리 누적
+		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+		usageByCategory = calculateCategory(bcList,currentDate,chList,usageByCategory);
+	
 		// CategoryBenefitDTO에 항목별로 금액 담기
 		List<CategoryBenefitDTO> categoryBenefitList = new ArrayList();
 		for (BenefitCategoryVO benefitCategory : bcList) {
@@ -187,13 +185,30 @@ public class CardHistoryService {
 			categoryBenefitDTO.setBenefitData(totalUsageAmount);
 			categoryBenefitList.add(categoryBenefitDTO);
 		}
+		return categoryBenefitList;
+	}
 
-		for (CategoryBenefitDTO categoryBenefitDTO : categoryBenefitList) {
-			log.info("Benefit Name: " + categoryBenefitDTO.getBenefitName() + ", Total Usage Amount: "
-					+ categoryBenefitDTO.getBenefitData());
+	// 카테고리 계산 맵 로직
+	public Map<Integer, Long> calculateCategory(Iterable<BenefitCategoryVO> bcList, LocalDate currentDate,
+			List<CardHistoryVO> chHistory, Map<Integer, Long> usageByCategory) {
+		for (CardHistoryVO cardHistory : chHistory) {
+			LocalDate cardHistoryDate = convertTimestampToLocalDate(cardHistory.getCardHistoryDate());
+			if (isWithinCurrentMonth(currentDate, cardHistoryDate)) {
+				int cateHistoryCategory = cardHistory.getCardHistoryCategory(); // Assuming this method exists
+				long cardHistoryAmount = cardHistory.getCardHistoryAmount();
+				for (BenefitCategoryVO benefitCategory : bcList) {
+					int benefitCode = benefitCategory.getBenefitCode();
+
+					if (cateHistoryCategory == benefitCode) {
+						usageByCategory.put(benefitCode,
+								usageByCategory.getOrDefault(benefitCode, 0L) + cardHistoryAmount);
+						break;
+					}
+				}
+			}
 		}
 
-		return categoryBenefitList;
+		return usageByCategory;
 	}
 
 	public List<MemberAccountVO> getAccount() {
