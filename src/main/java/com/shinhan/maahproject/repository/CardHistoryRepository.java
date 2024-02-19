@@ -16,6 +16,8 @@ import com.shinhan.maahproject.vo.MemberCardByVO;
 public interface CardHistoryRepository extends CrudRepository<CardHistoryVO, Long> {
 	List<CardHistoryVO> findByMemberCardHi(MemberCardHiVO memberCardHi);
 	
+	List<CardHistoryVO> findByMemberCardBy(MemberCardByVO memberCardBy);
+	
 	@Query("SELECT SUM(ch.cardHistoryAmount) FROM CardHistoryVO ch " +
             "WHERE ch.cardHistoryDate >= :startDate " +
             "AND ch.cardHistoryDate < :endDate " +

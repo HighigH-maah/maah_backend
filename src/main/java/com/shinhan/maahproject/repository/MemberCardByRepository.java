@@ -10,6 +10,8 @@ import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
+import com.shinhan.maahproject.vo.ByCardVO;
+
 
 public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, String> {
 	
@@ -26,6 +28,8 @@ public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, S
 
 
 	List<MemberCardByVO> findByMemberAndMemberByStatus(MemberVO member, int memberByStatus);
+	
+	List<MemberCardByVO> findByMemberAndMemberByStatusAndByCard(MemberVO member, int memberByStatus, ByCardVO byCard);
 
 	List<MemberCardByVO> findByMemberAndMemberByStatusAndConnectHiCardNullOrderByMemberByRank(MemberVO member, int memberByStatus);
 

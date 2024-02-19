@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.ByCardBenefitsDTO;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
+import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.service.ByCardDetailService;
 
@@ -23,7 +26,28 @@ public class ByCardDetailRestController {
 	@Autowired
 	ByCardDetailService bdService;
 	
+	//By:Card 상품 해택
+	@GetMapping("/byCardBenefits/{byCardCode}.do")
+	public List<ByCardBenefitsDTO> getByCardBenefits(@PathVariable("byCardCode") int byCardCode) {
+		List<ByCardBenefitsDTO> byCardInfo = bdService.getByCardBenefits(byCardCode);
+		return byCardInfo;
+	}
+	
+	//By:Card 상품
+	@GetMapping("/byCardDetail/{byCardCode}.do")
+	public ByCardDetailDTO getByCardInfo(@PathVariable("byCardCode") int byCardCode) {
+		ByCardDetailDTO byCardInfo = bdService.getByCardInfo(byCardCode);
+		return byCardInfo;
+	}
+	
+	//나의 By:Card
 
+	@PostMapping(value="/getBycardHistory.do", consumes = "application/json")
+	public Map<Integer, List<CardHistoryDTO>> getBycardHistory(@RequestBody MemberDTO memberId) {
+		Map<Integer, List<CardHistoryDTO>> byCardHistory = bdService.getBycardHistory(memberId.getMemberId());
+		return byCardHistory;
+	}
+	
 	@PostMapping(value="/getByCardAccountInfo.do", consumes = "application/json")
 	public AccountChangeDTO getAccountInfo(@RequestBody MemberDTO memberId) {
 		AccountChangeDTO byCardAccountInfo = bdService.getByCardAccountInfo(memberId.getMemberId());
@@ -31,7 +55,7 @@ public class ByCardDetailRestController {
 	}
 	
 	@PostMapping(value="/getAllByCardInfo.do", consumes = "application/json")
-	public Map<Integer, List<ByCardDetailDTO>> getByCardInfo(@RequestBody MemberDTO memberId) {
+	public Map<Integer, List<ByCardDetailDTO>> getMyByCardInfo(@RequestBody MemberDTO memberId) {
 		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo(memberId.getMemberId());
 		return byCardInfo;
 	}

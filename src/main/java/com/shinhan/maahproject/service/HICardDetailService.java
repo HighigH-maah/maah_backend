@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.HiCardBenefitsDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
-import com.shinhan.maahproject.dto.HiCardHistoryDTO;
+import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
 import com.shinhan.maahproject.repository.BankRepository;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
@@ -101,9 +101,9 @@ public class HICardDetailService {
 		return bankInfo;
 	}
 	
-	public List<HiCardHistoryDTO> getHicardHistory(String memberId) {
-	    ModelMapper mapper = new ModelMapper();
-	    List<HiCardHistoryDTO> hidtoList = new ArrayList<>(); // 결과를 저장할 리스트 생성
+	public List<CardHistoryDTO> getHicardHistory(String memberId) {
+	    //ModelMapper mapper = new ModelMapper();
+	    List<CardHistoryDTO> hidtoList = new ArrayList<>(); // 결과를 저장할 리스트 생성
 	    
 	    MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
 	    
@@ -115,7 +115,12 @@ public class HICardDetailService {
 	                
 	                for(CardHistoryVO chvo : chvoList) {
 	                    // 각 카드 이력을 DTO로 변환하여 리스트에 추가
-	                    HiCardHistoryDTO hidto = mapper.map(chvo, HiCardHistoryDTO.class);
+	                    //CardHistoryDTO hidto = mapper.map(chvo, CardHistoryDTO.class);
+	                	int amount = chvo.getCardHistoryAmount();
+						String store = chvo.getCardHistoryStore();
+						Timestamp date = chvo.getCardHistoryDate();
+						
+						CardHistoryDTO hidto = new CardHistoryDTO(store, date, amount);
 	                    hidtoList.add(hidto);
 	                }
 	                
@@ -134,14 +139,12 @@ public class HICardDetailService {
 		
 		MemberVO m = mRepo.findById(memberId).orElse(null);
 		//user3의 하이카드 정보
-//<<<<<<< HEAD
 //		//MemberCardHiVO hiCardInfo = mRepo.findByMemberHiOwner(memberId).getMemberHiCard().get(0); 
 //		
 //		MemberVO member = mRepo.findByMemberHiOwner(memberId);
 //		MemberCardHiVO hiCardInfo = mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0).get(0);
-//=======
+
 		MemberCardHiVO hiCardInfo = mhRepo.findFirstMemberCardHi(m);
-//>>>>>>> refs/heads/main
 		
 		List<TempHiVO> tvoList = tRepo.findByMemberCardHiAndTempHiStatus(hiCardInfo, 0);
 		

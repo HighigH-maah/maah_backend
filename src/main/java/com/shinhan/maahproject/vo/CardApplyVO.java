@@ -41,7 +41,7 @@ public class CardApplyVO {
 	// 암호화 필요
 	private String cardApplyMemberSocialNumber;
 	private Timestamp cardApplyDate;
-	private String cardApplyIdImagePath;
+	private String cardApplyIdIssueDate;
 	private Boolean cardApplyIsTermsOfService;
 	private Integer cardApplyAnnualIncome;
 	private Integer cardApplyPaydate;
