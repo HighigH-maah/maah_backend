@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.AccountChangeDTO;
+import com.shinhan.maahproject.dto.AccountCheckDTO;
 import com.shinhan.maahproject.dto.ByCardBenefitsDTO;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
