@@ -29,7 +29,7 @@ public class AccountNameRestController {
 	public AccountCheckDTO getAccountName(@RequestBody AccountCheckDTO accoChack) throws UnsupportedEncodingException {
 		
 		String accountNm = accountCheck.getAcountHolderNM(accoChack.getBankCode(),accoChack.getBankName());
-		String maberNm = "한마음";
+		String maberNm = accoChack.getMemberName();
 				//accoChack.getMemberId();
 		accoChack.setAccountChkYn("N");
 		
