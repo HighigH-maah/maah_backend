@@ -13,4 +13,5 @@ public class MemberCardByDTO {
 	private int memberByPointGoal;
 	private Boolean memberByIsTransport;
 	private String memberCardByNickname;
+	private int pointByAmount;
 }
