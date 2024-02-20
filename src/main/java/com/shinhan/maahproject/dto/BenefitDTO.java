@@ -8,4 +8,5 @@ import lombok.Data;
 public class BenefitDTO {
 	private String byBenefitDesc;
 	private int benefitCode;
+	private int byBenefitMinCondition;
 }
