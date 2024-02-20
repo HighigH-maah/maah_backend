@@ -5,10 +5,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -24,18 +27,22 @@ import com.shinhan.maahproject.dto.CategoryBenefitDTO;
 import com.shinhan.maahproject.dto.MyDataCompareDTO;
 import com.shinhan.maahproject.dto.MyDataLimitDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
+import com.shinhan.maahproject.dto.myDataCardForMonthDTO;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.ClassBenefitRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
 import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
+import com.shinhan.maahproject.repository.PointByRepository;
 import com.shinhan.maahproject.vo.BenefitCategoryVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.ClassBenefitVO;
 import com.shinhan.maahproject.vo.MemberAccountVO;
 import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberVO;
+import com.shinhan.maahproject.vo.PointByVO;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -59,32 +66,54 @@ public class CardHistoryService {
 
 	@Autowired
 	MemberCardByRepository mcbRepo;
-	
-	// 월 별 카드 할인 금액
-	public String cardSaleForMonth() {
-		return null;
+
+	@Autowired
+	PointByRepository pbRepo;
+
+	// By 카드 포인트 현황
+	public List<myDataCardForMonthDTO> cardForMonth(Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
+		List<PointByVO> pointList = new ArrayList<>();
+		List<myDataCardForMonthDTO> cardForMonth = new ArrayList<>();// DTO 선언
+
+		for (Map.Entry<Integer, List<ByCardDetailDTO>> entry : byCardInfo.entrySet()) {
+			for (ByCardDetailDTO cardDetailDTO : entry.getValue()) {
+				String ByNumber = cardDetailDTO.getMemberByNumber(); // 바이카드 넘버를 가져옴
+				MemberCardByVO mbvo = mcbRepo.findById(ByNumber).orElse(null); // 멤버카드VO 가져옴
+				// 이번 달 찾기
+				myDataCardForMonthDTO cardFor = new myDataCardForMonthDTO();
+				String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+				pointList = pbRepo.findByMemberByNumberAndPointByMonth(mbvo, currentYearMonth);
+				// 없는 포인트 제외, 점수 넣어주기
+				if (!pointList.isEmpty()) {
+					cardFor.setPoint(pointList.get(0).getPointByAmount());
+				}
+				cardFor.setByCardName(mbvo.getMemberCardByNickname());
+				cardForMonth.add(cardFor);
+			}
+		}
+		return cardForMonth;
 	}
 
 	// 저번달 VS 이번달
 	public MyDataCompareDTO getCompare(String memberHiNumber, Long diff) {
-		Long firstSum = 0L; 
-		Long middleSum = 0L; 
-		Long lastSum = 0L; 
+		Long firstSum = 0L;
+		Long middleSum = 0L;
+		Long lastSum = 0L;
 		Long moreThanUsedSum = 0L;
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
 
 		for (CardHistoryVO amount : chList) {
 			LocalDateTime historyDate = amount.getCardHistoryDate().toLocalDateTime();
 			Long amountValue = (long) amount.getCardHistoryAmount();
-				
+
 			if (historyDate.getDayOfMonth() == LocalDateTime.now().getDayOfMonth()) {
 				firstSum += amountValue;
 			}
-	
+
 			if (historyDate.isAfter(LocalDateTime.now().minusDays(15))) {
 				middleSum += amountValue;
 			}
-		
+
 			if (historyDate.isAfter(LocalDateTime.now().minusDays(30))) {
 				lastSum += amountValue;
 			}
@@ -100,10 +129,13 @@ public class CardHistoryService {
 		return myCompare;
 	}
 
-	// 평균 사용 금액
 	public long getMonthAvg(String memberHiNumber) {
-		Long historyAmount = 0L; // actual usage (Hi)
+		Long historyAmount = 0L;
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+		if (chList.isEmpty()) {
+			return 0L;
+		}
+
 		Collections.sort(chList, Comparator.comparing(CardHistoryVO::getCardHistoryDate).reversed());
 		CardHistoryVO mostRecentItem = chList.get(0);
 		CardHistoryVO latestItem = chList.get(chList.size() - 1);
@@ -111,13 +143,21 @@ public class CardHistoryService {
 		LocalDateTime mostRecentDateTime = mostRecentItem.getCardHistoryDate().toLocalDateTime();
 		LocalDateTime latestDateTime = latestItem.getCardHistoryDate().toLocalDateTime();
 		Duration duration = Duration.between(latestDateTime, mostRecentDateTime);
-		long monthsDifference = duration.toDays() / 30; // 일 수로 나눈다
+		long daysDifference = duration.toDays();
+
+		// Check if daysDifference is less than 30 to avoid division by zero
+		if (daysDifference < 30) {
+			return 0L;
+		}
+
+		long monthsDifference = daysDifference / 30; // 일 수로 나눈다
 
 		// 총 비용 건수를 그 개월로 나눈다
 		for (CardHistoryVO amount : chList) {
 			historyAmount += amount.getCardHistoryAmount();
 		}
-		return historyAmount / monthsDifference;
+
+		return monthsDifference != 0 ? historyAmount / monthsDifference : 0L;
 	}
 
 	// Hi와 By 한도 현황 및 남은 금액
@@ -126,10 +166,7 @@ public class CardHistoryService {
 		Long limitedAmount = 0L; // card limit (By들의 한도)
 
 		MyDataLimitDTO myLimit = new MyDataLimitDTO();
-
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
-
-		log.info("chList:" + chList.toString());
 		LocalDate currentDate = LocalDate.now();
 
 		// 바이카드 사용 이력
@@ -157,6 +194,11 @@ public class CardHistoryService {
 		return dateTime.toLocalDate();
 	}
 
+	// 3개월 이내에 해당하는지에 대한 여부
+	private boolean isWithinThreeMonth(LocalDate currentDate, LocalDate dateToCheck) {
+	    return ChronoUnit.MONTHS.between(dateToCheck, currentDate) <= 3;
+	}
+	
 	// 같은 년도와 월에 해당하는지에 대한 여부
 	private boolean isWithinCurrentMonth(LocalDate currentDate, LocalDate dateToCheck) {
 		return (dateToCheck.getYear() == currentDate.getYear())
@@ -190,6 +232,19 @@ public class CardHistoryService {
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
 		historyAmount += CalculateAmountByPrevious(currentDate, chList);
 		return historyAmount;
+	}
+	
+	// 3개월 간 이용 내역 축적
+	public Long CalculateAmountForThreeMonth(LocalDate currentDate, List<CardHistoryVO> history) {
+	    Long totalAmount = 0L;
+	    for (CardHistoryVO amount : history) {
+	        LocalDate cardHistoryDate = convertTimestampToLocalDate(amount.getCardHistoryDate());
+	        if (isWithinThreeMonth(currentDate, cardHistoryDate)) {
+	            totalAmount += amount.getCardHistoryAmount();
+	        }
+	    }
+	    log.info("totalAmount: " + totalAmount);
+	    return totalAmount;
 	}
 
 	// 같은 년도, 같은 달 이용 내역 축적
@@ -275,17 +330,17 @@ public class CardHistoryService {
 		return usageByCategory;
 	}
 
-	public List<MemberAccountVO> getAccount() {
-		log.info(mRepo.findByMemberAccountMemberIdMemberId("user2").toString());
-		List<MemberAccountVO> mAccountList = mRepo.findByMemberAccountMemberIdMemberId("user2");
-		return mRepo.findByMemberAccountMemberIdMemberId("user2");
-	}
-
-	public MyNextLevelDTO tonextLevel(String memId) {
+	public MyNextLevelDTO tonextLevel(String memId, String memberHiNumber) {
 		ModelMapper mapper = new ModelMapper();
 		MyNextLevelDTO nextLevel = new MyNextLevelDTO();
+		int priceHasUsed = 0; // 3개월동안 HiCard를 사용한 금액의 합
 		Optional<MemberVO> optionalMember = mrRepo.findById(memId);
+		LocalDate currentDate = LocalDate.now();
 
+		// 하이카드 이용 내역 축적
+		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+		priceHasUsed += CalculateAmountForThreeMonth(currentDate, chList);
+		
 		if (optionalMember.isPresent()) {
 			MemberVO member = optionalMember.get();
 			ClassBenefitVO classBenefit = member.getClassBenefit();
@@ -294,19 +349,21 @@ public class CardHistoryService {
 				int classBenefitCode = classBenefit.getClassBenefitCode();
 				String classBenefitName = classBenefit.getClassBenefitName();
 				nextLevel.setMemberClass(classBenefitName);
-
-				int priceHasUsed = 1000; // 현재까지 사용한 금액 로직 추가 필요
-
+				
 				int nextClass = (int) Math.ceil(classBenefitCode + 1);
 				Optional<ClassBenefitVO> toNextVO = cbRepo.findById(nextClass);
+				nextLevel.setPriceHasUsed(priceHasUsed);
 				if (toNextVO.isPresent()) {
 					ClassBenefitVO toNext = toNextVO.get();
 					int beneRange = toNext.getClassBenefitMinRange();
 					nextLevel.setToNextClass(beneRange - priceHasUsed); // 남은 금액
+					nextLevel.setPriceHasUsed(priceHasUsed);
 					nextLevel.setNextClass(toNext.getClassBenefitName());
+				} else { // Platinum인 경우 
+					nextLevel.setToNextClass(0); // 남은 금액
+					nextLevel.setNextClass(null);
 				}
 			} else {
-				// Handle the case when ClassBenefitVO is null
 				return null;
 			}
 		} else {

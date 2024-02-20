@@ -11,6 +11,5 @@ public class MyDataDTO {
 	private List<CategoryBenefitDTO> myCategoryView;
 	private MyNextLevelDTO myNextLevel; 
 	private MyDataCompareDTO myCompare;
-	
-
+	private List<myDataCardForMonthDTO> myCardForMonth;
 }

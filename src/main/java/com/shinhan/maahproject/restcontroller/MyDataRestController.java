@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
@@ -16,6 +18,7 @@ import com.shinhan.maahproject.dto.MyDataCompareDTO;
 import com.shinhan.maahproject.dto.MyDataDTO;
 import com.shinhan.maahproject.dto.MyDataLimitDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
+import com.shinhan.maahproject.dto.myDataCardForMonthDTO;
 import com.shinhan.maahproject.service.ByCardDetailService;
 import com.shinhan.maahproject.service.ByCardService;
 import com.shinhan.maahproject.service.CardHistoryService;
@@ -24,6 +27,7 @@ import com.shinhan.maahproject.service.MemberService;
 import com.shinhan.maahproject.vo.BenefitCategoryVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.MemberAccountVO;
+import com.shinhan.maahproject.vo.PointByVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,29 +49,26 @@ public class MyDataRestController {
 	@Autowired
 	ByCardDetailService bdService;
 
-	@GetMapping(value = "/getMyData.do")
-	public MyDataDTO getMyData() {
+	@PostMapping(value = "/getMyData.do", consumes = "application/json")
+	public MyDataDTO getMyData(@RequestBody MemberDTO memberId) {
+		String memId = memberId.getMemberId();
+		log.info(memId);
 		MyDataDTO myData = new MyDataDTO();
-
-		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo("user2"); // 멤버의 하이카드 정보
+		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo(memId); // 멤버의 하이카드 정보
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
-		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo("user2");
+		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo(memId);
+
 		MyDataLimitDTO mylimit = chService.getHistory(HiNumber, byCardInfo);
-		myData.setMyLimit(mylimit); // 한도 설정
-		myData.setMyNextLevel(chService.tonextLevel("user2")); // 다음 레벨 설정
+		myData.setMyLimit(mylimit); // 한도
+		myData.setMyNextLevel(chService.tonextLevel(memId, HiNumber)); // 다음 레벨
 		myData.setMyCategoryView(chService.getCategoryView(HiNumber, byCardInfo)); // 카테고리 비율 설정
-		myData.setMyAvg(chService.getMonthAvg(HiNumber));
+		myData.setMyAvg(chService.getMonthAvg(HiNumber)); // 월 평균 사용
 
 		Long diff = 0L;
 		diff = Math.abs((chService.getHistory(HiNumber, byCardInfo)).getHistoryAmount()
 				- (chService.getLastMonthHistory(HiNumber, byCardInfo)));
-		myData.setMyCompare(chService.getCompare(HiNumber, diff));
+		myData.setMyCompare(chService.getCompare(HiNumber, diff)); // 지난달 VS 이번달
+		myData.setMyCardForMonth(chService.cardForMonth(byCardInfo)); // 카드 별 포인트
 		return myData;
-
-	}
-
-	@GetMapping(value = "/getTest.do")
-	public List<MemberAccountVO> getTest() {
-		return chService.getAccount();
 	}
 }
