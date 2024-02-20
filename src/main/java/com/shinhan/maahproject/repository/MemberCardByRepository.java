@@ -36,5 +36,7 @@ public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, S
 	List<MemberCardByVO> findByMemberAndMemberByStatusOrderByMemberByRank(MemberVO member, int memberByStatus);
 	
 	List<MemberCardByVO> findByMemberByNumber(String memberByNumber);
+	
+	List<MemberCardByVO> findByMemberAndMemberByNumberAndMemberByStatus(MemberVO member, String memberByNumber, int memberByStatus);
 
 }

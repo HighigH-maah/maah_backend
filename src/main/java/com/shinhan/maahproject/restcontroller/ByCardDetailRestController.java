@@ -41,7 +41,18 @@ public class ByCardDetailRestController {
 	}
 	
 	//나의 By:Card
-
+	@PostMapping(value="/isConnectHiOrNot.do", consumes = "application/json")
+	public int isConnectHiOrNot(@RequestBody Map<String, String> data) {
+		int isConnectHiOrNot = bdService.isConnectHiOrNot(data.get("memberId"), data.get("memberByNumber"));
+		return isConnectHiOrNot;
+	}
+	
+	@PostMapping(value="/getMyBycardCode.do", consumes = "application/json")
+	public int getMyBycardCode(@RequestBody Map<String, String> data) {
+		int byCardCode = bdService.getMyBycardCode(data.get("memberId"), data.get("memberByNumber"));
+		return byCardCode;
+	}
+	
 	@PostMapping(value="/getBycardHistory.do", consumes = "application/json")
 	public Map<Integer, List<CardHistoryDTO>> getBycardHistory(@RequestBody MemberDTO memberId) {
 		Map<Integer, List<CardHistoryDTO>> byCardHistory = bdService.getBycardHistory(memberId.getMemberId());
