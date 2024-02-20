@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.AccountCheckDTO;
+import com.shinhan.maahproject.dto.LostCardChooseListDTO;
 import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.dto.MyCardHiDTO;
 import com.shinhan.maahproject.dto.MyCardNotByDTO;
@@ -63,27 +65,24 @@ public class MyCardListService {
 
 	@Autowired
 	PointByRepository pbRepo;
-	
+
 	@Autowired
 	CardHistoryRepository chRepo;
 
-	//나의 하이카드
+	// 나의 하이카드
 	public MyCardHiDTO getMyCardListHi(String memberId) {
 
 		ModelMapper mapper = new ModelMapper();
-		Map<String, Timestamp> thisMonth = getThisMonth();
 
 		MemberVO member = mRepo.findById(memberId).orElse(null);
 
-		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerWithHiImageCode(member
-//				,thisMonth.get("startTimestamp"), thisMonth.get("endTimestamp")
-				);
-		
+		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerWithHiImageCode(member);
+
 		ClassBenefitVO cb = member.getClassBenefit();
 		// log.info(cb.toString());
 
 		MemberCardHiVO mhicard = mhicards.get(0);
-		
+
 		// 현재 날짜와 비교할 YearMonth 객체 생성
 		YearMonth currentYearMonth = YearMonth.now();
 
@@ -92,27 +91,20 @@ public class MyCardListService {
 		LocalDate lastDayOfMonth = currentYearMonth.atEndOfMonth();
 
 		// 조건을 추가하여 이번 달의 cardHistoryAmount 합계 계산
-		int thisMonthSum = chRepo.findByMemberCardHi(mhicard).stream()
-		        .filter(ch -> {
-		            // cardHistoryDate가 이번 달에 속하는지 확인
-		            LocalDate date = ch.getCardHistoryDate().toLocalDateTime().toLocalDate();
-		            return date.isEqual(firstDayOfMonth) || (date.isAfter(firstDayOfMonth) && date.isBefore(lastDayOfMonth));
-		        })
-		        .mapToInt(CardHistoryVO::getCardHistoryAmount)
-		        .sum();
-		
+		int thisMonthSum = chRepo.findByMemberCardHi(mhicard).stream().filter(ch -> {
+			// cardHistoryDate가 이번 달에 속하는지 확인
+			LocalDate date = ch.getCardHistoryDate().toLocalDateTime().toLocalDate();
+			return date.isEqual(firstDayOfMonth) || (date.isAfter(firstDayOfMonth) && date.isBefore(lastDayOfMonth));
+		}).mapToInt(CardHistoryVO::getCardHistoryAmount).sum();
+
 		int totalLimit = mchRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
-		
-//		int thisMounthSum = chRepo.findByMemberCardHi(mhicard).stream()
-//		        .mapToInt(CardHistoryVO::getCardHistoryAmount)
-//		        .sum();
 
 		MyCardHiDTO resultMyHiCard = mapper.map(mhicard, MyCardHiDTO.class);
 		resultMyHiCard.setThisMonthSum(thisMonthSum);
 		resultMyHiCard.setTotalLimit(totalLimit);
 		resultMyHiCard.setClassBenefitName(cb.getClassBenefitName());
 
-		//log.info(resultMyHiCard.toString());
+		// log.info(resultMyHiCard.toString());
 
 		return resultMyHiCard;
 
@@ -137,75 +129,66 @@ public class MyCardListService {
 		return thisMonth;
 	}
 
-	//나의 바이카드 리스트
+	// 나의 바이카드 리스트
 	public List<MyCardByDTO> getMyCardListBy(String memberId) {
 		ModelMapper mapper = new ModelMapper();
 		MemberVO member = mRepo.findById(memberId).orElse(null);
 
-//		LocalDateTime now = LocalDateTime.now();
-//		YearMonth ym = YearMonth.from(now);
-//
-//		String poinByMonth = ym.toString().replaceAll("-", "");
-		
+
 		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo
 				.findByMemberAndMemberByStatusAndConnectHiCardNotNullOrderByMemberByRank(member, 0);
-		
-//		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo.findByMemberAndMemberByStatusOrderByMemberByRank(member, 0);
 
-//		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo.findByMemberByCard(member);
-		
-		//log.info("77777777777777777777777"+mbycards.toString());
-		
+
 		List<MyCardByDTO> myCardListBy = mbycards.stream()
 				.map(memberCardByVO -> mapper.map(memberCardByVO, MyCardByDTO.class)).collect(Collectors.toList());
-		
-//		List<PointByVO> pointBys = pbRepo
-//				.findByMemberByNumberMonthMemberByNumberAndMemberByNumberMonthPointByMonth(memberId, memberId);
-
-//		for (MyCardByDTO aa : myCardListBy) {
-//			System.out.println(aa);
-//		}
 
 		return myCardListBy;
 	}
-	
-	//나의 낫바이카드 리스트
+
+	// 나의 낫바이카드 리스트
 	public List<MyCardNotByDTO> getMyCardListNotBy(String memberId) {
 		ModelMapper mapper = new ModelMapper();
 		MemberVO member = mRepo.findById(memberId).orElse(null);
-		
+
 		List<MemberCardByVO> mNotbycards = (List<MemberCardByVO>) mcbRepo
 				.findByMemberAndMemberByStatusAndConnectHiCardNullOrderByMemberByRank(member, 0);
-		
-		List<MyCardNotByDTO> myCardListNotBy = mNotbycards.stream()
-			    .map(memberCardByVO -> {
-			        MyCardNotByDTO dto = mapper.map(memberCardByVO, MyCardNotByDTO.class);
-			        
-			        // 시작일과 종료일 설정
-			        LocalDate currentDate = LocalDate.now();
-			        Timestamp startDate = Timestamp.valueOf(currentDate.atStartOfDay());
-			        Timestamp endDate = Timestamp.valueOf(currentDate.plusDays(1).atStartOfDay());
-			        
-			        Integer thisMonthSum = chRepo.findByMemberCardBy(startDate, endDate, memberCardByVO);
-			        
-			        int sum = (thisMonthSum != null) ? thisMonthSum : 0; // null 체크하여 기본값 할당
-			        
-			        dto.setThisMonthSum(sum);
-			        
-			        return dto;
-			    })
-			    .collect(Collectors.toList());
-		
+
+		// System.out.println(mNotbycards.get(0).getMemberByNumber());
+
+		List<MyCardNotByDTO> myCardListNotBy = mNotbycards.stream().map(memberCardByVO -> {
+			MyCardNotByDTO dto = mapper.map(memberCardByVO, MyCardNotByDTO.class);
+
+			// 시작일과 종료일 설정
+			LocalDate currentDate = LocalDate.now();
+			Timestamp startDate = Timestamp.valueOf(currentDate.withDayOfMonth(1).atStartOfDay());
+			Timestamp endDate = Timestamp.valueOf(currentDate
+					.withDayOfMonth(currentDate.getMonth().length(currentDate.isLeapYear())).atTime(23, 59, 59));
+
+			System.out.println(currentDate);
+			System.out.println(startDate);
+			System.out.println(endDate);
+
+			Integer thisMonthSum = chRepo.findByMemberCardBy(startDate, endDate, memberCardByVO);
+
+			System.out.println(thisMonthSum);
+
+			int sum = (thisMonthSum != null) ? thisMonthSum : 0; // null 체크하여 기본값 할당
+
+			dto.setThisMonthSum(sum);
+
+			return dto;
+		}).collect(Collectors.toList());
+
 		return myCardListNotBy;
 	}
-	
-	//계좌변경
+
+	// 하이카드 계좌변경
 	@Transactional
 	public int updateHiAccount(AccountCheckDTO accch) {
 
 		int result = 0;
 		MemberVO member = mRepo.findById(accch.getMemberId()).orElse(null);
-		
+
 		log.info(accch.toString());
 		List<MemberCardHiVO> mhicards = mchRepo
 				.findByMemberHiOwnerAndMemberHiStatus(mRepo.findById(accch.getMemberId()).orElse(null), 0);
@@ -225,7 +208,7 @@ public class MyCardListService {
 		// 신규 등록 필요
 		else {
 			log.info("신규 등록 필요");
-			
+
 			BankVO bank = bankRepo.findById(accch.getBankCode()).orElse(null);
 
 			assert bank != null;
@@ -234,15 +217,9 @@ public class MyCardListService {
 
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-			MemberAccountVO account = MemberAccountVO.builder()
-					.memberAccountNumber(accch.getBankName())
-					.bank(bank)
-					.memberAccountMemberId(member)
-					.memberAccountBalance(0)
-					.memberAccountRegdate(timestamp)
-					.memberAccountStatus(0)
-					.memberAccountPassword("1234")
-					.build();
+			MemberAccountVO account = MemberAccountVO.builder().memberAccountNumber(accch.getBankName()).bank(bank)
+					.memberAccountMemberId(member).memberAccountBalance(0).memberAccountRegdate(timestamp)
+					.memberAccountStatus(0).memberAccountPassword("1234").build();
 
 			if (!bankRepo.existsById(bank.getBankCode())) {
 				bankRepo.save(bank);
@@ -260,42 +237,146 @@ public class MyCardListService {
 
 		return result;
 	}
-	
-	//바이카드-하이카드제외
+
+	// 바이카드 계좌변경
+	public int updateByAccount(AccountCheckDTO accch) {
+		
+		int result = 0;
+		MemberVO member = mRepo.findById(accch.getMemberId()).orElse(null);
+
+		List<MemberCardByVO> mcbList = mcbRepo.findByMemberByNumber(accch.getCardNumber());
+
+		List<MemberAccountVO> mAccounts = maRepo.findByMemberAccountNumberAndBankBankCode(accch.getBankName(),
+				accch.getBankCode());
+
+		if (mAccounts.size() != 0) {
+			MemberAccountVO mAcc = mAccounts.get(0);
+			log.info(mAcc.toString());
+			for (MemberCardByVO mcb : mcbList) {
+				mcb.setMemberAccountKey(mAcc);
+				log.info("dddd" + mcb.toString());
+				mcbRepo.save(mcb);
+			}
+		}
+		// 신규 등록 필요
+		else {
+			log.info("신규 등록 필요");
+
+			BankVO bank = bankRepo.findById(accch.getBankCode()).orElse(null);
+
+			assert bank != null;
+
+			System.out.println("aaaaa" + bank);
+
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+			MemberAccountVO account = MemberAccountVO.builder().memberAccountNumber(accch.getBankName()).bank(bank)
+					.memberAccountMemberId(member).memberAccountBalance(0).memberAccountRegdate(timestamp)
+					.memberAccountStatus(0).memberAccountPassword("1234").build();
+
+			if (!bankRepo.existsById(bank.getBankCode())) {
+				bankRepo.save(bank);
+			}
+
+			MemberAccountVO savedAcc = maRepo.save(account);
+
+			System.out.println("bbbbb" + savedAcc);
+
+			MemberCardByVO mcBy = mcbList.get(0);
+			mcBy.setMemberAccountKey(savedAcc);
+			System.out.println("5555555555555555" + mcBy.getMemberAccountKey());
+			
+			mcbRepo.save(mcBy);
+
+		}
+
+		return result;
+	}
+
+	// 바이카드-하이카드제외
 	public int excludeHiCard(MyCardByDTO myCardBy) {
-		
+
 		List<MemberCardByVO> mcbList = mcbRepo.findByMemberByNumber(myCardBy.getMemberByNumber());
-		
+
 		MemberCardByVO memByCard = mcbList.get(0);
-		
-		System.out.println("aaaaaaaaaaaaaaaaa"+memByCard.getConnectHiCard().getMemberHiNumber());
-		
+
+		// System.out.println("aaaaaaaaaaaaaaaaa"+memByCard.getConnectHiCard().getMemberHiNumber());
+
 		memByCard.setConnectHiCard(null);
-		
+
 		mcbRepo.save(memByCard);
-	
+
 		return 0;
 	}
-	
-	//바이카드-하이카드연결
+
+	// 바이카드-하이카드연결
 	public int addHiCard(MyCardNotByDTO myCardNotBy) {
-		
+
 		MemberVO member = mRepo.findById(myCardNotBy.getMemberId()).orElse(null);
-		
-		List<MemberCardHiVO> mchList = mchRepo
-				.findByMemberHiOwnerAndMemberHiStatus(member, 0);
-		
+
+		List<MemberCardHiVO> mchList = mchRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0);
+
 		MemberCardHiVO memHiCard = mchList.get(0);
-		
+
 		List<MemberCardByVO> mcbList = mcbRepo.findByMemberByNumber(myCardNotBy.getMemberByNumber());
-		
+
 		MemberCardByVO memByCard = mcbList.get(0);
-		
+
 		memByCard.setConnectHiCard(memHiCard);
-		
+
 		mcbRepo.save(memByCard);
-		
+
 		return 0;
 	}
-	
+
+	// 분실카드 선택 리스트
+	public List<LostCardChooseListDTO> getlostCardChooseList(String memberId) {
+		MemberVO member = mRepo.findById(memberId).orElse(null);
+
+		List<LostCardChooseListDTO> resultList = new ArrayList<>();
+
+		List<MemberCardHiVO> mhicards = mchRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0);
+
+		MemberCardHiVO mhicard = mhicards.get(0);
+
+		LostCardChooseListDTO card = LostCardChooseListDTO.builder().memberCardNumber(mhicard.getMemberHiNumber())
+				.memberCardNickname(mhicard.getMemberHiNickname())
+				.cardImageFrontPath(mhicard.getHiImageCode().getHiCardImageFrontPath()).isHiCard(true).build();
+
+		resultList.add(card);
+
+		List<MemberCardByVO> mbycards = (List<MemberCardByVO>) mcbRepo.findByMemberAndMemberByStatus(member, 0);
+
+		for (int i = 0; i < mbycards.size(); i++) {
+			card = LostCardChooseListDTO.builder().memberCardNumber(mbycards.get(i).getMemberByNumber())
+					.memberCardNickname(mbycards.get(i).getMemberCardByNickname())
+					.cardImageFrontPath(mbycards.get(i).getByCard().getByImagePath()).isHiCard(false).build();
+
+			resultList.add(card);
+
+		}
+
+		return resultList;
+	}
+
+	public int reportLost(String memberCardNumber) {
+		System.out.println("여기옴모모오ㅑ로매ㅑㅗㄹ니ㅏㅓㅏㅣㄹㄴ어");
+		System.out.println(memberCardNumber);
+		
+		List<MemberCardHiVO> mchList = mchRepo.findByMemberHiNumber(memberCardNumber);
+		
+		if(mchList.size() > 0) {
+			MemberCardHiVO mch = mchList.get(0);
+			mch.setMemberHiStatus(1);
+			mchRepo.save(mch);
+		}else {
+			List<MemberCardByVO> mcbList = mcbRepo.findByMemberByNumber(memberCardNumber);
+			MemberCardByVO mcb = mcbList.get(0);
+			mcb.setMemberByStatus(1);
+			mcbRepo.save(mcb);
+		}
+
+		return 0;
+	}
+
 }

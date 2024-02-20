@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.AccountCheckDTO;
+import com.shinhan.maahproject.dto.LostCardChooseListDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.MyCardByDTO;
 import com.shinhan.maahproject.dto.MyCardHiDTO;
@@ -52,9 +53,14 @@ public class MyCardListRestController {
 		return mclService.updateHiAccount(accch);
 	}
 	
+	@PutMapping(value = "/updateByAccount.do", consumes = "application/json")
+	public int updateByAccount(@RequestBody AccountCheckDTO accch) {
+		
+		return mclService.updateByAccount(accch);
+	}
+	
 	@PostMapping(value = "/excludeHiCard.do", consumes = "application/json")
 	public int excludeHiCard(@RequestBody MyCardByDTO myCardBy) {
-		log.info("exclude");
 		return mclService.excludeHiCard(myCardBy);
 	}
 	
@@ -62,6 +68,18 @@ public class MyCardListRestController {
 	public int addHiCard(@RequestBody MyCardNotByDTO myCardNotBy) {
 		
 		return mclService.addHiCard(myCardNotBy);
+	}
+	
+	@PostMapping(value = "/getlostCardChooseList.do", consumes = "application/json")
+	public List<LostCardChooseListDTO> getlostCardChooseList(@RequestBody MemberDTO member){
+		
+		return mclService.getlostCardChooseList(member.getMemberId());
+	}
+	
+	@PostMapping(value = "/reportLost.do", consumes = "application/json")
+	public int reportLost(@RequestBody LostCardChooseListDTO lostCard) {
+		
+		return mclService.reportLost(lostCard.getMemberCardNumber());
 	}
 	
 }
