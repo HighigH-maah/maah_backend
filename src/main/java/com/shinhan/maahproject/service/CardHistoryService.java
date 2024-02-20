@@ -1,13 +1,17 @@
 package com.shinhan.maahproject.service;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.time.ZoneId;
 import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
 import com.shinhan.maahproject.dto.CategoryBenefitDTO;
-import com.shinhan.maahproject.dto.MemberDTO;
+import com.shinhan.maahproject.dto.MyDataCompareDTO;
 import com.shinhan.maahproject.dto.MyDataLimitDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
@@ -32,7 +36,6 @@ import com.shinhan.maahproject.vo.ClassBenefitVO;
 import com.shinhan.maahproject.vo.MemberAccountVO;
 import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberVO;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -56,6 +59,66 @@ public class CardHistoryService {
 
 	@Autowired
 	MemberCardByRepository mcbRepo;
+	
+	// 월 별 카드 할인 금액
+	public String cardSaleForMonth() {
+		return null;
+	}
+
+	// 저번달 VS 이번달
+	public MyDataCompareDTO getCompare(String memberHiNumber, Long diff) {
+		Long firstSum = 0L; 
+		Long middleSum = 0L; 
+		Long lastSum = 0L; 
+		Long moreThanUsedSum = 0L;
+		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+
+		for (CardHistoryVO amount : chList) {
+			LocalDateTime historyDate = amount.getCardHistoryDate().toLocalDateTime();
+			Long amountValue = (long) amount.getCardHistoryAmount();
+				
+			if (historyDate.getDayOfMonth() == LocalDateTime.now().getDayOfMonth()) {
+				firstSum += amountValue;
+			}
+	
+			if (historyDate.isAfter(LocalDateTime.now().minusDays(15))) {
+				middleSum += amountValue;
+			}
+		
+			if (historyDate.isAfter(LocalDateTime.now().minusDays(30))) {
+				lastSum += amountValue;
+			}
+
+			moreThanUsedSum += amountValue;
+		}
+		MyDataCompareDTO myCompare = new MyDataCompareDTO();
+		myCompare.setFirst(firstSum);
+		myCompare.setMiddle(middleSum);
+		myCompare.setLast(lastSum);
+		myCompare.setMoreThanUsed(moreThanUsedSum);
+		myCompare.setMoreThanUsed(diff);
+		return myCompare;
+	}
+
+	// 평균 사용 금액
+	public long getMonthAvg(String memberHiNumber) {
+		Long historyAmount = 0L; // actual usage (Hi)
+		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+		Collections.sort(chList, Comparator.comparing(CardHistoryVO::getCardHistoryDate).reversed());
+		CardHistoryVO mostRecentItem = chList.get(0);
+		CardHistoryVO latestItem = chList.get(chList.size() - 1);
+
+		LocalDateTime mostRecentDateTime = mostRecentItem.getCardHistoryDate().toLocalDateTime();
+		LocalDateTime latestDateTime = latestItem.getCardHistoryDate().toLocalDateTime();
+		Duration duration = Duration.between(latestDateTime, mostRecentDateTime);
+		long monthsDifference = duration.toDays() / 30; // 일 수로 나눈다
+
+		// 총 비용 건수를 그 개월로 나눈다
+		for (CardHistoryVO amount : chList) {
+			historyAmount += amount.getCardHistoryAmount();
+		}
+		return historyAmount / monthsDifference;
+	}
 
 	// Hi와 By 한도 현황 및 남은 금액
 	public MyDataLimitDTO getHistory(String memberHiNumber, Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
@@ -65,6 +128,8 @@ public class CardHistoryService {
 		MyDataLimitDTO myLimit = new MyDataLimitDTO();
 
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+
+		log.info("chList:" + chList.toString());
 		LocalDate currentDate = LocalDate.now();
 
 		// 바이카드 사용 이력
@@ -164,15 +229,14 @@ public class CardHistoryService {
 				MemberCardByVO mbvo = mcbRepo.findById(ByNumber).orElse(null); // 멤버카드VO 가져옴
 				List<CardHistoryVO> chByHistory = chRepo.findByMemberCardhistoryB(ByNumber); // 이제 history에 접근
 				// 바이카드 카테고리 누적
-				usageByCategory = calculateCategory(bcList,currentDate,chByHistory,usageByCategory);
+				usageByCategory = calculateCategory(bcList, currentDate, chByHistory, usageByCategory);
 			}
 		}
 
-	
 		// 하이카드 카테고리 누적
 		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
-		usageByCategory = calculateCategory(bcList,currentDate,chList,usageByCategory);
-	
+		usageByCategory = calculateCategory(bcList, currentDate, chList, usageByCategory);
+
 		// CategoryBenefitDTO에 항목별로 금액 담기
 		List<CategoryBenefitDTO> categoryBenefitList = new ArrayList();
 		for (BenefitCategoryVO benefitCategory : bcList) {
