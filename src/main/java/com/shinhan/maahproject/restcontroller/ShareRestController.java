@@ -38,4 +38,9 @@ public class ShareRestController {
 	public ShareByPointUpdateDTO updateByPoint(@RequestBody ShareByPointUpdateDTO sharePointInput) {
 		return sService.updateByPoint(sharePointInput);
 	}
+	
+	@PostMapping(value="returnByPoint.do")
+	public ShareByPointUpdateDTO returnByPoint(@RequestBody ShareByPointUpdateDTO sharePointInput) {
+		return sService.returnByPoint(sharePointInput);
+	}
 }

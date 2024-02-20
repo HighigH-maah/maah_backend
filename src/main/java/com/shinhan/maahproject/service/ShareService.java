@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.shinhan.maahproject.dto.BenefitDTO;
 import com.shinhan.maahproject.dto.ByCardDTO;
 import com.shinhan.maahproject.dto.MemberBenefitDTO;
@@ -60,10 +59,10 @@ public class ShareService {
 
 	@Autowired
 	BenefitCategoryRepository bcRepo;
-	
+
 	@Autowired
 	MemberBenefitRepository mbhRepo;
-	
+
 	@Autowired
 	PointByRepository pbRepo;
 
@@ -74,23 +73,21 @@ public class ShareService {
 
 //		log.info(member.toString());
 		MemberCardHiVO hicard = mhRepo.findFirstMemberCardHi(member);
-		
+
 		List<MemberBenefitDTO> mbhList = new ArrayList<>();
-		
+
 		List<MemberBenefitVO> mbhvoList = mbhRepo.findByMemberBenefitMemberIdMemberId(memberId);
-		for(MemberBenefitVO mbh: mbhvoList) {
+		for (MemberBenefitVO mbh : mbhvoList) {
 			MemberBenefitDTO mbhdto = mapper.map(mbh, MemberBenefitDTO.class);
 			mbhList.add(mbhdto);
 		}
-		
-		
+
 		log.info(hicard.toString());
 		MemberCardHiShareDTO hiShare = MemberCardHiShareDTO.builder().memberHiNickname(hicard.getMemberHiNickname())
-				.memberHiPoint(hicard.getMemberHiPoint()).hiImageCode(hicard.getHiImageCode()).memberBenefitList(mbhList).build();
+				.memberHiPoint(hicard.getMemberHiPoint()).hiImageCode(hicard.getHiImageCode())
+				.memberBenefitList(mbhList).build();
 
 		List<MemberCardByDTO> byCardDtoList = getMemberByCard(hicard);
-		
-		
 
 		HashMap<String, Object> hiAndBy = new HashMap<>();
 		hiAndBy.put("hicard", hiShare);
@@ -117,44 +114,38 @@ public class ShareService {
 			ByCardDTO byCardDto = bydto.getByCard();
 			List<ByRelationBenefitVO> rblist = bycard.getByCard().getBenefits();
 
-			//바이카드 DTO 생성 혜택 리스트 뽑기
+			// 바이카드 DTO 생성 혜택 리스트 뽑기
 			List<BenefitDTO> benefitList = new ArrayList<>();
 
 			for (ByRelationBenefitVO rb : rblist) {
-				BenefitDTO bDto = BenefitDTO.builder()
-						.byBenefitDesc(rb.getBenefits().getByBenefitDesc())
+				BenefitDTO bDto = BenefitDTO.builder().byBenefitDesc(rb.getBenefits().getByBenefitDesc())
 						.benefitCode(rb.getBenefits().getByBenefitCategory().getBenefitCode())
-						.byBenefitMinCondition(rb.getBenefits().getByBenefitMinCondition())
-						.build();
+						.byBenefitMinCondition(rb.getBenefits().getByBenefitMinCondition()).build();
 				benefitList.add(bDto);
 			}
 			Collections.sort(benefitList, Comparator.comparingInt(BenefitDTO::getByBenefitMinCondition));
 
 			byCardDto.setBenefitList(benefitList);
 			byCardDto.setByCategoryList(bydto.getByCard().getByCategoryList());
-			
-			
-			//멤버 바이 DTO에 넣기
+
+			// 멤버 바이 DTO에 넣기
 			bydto.setByCard(byCardDto);
-			
-			//이번 달 찾기
+
+			// 이번 달 찾기
 			String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
 			List<PointByVO> pointList = pbRepo.findByMemberByNumberAndPointByMonth(bycard, currentYearMonth);
 			int pointByAmount = 0;
-			 if(!pointList.isEmpty()) {
-				 pointByAmount = pointList.get(0).getPointByAmount();
+			if (!pointList.isEmpty()) {
+				pointByAmount = pointList.get(0).getPointByAmount();
 			} else {
-				PointByVO point = PointByVO.builder()
-						.memberByNumber(bycard)
-						.pointByMonth(currentYearMonth)
-						.pointByAmount(0)
-						.build();
+				PointByVO point = PointByVO.builder().memberByNumber(bycard).pointByMonth(currentYearMonth)
+						.pointByAmount(0).build();
 				pbRepo.save(point);
 			}
-			//이번 달 바이포인트 넣기
+			// 이번 달 바이포인트 넣기
 			bydto.setPointByAmount(pointByAmount);
-			
-			//멤버 바이 DTO List에 넣기
+
+			// 멤버 바이 DTO List에 넣기
 			memberByDtoList.add(bydto);
 		}
 
@@ -184,35 +175,67 @@ public class ShareService {
 
 		return categoryToDesc;
 	}
-	
+
 	@Transactional
 	public ShareByPointUpdateDTO updateByPoint(ShareByPointUpdateDTO sharePointInput) {
 		MemberVO member = mRepo.findById(sharePointInput.getMemberId()).orElse(null);
 		MemberCardByVO memByCard = mbRepo.findById(sharePointInput.getByCardNumber()).orElse(null);
 		String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
-		
+
 		MemberCardHiVO memHiCard = mhRepo.findFirstMemberCardHi(member);
-		
-		//존재하는 포인트보다 조작하고 싶은게 클 경우
-		if(memHiCard.getMemberHiPoint() < sharePointInput.getAmount()) {
+
+		// 존재하는 포인트보다 조작하고 싶은게 클 경우
+		if (memHiCard.getMemberHiPoint() < sharePointInput.getAmount()) {
 			return null;
 		}
-		
+
 		List<PointByVO> pointList = pbRepo.findByMemberByNumberAndPointByMonth(memByCard, currentYearMonth);
 		PointByVO point = null;
-		if(pointList.isEmpty()) {
-			point = PointByVO.builder().memberByNumber(memByCard).pointByMonth(currentYearMonth).pointByAmount(sharePointInput.getAmount()).build();
-			pbRepo.save(point);;
+		if (pointList.isEmpty()) {
+			point = PointByVO.builder().memberByNumber(memByCard).pointByMonth(currentYearMonth)
+					.pointByAmount(sharePointInput.getAmount()).build();
+			pbRepo.save(point);
+			;
 		} else {
-			//이번 달 포인트가 있는 경우
+			// 이번 달 포인트가 있는 경우
 			point = pointList.get(0);
-			point.setPointByAmount(point.getPointByAmount()+sharePointInput.getAmount());
+			point.setPointByAmount(point.getPointByAmount() + sharePointInput.getAmount());
 		}
 		memHiCard.setMemberHiPoint(memHiCard.getMemberHiPoint() - sharePointInput.getAmount());
-		
+
 		sharePointInput.setHiAmount(memHiCard.getMemberHiPoint());
 		sharePointInput.setByAmount(point.getPointByAmount());
+
+		return sharePointInput;
+	}
+
+	@Transactional
+	public ShareByPointUpdateDTO returnByPoint(ShareByPointUpdateDTO sharePointInput) {
+		MemberCardByVO memByCard = mbRepo.findById(sharePointInput.getByCardNumber()).orElse(null);
+		String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+		List<PointByVO> pointList = pbRepo.findByMemberByNumberAndPointByMonth(memByCard, currentYearMonth);
+		// 기존 포인트 정보가 없을 경우 - 뺄 것도 없음.
+		if (pointList.isEmpty()) {
+			return null;
+		}
+		PointByVO point = pointList.get(0);
+
+		// 존재하는 포인트보다 조작하고 싶은게 클 경우
+		if (point.getPointByAmount() < sharePointInput.getAmount()) {
+			return null;
+		}
+
+		//바꿀 수 있는 경우
+		MemberVO member = mRepo.findById(sharePointInput.getMemberId()).orElse(null);
+		MemberCardHiVO memHiCard = mhRepo.findFirstMemberCardHi(member);
 		
+		//bypoint에서 빼고, hipoint에 더하기
+		point.setPointByAmount(point.getPointByAmount() - sharePointInput.getAmount());
+		memHiCard.setMemberHiPoint(memHiCard.getMemberHiPoint() + sharePointInput.getAmount());
+
+		sharePointInput.setHiAmount(memHiCard.getMemberHiPoint());
+		sharePointInput.setByAmount(point.getPointByAmount());
+
 		return sharePointInput;
 	}
 
