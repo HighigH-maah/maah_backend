@@ -33,4 +33,19 @@ public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, S
 	
 	List<MemberCardByVO> findByMemberByNumber(String memberByNumber);
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
