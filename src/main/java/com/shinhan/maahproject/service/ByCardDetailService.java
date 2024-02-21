@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.ByCardBenefitsDTO;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
+import com.shinhan.maahproject.dto.ByCardInfoChangeDTO;
 import com.shinhan.maahproject.dto.HiCardBenefitsDTO;
 import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
@@ -37,6 +38,7 @@ import com.shinhan.maahproject.vo.MemberVO;
 import com.shinhan.maahproject.vo.PointByMultikey;
 import com.shinhan.maahproject.vo.PointByVO;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -233,6 +235,8 @@ public class ByCardDetailService {
 					String pointByMonth = null;
 					int pointByAmount = 0;
 					String connectHiCard = null;
+					int memberByPointGoal = bycard.getMemberByPointGoal();
+					int memberByRank = bycard.getMemberByRank();
 					
 					 // 현재 년월 가져오기
 	                String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
@@ -265,7 +269,7 @@ public class ByCardDetailService {
 	                	connectHiCard = connectHiCardNum.getMemberHiNumber();//connectHiCard
 	                }
 	                
-	                ByCardDetailDTO dto = new ByCardDetailDTO(memberByNumber,byCode, byName, memberCardByNickname, byImagePath, pointByAmount, pointByMonth, byBenefitMinCondition, connectHiCard);
+	                ByCardDetailDTO dto = new ByCardDetailDTO(memberByNumber,byCode, byName, memberCardByNickname, byImagePath, pointByAmount, pointByMonth, byBenefitMinCondition, connectHiCard, memberByPointGoal, memberByRank);
 	                bycardInfoList.add(dto);
 	                
 	                if(byCardDetaildtoMap.get(dto.getByCode())==null){
@@ -311,5 +315,35 @@ public class ByCardDetailService {
  		}
 		
  		return byCardBenefitsdtoMap;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Transactional
+	public int updateByCardInfo(ByCardInfoChangeDTO byInfoChangedto) {
+		MemberCardByVO mbycard = mbRepo.findById(byInfoChangedto.getMemberByNumber()).orElse(null);
+		
+		if(byInfoChangedto.getMemberByPointGoal() >= 0) {
+			mbycard.setMemberByPointGoal(byInfoChangedto.getMemberByPointGoal());
+		} 
+		if(!byInfoChangedto.getMemberCardByNickname().equals("")) {
+			mbycard.setMemberCardByNickname(byInfoChangedto.getMemberCardByNickname());
+		}
+		else {
+			return 0;
+		}
+		return 1;
 	}
 }

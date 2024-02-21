@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.ByCardBenefitsDTO;
 import com.shinhan.maahproject.dto.ByCardDetailDTO;
+import com.shinhan.maahproject.dto.ByCardInfoChangeDTO;
 import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.service.ByCardDetailService;
@@ -75,5 +76,19 @@ public class ByCardDetailRestController {
 	public Map<Integer, List<ByCardBenefitsDTO>> getAllByCardBenefits(@RequestBody MemberDTO memberId) {
 		Map<Integer, List<ByCardBenefitsDTO>> byCardBenefits = bdService.getAllByCardBenefits(memberId.getMemberId());
 		return byCardBenefits;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@PostMapping(value="updateByCardInfo.do", consumes = "application/json")
+	public int updateByCardInfo(@RequestBody ByCardInfoChangeDTO byInfoChange){
+		return bdService.updateByCardInfo(byInfoChange);
 	}
 }
