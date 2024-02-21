@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.HiCardBenefitsDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
-import com.shinhan.maahproject.dto.HiCardHistoryDTO;
+import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
 import com.shinhan.maahproject.service.CertificationService;
@@ -51,8 +51,8 @@ public class HiCardDetailRestController {
 	}
 	
 	@PostMapping(value="/getHicardHistory.do", consumes = "application/json")
-	public List<HiCardHistoryDTO> getHicardHistory(@RequestBody MemberDTO memberId) {
-		List<HiCardHistoryDTO> hiCardHistory = hdService.getHicardHistory(memberId.getMemberId());
+	public List<CardHistoryDTO> getHicardHistory(@RequestBody MemberDTO memberId) {
+		List<CardHistoryDTO> hiCardHistory = hdService.getHicardHistory(memberId.getMemberId());
 		return hiCardHistory;
 	}
 	
