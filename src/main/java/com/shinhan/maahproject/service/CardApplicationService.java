@@ -1,6 +1,8 @@
 package com.shinhan.maahproject.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +10,21 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shinhan.maahproject.dto.CardApplyDTO;
 import com.shinhan.maahproject.dto.MyCardByDTO;
+import com.shinhan.maahproject.repository.BankRepository;
 import com.shinhan.maahproject.repository.ByCardRepository;
+import com.shinhan.maahproject.repository.CardApplyRepository;
 import com.shinhan.maahproject.repository.HiCardImageRepository;
+import com.shinhan.maahproject.repository.MemberAccountRepository;
+import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
+import com.shinhan.maahproject.vo.BankVO;
 import com.shinhan.maahproject.vo.ByCardVO;
+import com.shinhan.maahproject.vo.CardApplyVO;
+import com.shinhan.maahproject.vo.HiCardImageVO;
+import com.shinhan.maahproject.vo.MemberAccountMultikey;
+import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 @Service
 public class CardApplicationService {
@@ -21,13 +33,25 @@ public class CardApplicationService {
 	MyCardListService mclService;
 	
 	@Autowired
-	HiCardImageRepository hicardRepo;
+	HiCardImageRepository hicardImgRepo;
+	
+	@Autowired
+	MemberCardHiRepository hicardRepo;
 	
 	@Autowired
 	ByCardRepository bycardRepo;
 	
 	@Autowired
 	MemberRepository memberRepo;
+	
+	@Autowired
+	MemberAccountRepository accountRepo;
+	
+	@Autowired
+	BankRepository bankRepo;
+	
+	@Autowired
+	CardApplyRepository applyRepo;
 
 	public Map<String, Object> getHicardDesigns(String userId) {
 		Map<String, Object> res = new HashMap<>();
@@ -61,10 +85,95 @@ public class CardApplicationService {
 			}
 		}
 		
-		res.put("hi", hicardRepo.findAll());
+		res.put("hi", hicardImgRepo.findAll());
 		res.put("by", by);
 		
 		return res;
+	}
+
+	@SuppressWarnings("null")
+	public HiCardImageVO applyCard(CardApplyDTO cardApply) {
+		CardApplyVO applyInfo = changeDTO(cardApply);
+		applyRepo.save(applyInfo);
+		if(cardApply.getType().equals("hi")) {
+			
+			// 만료일 계산
+			Calendar cal = Calendar.getInstance();
+			Timestamp expdate = (Timestamp) applyInfo.getCardApplyDate().clone();
+			cal.setTime(expdate);
+			cal.add(Calendar.YEAR, 5);
+			expdate.setTime(cal.getTime().getTime());
+			System.out.println(expdate);
+			
+			// 카드번호 생성
+			boolean isNum = true;
+			String cardNumber = "";
+			while(isNum) {
+				cardNumber = Integer.toString((int) (Math.random() * 9999999));
+				for(int i = 0; i < 7 - cardNumber.length(); i++) {
+					cardNumber = "0" + cardNumber;
+				}
+				cardNumber = "1" + cardNumber;
+				isNum = !hicardRepo.findById(cardNumber).isEmpty();
+			}
+			
+			// CVC 생성
+			String cvc = Integer.toString((int) (Math.random() * 999));
+			for(int i = 0; i < 3 - cvc.length(); i++) {
+				cvc = "0" + cvc;
+			}
+			
+			HiCardImageVO imgCode = hicardImgRepo.findById(Integer.parseInt(cardApply.getCard())).get();
+			MemberCardHiVO card = MemberCardHiVO.builder()
+					.memberHiNumber(cardNumber)
+					.memberHiPassword(applyInfo.getCardApplyPassword())
+					.memberHiOwner(applyInfo.getMember())
+					.memberAccountKey(applyInfo.getMemberAccountKey())
+					.hiImageCode(imgCode)
+					.memberHiRegdate(applyInfo.getCardApplyDate())
+					.memberHiExpdate(expdate)
+					.memberHiPaydate(applyInfo.getCardApplyPaydate())
+					.memberHiCvc(cvc)
+					.cardApplyCode(applyInfo)
+					.memberHiIsTransport(applyInfo.getCardApplyIsTransport())
+					.memberHiNickname(applyInfo.getMember().getMemberName() + "님HIcard")
+					.build();
+			
+			hicardRepo.save(card);
+			
+			return imgCode;
+		}
+		return null;
+	}
+	
+	public List<BankVO> getCardApplyBankCode() {
+		return (List<BankVO>) bankRepo.findAll();
+	}
+	
+	private CardApplyVO changeDTO(CardApplyDTO cardApply) {
+		return CardApplyVO.builder()
+				.member(memberRepo.findById(cardApply.getMemberId()).get())
+				.cardApplyMemberSocialNumber(cardApply.getCardApplyMemberSocialNumber())
+				.cardApplyDate(cardApply.getCardApplyDate())
+				.cardApplyIdIssueDate(cardApply.getCardApplyIdIssueDate())
+				.cardApplyIsTermsOfService(cardApply.getCardApplyIsTermsOfService())
+				.cardApplyAnnualIncome(cardApply.getCardApplyAnnualIncome())
+				.cardApplyPaydate(cardApply.getCardApplyPaydate())
+				.cardApplyCreditPoint(cardApply.getCardApplyCreditPoint())
+				.cardApplySourceFund(cardApply.getCardApplySourceFund())
+				.cardApplyPurpose(cardApply.getCardApplyPurpose())
+				.cardApplyIsVerify(cardApply.getCardApplyIsVerify())
+				.cardApplyEngname(cardApply.getCardApplyEngname())
+				.cardApplyIsInternational(cardApply.getCardApplyIsInternational())
+				.cardApplyIsAccountVerify(cardApply.getCardApplyIsAccountVerify())
+				.cardApplyLimitAmount(cardApply.getCardApplyLimitAmount())
+				.cardApplyAddress(cardApply.getCardApplyAddress())
+				.cardApplyPassword(cardApply.getCardApplyPassword())
+				.cardApplyIsTransport(cardApply.getCardApplyIsTransport())
+				.memberAccountKey(accountRepo.findById(MemberAccountMultikey.builder()
+						.memberAccountNumber(cardApply.getAccountNumber())
+						.bank(cardApply.getBankCode()).build()).get())
+				.build();
 	}
 
 }
