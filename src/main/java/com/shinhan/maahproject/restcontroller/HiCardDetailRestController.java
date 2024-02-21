@@ -15,8 +15,10 @@ import com.shinhan.maahproject.dto.HiCardDetailDTO;
 import com.shinhan.maahproject.dto.HiCardHistoryDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
+import com.shinhan.maahproject.service.CertificationService;
 import com.shinhan.maahproject.service.HICardDetailService;
 import com.shinhan.maahproject.vo.BankVO;
+import com.shinhan.maahproject.vo.TempHiVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,15 @@ public class HiCardDetailRestController {
 	
 	@Autowired
 	HICardDetailService hdService;
+	
+	@Autowired
+	CertificationService cService;
+	
+	@PostMapping(value="/getVirtualCardExistOrNot.do", consumes = "application/json")
+	public int getVirtualCardExistOrNot(@RequestBody MemberDTO memberId){
+		int virtualCardExistOrNot = hdService.getVirtualCardExistOrNot(memberId.getMemberId());
+		return virtualCardExistOrNot;
+	}
 	
 	@PostMapping(value="/getHiCardBenefits.do", consumes = "application/json")
 	public List<HiCardBenefitsDTO> getHiCardBenefits(@RequestBody MemberDTO memberId){
@@ -59,7 +70,7 @@ public class HiCardDetailRestController {
 //		return hiCardInfo;
 //	}
 	
-	@PostMapping(value="/getAccountInfo.do", consumes = "application/json")
+	@PostMapping(value="/getHiCardAccountInfo.do", consumes = "application/json")
 	public AccountChangeDTO getAccountInfo(@RequestBody MemberDTO memberId) {
 		AccountChangeDTO hiCardAccountInfo = hdService.getHiCardAccountInfo(memberId.getMemberId());
 		return hiCardAccountInfo;
@@ -69,6 +80,11 @@ public class HiCardDetailRestController {
 	public VirtualCardInfoDTO getVirtualCard(@RequestBody MemberDTO memberId) {
 		VirtualCardInfoDTO vCard = hdService.getVirtualCardInfo(memberId.getMemberId());
 		return vCard;
+	}
+	
+	@PostMapping(value="/getTempHiCard.do", consumes = "application/json")
+	public TempHiVO getTempHiCard(@RequestBody MemberDTO memberId) {
+		return cService.tempHiInsert(memberId.getMemberId());
 	}
 	
 }

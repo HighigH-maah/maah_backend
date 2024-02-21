@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shinhan.maahproject.dto.CertDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.service.CertificationService;
+import com.shinhan.maahproject.vo.TempHiVO;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +24,9 @@ public class CertificationRestController {
 	CertificationService certService;
 	
 	@PostMapping(value="/getCert.do", consumes = "application/json")
-	public String getCert(@RequestBody Map<String, String> data) {
+	public CertDTO getCert(@RequestBody Map<String, String> data) {
 		//인증성공후 imp_uid안에 있는 이름과, member table에 있는 member_name과 같으면 가상카드번호 발급
-		String result = certService.cert(data.get("imp_uid"), data.get("memberId"));
+		CertDTO result = certService.cert(data.get("imp_uid"), data.get("memberId"));
 		return result;
 	}
 }

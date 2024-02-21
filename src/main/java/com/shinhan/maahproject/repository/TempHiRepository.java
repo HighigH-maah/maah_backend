@@ -11,4 +11,6 @@ public interface TempHiRepository extends JpaRepository<TempHiVO, String> {
 	//TempHiVO findByMemberCardHiAndTempHiStatus(MemberCardHiVO memberCardHi, int tempHiStatus);
 
 	 List<TempHiVO> findByMemberCardHiAndTempHiStatus(MemberCardHiVO memberCardHi, int tempHiStatus);
+	 
+	 List<TempHiVO> findByMemberCardHi(MemberCardHiVO memberCardHi);
 }

@@ -63,17 +63,17 @@ public class MemberVO {
 
 	private String memberAddress;
 
-	@OneToMany(mappedBy = "memberAccountMemberId", fetch = FetchType.LAZY)
-	private List<MemberAccountVO> memberAccounts;
+//	@OneToMany(mappedBy = "memberAccountMemberId", fetch = FetchType.LAZY)
+//	private List<MemberAccountVO> memberAccounts;
 	
-	@OneToMany(mappedBy = "memberCouponMemberId", fetch = FetchType.LAZY)
-	private List<MemberCouponVO> memberCoupons;
+//	@OneToMany(mappedBy = "memberCouponMemberId", fetch = FetchType.LAZY)
+//	private List<MemberCouponVO> memberCoupons;
 	
 	//member_hi_owner
-	@OneToMany(mappedBy = "memberHiOwner", fetch = FetchType.LAZY)
-	private List<MemberCardHiVO> memberHiCard;
+//	@OneToMany(mappedBy = "memberHiOwner", fetch = FetchType.LAZY)
+//	private List<MemberCardHiVO> memberHiCard;
 	
-	@OneToMany(mappedBy = "memberBenefitMemberId", fetch = FetchType.LAZY)
-	private List<MemberBenefitVO> memberBenefits;
+//	@OneToMany(mappedBy = "memberBenefitMemberId", fetch = FetchType.LAZY)
+//	private List<MemberBenefitVO> memberBenefits;
 
 }

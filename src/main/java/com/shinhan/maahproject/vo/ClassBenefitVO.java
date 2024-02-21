@@ -38,5 +38,6 @@ public class ClassBenefitVO {
 	private String classBenefitName;
 	private Integer classBenefitMinRange;
 	private Double classBenefitSavePercent;
+	
 
 }
