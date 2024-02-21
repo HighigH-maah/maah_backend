@@ -29,6 +29,7 @@ import com.shinhan.maahproject.dto.MyDataLimitDTO;
 import com.shinhan.maahproject.dto.MyNextLevelDTO;
 import com.shinhan.maahproject.dto.myDataCardForMonthDTO;
 import com.shinhan.maahproject.repository.BenefitCategoryRepository;
+import com.shinhan.maahproject.repository.ByCardRepository;
 import com.shinhan.maahproject.repository.CardHistoryRepository;
 import com.shinhan.maahproject.repository.ClassBenefitRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
@@ -66,6 +67,9 @@ public class CardHistoryService {
 
 	@Autowired
 	MemberCardByRepository mcbRepo;
+	
+	@Autowired
+	ByCardRepository bRepo;
 
 	@Autowired
 	PointByRepository pbRepo;
@@ -88,6 +92,7 @@ public class CardHistoryService {
 					cardFor.setPoint(pointList.get(0).getPointByAmount());
 				}
 				cardFor.setByCardName(mbvo.getMemberCardByNickname());
+				cardFor.setByCardImage(mbvo.getByCard().getByImagePath());
 				cardForMonth.add(cardFor);
 			}
 		}

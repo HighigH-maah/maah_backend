@@ -52,14 +52,16 @@ public class MyDataRestController {
 	@PostMapping(value = "/getMyData.do", consumes = "application/json")
 	public MyDataDTO getMyData(@RequestBody MemberDTO memberId) {
 		String memId = memberId.getMemberId();
-		log.info(memId);
+		
 		MyDataDTO myData = new MyDataDTO();
 		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo(memId); // 멤버의 하이카드 정보
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
+		
 		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo(memId);
 
 		MyDataLimitDTO mylimit = chService.getHistory(HiNumber, byCardInfo);
 		myData.setMyLimit(mylimit); // 한도
+		myData.setMyHiCardImage(hiCardInfo.getHiCardImageFrontPath()); // 하이카드 이미지
 		myData.setMyNextLevel(chService.tonextLevel(memId, HiNumber)); // 다음 레벨
 		myData.setMyCategoryView(chService.getCategoryView(HiNumber, byCardInfo)); // 카테고리 비율 설정
 		myData.setMyAvg(chService.getMonthAvg(HiNumber)); // 월 평균 사용

@@ -6,4 +6,5 @@ import lombok.Data;
 public class myDataCardForMonthDTO {
 	private int point;
 	private String byCardName;
+	private String byCardImage;
 }
