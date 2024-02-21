@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.AccountCheckDTO;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
+import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.utils.PortoneAPI;
 import com.shinhan.maahproject.vo.BankVO;
 import com.shinhan.maahproject.vo.MemberAccountMultikey;
 import com.shinhan.maahproject.vo.MemberAccountVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
+import com.shinhan.maahproject.vo.MemberVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,11 +27,18 @@ public class AccountNameRestController {
 	@Autowired
 	private PortoneAPI accountCheck;
 	
+	@Autowired
+	MemberRepository mRepo;
+	
 	@PostMapping(value = "/getAccountName.do", consumes = "application/json")
 	public AccountCheckDTO getAccountName(@RequestBody AccountCheckDTO accoChack) throws UnsupportedEncodingException {
 		
+		System.out.println(accoChack.getMemberId());
+		
+		MemberVO member = mRepo.findById(accoChack.getMemberId()).orElse(null);
+		
 		String accountNm = accountCheck.getAcountHolderNM(accoChack.getBankCode(),accoChack.getBankName());
-		String maberNm = accoChack.getMemberName();
+		String maberNm = member.getMemberName();
 				//accoChack.getMemberId();
 		accoChack.setAccountChkYn("N");
 		
