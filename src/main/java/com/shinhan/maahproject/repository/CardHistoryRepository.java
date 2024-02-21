@@ -21,10 +21,14 @@ public interface CardHistoryRepository extends CrudRepository<CardHistoryVO, Lon
             "AND ch.cardHistoryDate < :endDate " +
             "AND ch.memberCardBy = :memberCardBy")
 	Integer findByMemberCardBy(@Param("startDate") Timestamp startDate,
-            @Param("endDate") Timestamp endDate,
+            @Param("endDate") Timestamp endDate, 
             @Param("memberCardBy") MemberCardByVO memberCardBy);
 
 	 List<CardHistoryVO> findByMemberCardHiMemberHiNumber(String memberHiNumber);
-
-
+	 
+	 
+	 
+	 @Query("SELECT ch FROM CardHistoryVO ch "
+	 		+ "WHERE ch.memberCardBy.memberByNumber = :memberCard ")
+	 List<CardHistoryVO> findByMemberCardhistoryB(@Param("memberCard") String memberCardBy);
 }
