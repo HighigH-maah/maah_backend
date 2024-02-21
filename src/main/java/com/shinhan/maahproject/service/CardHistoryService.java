@@ -96,37 +96,67 @@ public class CardHistoryService {
 
 	// 저번달 VS 이번달
 	public MyDataCompareDTO getCompare(String memberHiNumber, Long diff) {
-		Long firstSum = 0L;
-		Long middleSum = 0L;
-		Long lastSum = 0L;
-		Long moreThanUsedSum = 0L;
-		List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
+	    Long firstSumCurrentMonth = 0L;
+	    Long middleSumCurrentMonth = 0L;
+	    Long lastSumCurrentMonth = 0L;
+	    Long moreThanUsedSumCurrentMonth = 0L;
 
-		for (CardHistoryVO amount : chList) {
-			LocalDateTime historyDate = amount.getCardHistoryDate().toLocalDateTime();
-			Long amountValue = (long) amount.getCardHistoryAmount();
+	    Long firstSumPreviousMonth = 0L;
+	    Long middleSumPreviousMonth = 0L;
+	    Long lastSumPreviousMonth = 0L;
+	    Long moreThanUsedSumPreviousMonth = 0L;
 
-			if (historyDate.getDayOfMonth() == LocalDateTime.now().getDayOfMonth()) {
-				firstSum += amountValue;
-			}
+	    LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime firstDayCurrentMonth = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
+	    LocalDateTime firstDayPreviousMonth = firstDayCurrentMonth.minusMonths(1);
 
-			if (historyDate.isAfter(LocalDateTime.now().minusDays(15))) {
-				middleSum += amountValue;
-			}
+	    List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
 
-			if (historyDate.isAfter(LocalDateTime.now().minusDays(30))) {
-				lastSum += amountValue;
-			}
+	    for (CardHistoryVO amount : chList) {
+	        LocalDateTime historyDate = amount.getCardHistoryDate().toLocalDateTime();
+	        Long amountValue = (long) amount.getCardHistoryAmount();
 
-			moreThanUsedSum += amountValue;
-		}
-		MyDataCompareDTO myCompare = new MyDataCompareDTO();
-		myCompare.setFirst(firstSum);
-		myCompare.setMiddle(middleSum);
-		myCompare.setLast(lastSum);
-		myCompare.setMoreThanUsed(moreThanUsedSum);
-		myCompare.setMoreThanUsed(diff);
-		return myCompare;
+	        if (historyDate.isAfter(firstDayCurrentMonth)) {
+	            // 이번 달
+	            if (historyDate.getDayOfMonth() == now.getDayOfMonth()) {
+	                firstSumCurrentMonth += amountValue;
+	            }
+	            if (historyDate.isAfter(now.minusDays(15))) {
+	                middleSumCurrentMonth += amountValue;
+	            }
+	            if (historyDate.isAfter(now.minusDays(30))) {
+	                lastSumCurrentMonth += amountValue;
+	            }
+	            moreThanUsedSumCurrentMonth += amountValue;
+	        } else if (historyDate.isAfter(firstDayPreviousMonth) && historyDate.isBefore(firstDayCurrentMonth)) {
+	            // 전달
+	        	
+	            if (historyDate.getDayOfMonth() == 1) {
+	                firstSumPreviousMonth += amountValue;
+	            }
+	            if (historyDate.getDayOfMonth() == 15) {
+	                middleSumPreviousMonth += amountValue;
+	            }
+	            if (historyDate.getDayOfMonth() == 30 || historyDate.getDayOfMonth() == historyDate.toLocalDate().lengthOfMonth()) {
+	                lastSumPreviousMonth += amountValue;
+	            }
+	            moreThanUsedSumPreviousMonth += amountValue;
+	        }
+	    }
+
+
+	    MyDataCompareDTO myCompare = new MyDataCompareDTO();
+	    myCompare.setFirst(firstSumCurrentMonth);
+	    myCompare.setMiddle(middleSumCurrentMonth);
+	    myCompare.setLast(lastSumCurrentMonth);
+	    myCompare.setMoreThanUsed(moreThanUsedSumCurrentMonth);
+
+	    myCompare.setPfirst(firstSumPreviousMonth);
+	    myCompare.setPmiddle(middleSumPreviousMonth);
+	    myCompare.setPlast(lastSumPreviousMonth);
+	    myCompare.setMoreThanUsed(diff);
+
+	    return myCompare;
 	}
 
 	public long getMonthAvg(String memberHiNumber) {
@@ -145,7 +175,6 @@ public class CardHistoryService {
 		Duration duration = Duration.between(latestDateTime, mostRecentDateTime);
 		long daysDifference = duration.toDays();
 
-		// Check if daysDifference is less than 30 to avoid division by zero
 		if (daysDifference < 30) {
 			return 0L;
 		}
