@@ -13,5 +13,5 @@ public class MemberCardHiShareDTO {
 	private String memberHiNickname;
 	private HiCardImageVO hiImageCode;
 	private Integer memberHiPoint;
-	private List<MemberBenefitDTO> benefitList;
+	private List<MemberBenefitDTO> memberBenefitList;
 }
