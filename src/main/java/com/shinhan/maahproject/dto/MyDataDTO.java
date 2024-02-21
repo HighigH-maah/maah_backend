@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class MyDataDTO {
 	private Long myAvg;
+	private String myHiCardImage;
 	private MyDataLimitDTO myLimit;
 	private List<CategoryBenefitDTO> myCategoryView;
 	private MyNextLevelDTO myNextLevel; 
