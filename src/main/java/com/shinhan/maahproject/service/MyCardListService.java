@@ -107,7 +107,7 @@ public class MyCardListService {
 			return date.isEqual(firstDayOfMonth) || (date.isAfter(firstDayOfMonth) && date.isBefore(lastDayOfMonth));
 		}).mapToInt(CardHistoryVO::getCardHistoryAmount).sum();
 
-		int totalLimit = mchRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
+		Integer totalLimit = mchRepo.sumHiCardTotalLimitByMemberBYOwner(member, mhicard);
 
 		MyCardHiDTO resultMyHiCard = mapper.map(mhicard, MyCardHiDTO.class);
 		resultMyHiCard.setThisMonthSum(thisMonthSum);
