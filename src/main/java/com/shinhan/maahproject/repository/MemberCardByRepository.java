@@ -16,9 +16,9 @@ import com.shinhan.maahproject.vo.ByCardVO;
 public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, String> {
 	
 	@Query("SELECT DISTINCT mb FROM MemberCardByVO mb "
-			+ "JOIN FETCH mb.byCard b "
-			+ "JOIN FETCH b.benefits bb "
-			+ "JOIN FETCH bb.benefits bf "
+			+ "LEFT JOIN FETCH mb.byCard b "
+			+ "LEFT JOIN FETCH b.benefits bb "
+			+ "LEFT JOIN FETCH bb.benefits bf "
 			+ "WHERE mb.connectHiCard = :connectedHiCard "
 			+ "AND mb.memberByStatus = 0")
 	List<MemberCardByVO> findByConnectHiCard(@Param("connectedHiCard") MemberCardHiVO connectHiCard);
