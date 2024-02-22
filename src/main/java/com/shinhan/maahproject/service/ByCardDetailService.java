@@ -75,8 +75,8 @@ public class ByCardDetailService {
 				String benefitName = bvo.getBenefits().getByBenefitCategory().getBenefitName();
 				String benefitDesc = bvo.getBenefits().getByBenefitDesc();
 				String benefitBody = bvo.getBenefits().getByBenefitBody();
-				
-				ByCardBenefitsDTO dto = new ByCardBenefitsDTO(byCode, benefitName, benefitDesc, benefitBody);
+				int byBenefitMinCondition = bvo.getBenefits().getByBenefitMinCondition();				
+				ByCardBenefitsDTO dto = new ByCardBenefitsDTO(byCode, benefitName, benefitDesc, benefitBody, byBenefitMinCondition);
 				bybenefitList.add(dto);
 				
 			}
@@ -299,8 +299,8 @@ public class ByCardDetailService {
  						String benefitName = bvo.getBenefits().getByBenefitCategory().getBenefitName();
  						String benefitDesc = bvo.getBenefits().getByBenefitDesc();
  						String benefitBody = bvo.getBenefits().getByBenefitBody();
- 						
- 						ByCardBenefitsDTO dto = new ByCardBenefitsDTO(byCode, benefitName, benefitDesc, benefitBody);
+ 						int byBenefitMinCondition = bvo.getBenefits().getByBenefitMinCondition(); 						
+ 						ByCardBenefitsDTO dto = new ByCardBenefitsDTO(byCode, benefitName, benefitDesc, benefitBody, byBenefitMinCondition);
  						bybenefitList.add(dto);
  						
  						if(byCardBenefitsdtoMap.get(dto.getByCode())==null){
