@@ -62,8 +62,8 @@ public class ByCardDetailRestController {
 	}
 	
 	@PostMapping(value="/getByCardAccountInfo.do", consumes = "application/json")
-	public AccountChangeDTO getAccountInfo(@RequestBody MemberDTO memberId) {
-		AccountChangeDTO byCardAccountInfo = bdService.getByCardAccountInfo(memberId.getMemberId());
+	public AccountChangeDTO getAccountInfo(@RequestBody Map<String, String> data) {
+		AccountChangeDTO byCardAccountInfo = bdService.getByCardAccountInfo(data.get("memberId"), data.get("memberByNumber"));
 		return byCardAccountInfo;
 	}
 	

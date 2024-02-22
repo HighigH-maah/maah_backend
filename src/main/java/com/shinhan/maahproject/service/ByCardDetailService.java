@@ -194,13 +194,13 @@ public class ByCardDetailService {
 	}
 	
 	//By:Card 계좌 정보
-		public AccountChangeDTO getByCardAccountInfo(String memberId) {
+		public AccountChangeDTO getByCardAccountInfo(String memberId, String memberByNumber) {
 		    AccountChangeDTO acdto = new AccountChangeDTO(); // AccountChangeDTO 객체 생성
 
 		    MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
 
 		    if (member != null) {
-		        for (MemberCardByVO bycard : mbRepo.findByMemberAndMemberByStatus(member, 0)) {
+		        for (MemberCardByVO bycard : mbRepo.findByMemberAndMemberByNumberAndMemberByStatus(member, memberByNumber ,0)) {
 		            if (bycard.getMemberByStatus() == 0) {
 		                // 바이카드 정보 설정
 		            	acdto.setBankName(bycard.getMemberAccountKey().getBank().getBankName()); //bankName
