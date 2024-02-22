@@ -85,9 +85,10 @@ public class ShareService {
 		log.info(hicard.toString());
 		MemberCardHiShareDTO hiShare = MemberCardHiShareDTO.builder().memberHiNickname(hicard.getMemberHiNickname())
 				.memberHiPoint(hicard.getMemberHiPoint()).hiImageCode(hicard.getHiImageCode())
-				.memberBenefitList(mbhList).build();
+				.memberBenefitList(mbhList).memberHiNumber(hicard.getMemberHiNumber()).build();
 
 		List<MemberCardByDTO> byCardDtoList = getMemberByCard(hicard);
+//		log.info("찾아온 사이즈"+byCardDtoList.size());
 
 		HashMap<String, Object> hiAndBy = new HashMap<>();
 		hiAndBy.put("hicard", hiShare);

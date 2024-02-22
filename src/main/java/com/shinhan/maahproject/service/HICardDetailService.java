@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.shinhan.maahproject.dto.AccountChangeDTO;
 import com.shinhan.maahproject.dto.HiCardBenefitsDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
+import com.shinhan.maahproject.dto.HiInfoChangeDTO;
 import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
 import com.shinhan.maahproject.repository.BankRepository;
@@ -27,10 +28,12 @@ import com.shinhan.maahproject.vo.BenefitCategoryVO;
 import com.shinhan.maahproject.vo.ByBenefitVO;
 import com.shinhan.maahproject.vo.CardHistoryVO;
 import com.shinhan.maahproject.vo.MemberBenefitVO;
+import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 import com.shinhan.maahproject.vo.MemberVO;
 import com.shinhan.maahproject.vo.TempHiVO;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -250,6 +253,22 @@ public class HICardDetailService {
 			}
 		}
 		return vcdto;
+	}
+
+	
+	
+	@Transactional
+	public int updateHiCardInfo(HiInfoChangeDTO hiInfoChange) {
+		MemberCardHiVO mhicard = mhRepo.findById(hiInfoChange.getMemberHiNumber()).orElse(null);
+		
+
+		if(hiInfoChange.getMemberCardHiNickname()!=null && !hiInfoChange.getMemberCardHiNickname().equals("")) {
+			mhicard.setMemberHiNickname((hiInfoChange.getMemberCardHiNickname()));
+		}
+		else {
+			return 0;
+		}
+		return 1;
 	}
 	
 	
