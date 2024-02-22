@@ -85,7 +85,7 @@ public class ShareService {
 		log.info(hicard.toString());
 		MemberCardHiShareDTO hiShare = MemberCardHiShareDTO.builder().memberHiNickname(hicard.getMemberHiNickname())
 				.memberHiPoint(hicard.getMemberHiPoint()).hiImageCode(hicard.getHiImageCode())
-				.memberBenefitList(mbhList).build();
+				.memberBenefitList(mbhList).memberHiNumber(hicard.getMemberHiNumber()).build();
 
 		List<MemberCardByDTO> byCardDtoList = getMemberByCard(hicard);
 

@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MemberCardHiShareDTO {
+	private String memberHiNumber;
 	private String memberHiNickname;
 	private HiCardImageVO hiImageCode;
 	private Integer memberHiPoint;

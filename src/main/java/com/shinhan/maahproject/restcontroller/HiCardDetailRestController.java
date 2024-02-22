@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shinhan.maahproject.dto.AccountChangeDTO;
+import com.shinhan.maahproject.dto.ByCardInfoChangeDTO;
 import com.shinhan.maahproject.dto.HiCardBenefitsDTO;
 import com.shinhan.maahproject.dto.HiCardDetailDTO;
+import com.shinhan.maahproject.dto.HiInfoChangeDTO;
 import com.shinhan.maahproject.dto.CardHistoryDTO;
 import com.shinhan.maahproject.dto.MemberDTO;
 import com.shinhan.maahproject.dto.VirtualCardInfoDTO;
@@ -85,6 +87,18 @@ public class HiCardDetailRestController {
 	@PostMapping(value="/getTempHiCard.do", consumes = "application/json")
 	public TempHiVO getTempHiCard(@RequestBody MemberDTO memberId) {
 		return cService.tempHiInsert(memberId.getMemberId());
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@PostMapping(value="updateHicardInfo.do", consumes = "application/json")
+	public int updateHicardInfo(@RequestBody HiInfoChangeDTO hiInfoChange){
+		return hdService.updateHiCardInfo(hiInfoChange);
 	}
 	
 }

@@ -18,4 +18,10 @@ public interface MemberBenefitRepository extends CrudRepository<MemberBenefitVO,
 			+ "LEFT JOIN FETCH mb.memberBenefitByBenefitCode "
 			+ "WHERE mb.memberBenefitMemberId.memberId = :memberId ")
 	List<MemberBenefitVO> findByMemberBenefitMemberIdMemberId(@Param("memberId") String memberBenefitMemberId);
+	
+	
+	
+	@Query("DELETE FROM MemberBenefitVO mb "
+			+ "WHERE mb.memberBenefitMemberId = :memberId")
+	void deleteBenefitByMember(@Param("memberId") MemberVO member);
 }
