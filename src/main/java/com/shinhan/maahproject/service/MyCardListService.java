@@ -203,7 +203,7 @@ public class MyCardListService {
 //		List<MyCardByDTO> myCardListBy = mbycards.stream()
 //				.map(memberCardByVO -> mapper.map(memberCardByVO, MyCardByDTO.class)).collect(Collectors.toList());
 
-		System.out.println("77777777777"+myCardListBy);
+		//System.out.println("77777777777"+myCardListBy);
 		return myCardListBy;
 	}
 
@@ -292,7 +292,8 @@ public class MyCardListService {
 			myCardListNotBy.add(bydto);
 
 		}
-
+		
+		//System.out.println("8888888888888"+myCardListNotBy);
 		return myCardListNotBy;
 	}
 
