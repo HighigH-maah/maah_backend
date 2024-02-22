@@ -42,8 +42,8 @@ public class PortoneAPI {
 		
 		String bankHolder = "";
 		String strUrl = "https://api.iamport.kr/vbanks/holder";
-		String queryStr = String.format("?bank_code=%s&bank_num=%s",URLEncoder.encode(bank_code, "UTF-8"),URLEncoder.encode(bank_name, "UTF-8")); 
-		
+		String queryStr = String.format("?bank_code=%s&bank_num=%s",URLEncoder.encode(bank_code, "UTF-8"),URLEncoder.encode(bank_name, "UTF-8"));
+
 		try {
 			
 			URL url = new URL(strUrl+queryStr);
@@ -55,7 +55,7 @@ public class PortoneAPI {
 			
 			int resposeCode = conn.getResponseCode();
 			
-			log.info("============= resposeCode :"+resposeCode+" ==========");
+			log.info("a============= resposeCode :"+resposeCode+" ==========");
 			
 			if(resposeCode == 200) 
 			{
@@ -79,6 +79,7 @@ public class PortoneAPI {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return bankHolder; 
 	}
 	
@@ -99,8 +100,8 @@ public class PortoneAPI {
 			conn.setRequestProperty("content-Type", "application/json");
 			conn.setRequestProperty("Accept", "application/json");
 			
-			log.info(this.imp_key);
-			log.info(this.imp_secret);
+			//log.info(this.imp_key);
+			//log.info(this.imp_secret);
 			
 			
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
@@ -117,7 +118,7 @@ public class PortoneAPI {
 			
 			int resposeCode = conn.getResponseCode();
 			
-			log.info("============= resposeCode :"+resposeCode+" ==========");
+			log.info("b============= resposeCode :"+resposeCode+" ==========");
 			
 			if(resposeCode == 200) 
 			{

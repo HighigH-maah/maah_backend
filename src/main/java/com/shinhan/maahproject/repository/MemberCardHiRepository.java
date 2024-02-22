@@ -55,5 +55,7 @@ public interface MemberCardHiRepository extends CrudRepository<MemberCardHiVO, S
 
 
 	MemberCardHiVO findByMemberHiOwnerAndMemberHiNumberAndMemberHiStatus(MemberVO member, String cardNum, int i);
+	
+	List<MemberCardHiVO> findByMemberHiNumber(String memberHiNumber);
 
 }

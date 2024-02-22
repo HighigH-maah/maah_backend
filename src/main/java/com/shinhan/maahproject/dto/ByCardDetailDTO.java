@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ByCardDetailDTO {
 
 	public ByCardDetailDTO(String memberByNumber, int byCode, String byName, String memberCardByNickname, String byImagePath,
-			int pointByAmount, String pointByMonth, int byBenefitMinCondition, String connectHiCard) {
+			int pointByAmount, String pointByMonth, int byBenefitMinCondition, String connectHiCard, int memberByPointGoal, int memberByRank) {
 		
 		this.memberByNumber = memberByNumber;
 		this.byCode = byCode;
@@ -23,6 +23,8 @@ public class ByCardDetailDTO {
 		this.pointByAmount = pointByAmount;
 		this.byBenefitMinCondition = byBenefitMinCondition;
 		this.connectHiCard = connectHiCard;
+		this.memberByPointGoal = memberByPointGoal;
+		this.memberByRank = memberByRank;
 	}
 	
 	
@@ -38,6 +40,8 @@ public class ByCardDetailDTO {
 	private int pointByAmount; //byCard 포인트
 	private int byBenefitMinCondition; //byCard 전월실적
 	private String connectHiCard;
+	private int memberByPointGoal;
+	private int memberByRank;
 	
 }
 

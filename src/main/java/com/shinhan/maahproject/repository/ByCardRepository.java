@@ -9,4 +9,5 @@ import java.util.List;
 public interface ByCardRepository extends CrudRepository<ByCardVO, Integer> {
 
 	List<ByCardVO> findByByCode(int byCode);
+	
 }
