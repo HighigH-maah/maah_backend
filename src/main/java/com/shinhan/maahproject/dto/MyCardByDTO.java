@@ -17,13 +17,15 @@ public class MyCardByDTO{
 	private String memberCardByNickname;
 	
 	private String byImagePath;
-	private List<ByBenefitVO> benefits;
-//	private ByCardVO byCard;
+	//private List<ByBenefitVO> benefits;
+	//private ByCardVO byCard;
+	private ByCardDTO byCard;
 	
 	private String memberHiNumber;
 	
 	private int pointByAmount;
-	
 	private int byBenefitMinCondition;
+	
+	//private int byMinLimit;
 
 }

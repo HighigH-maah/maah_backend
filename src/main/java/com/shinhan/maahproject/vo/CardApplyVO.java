@@ -21,7 +21,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-@EqualsAndHashCode // 모든 칼럼을 비교하여 내용 같아야 함
 @Getter
 @Setter
 @ToString
@@ -38,7 +37,6 @@ public class CardApplyVO {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "card_apply_member_id")
 	private MemberVO member;
-	// 암호화 필요
 	private String cardApplyMemberSocialNumber;
 	private Timestamp cardApplyDate;
 	private String cardApplyIdIssueDate;

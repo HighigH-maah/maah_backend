@@ -17,8 +17,8 @@ public class MyCardNotByDTO{
 	private String memberCardByNickname;
 	
 	private String byImagePath;
-	private List<ByBenefitVO> benefits;
-//	private ByCardVO byCard;
+	//private List<ByBenefitVO> benefits;
+	private ByCardDTO byCard;
 	
 	private String memberHiNumber;
 	

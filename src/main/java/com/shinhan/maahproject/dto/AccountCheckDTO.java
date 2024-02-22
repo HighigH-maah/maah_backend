@@ -6,6 +6,7 @@ import lombok.Data;
 public class AccountCheckDTO {
 
 	private String memberId;
+	private String memberName;
 	private String bankCode;
 	private String bankName; //계좌번호
 	private String accountChkYn;
