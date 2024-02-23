@@ -176,7 +176,7 @@ public class HICardDetailService {
 		
  		MemberVO member = mRepo.findById(memberId).orElse(null); // 회원 정보 조회
  		MemberCardHiVO mhicard = null;
- 		int totalLimit = 0;
+ 		Integer totalLimit = 0;
 		
 		
  		if (member != null) {
