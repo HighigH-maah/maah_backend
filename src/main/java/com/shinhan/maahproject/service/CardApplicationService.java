@@ -17,6 +17,7 @@ import com.shinhan.maahproject.repository.ByCardRepository;
 import com.shinhan.maahproject.repository.CardApplyRepository;
 import com.shinhan.maahproject.repository.HiCardImageRepository;
 import com.shinhan.maahproject.repository.MemberAccountRepository;
+import com.shinhan.maahproject.repository.MemberCardByRepository;
 import com.shinhan.maahproject.repository.MemberCardHiRepository;
 import com.shinhan.maahproject.repository.MemberRepository;
 import com.shinhan.maahproject.vo.BankVO;
@@ -24,6 +25,7 @@ import com.shinhan.maahproject.vo.ByCardVO;
 import com.shinhan.maahproject.vo.CardApplyVO;
 import com.shinhan.maahproject.vo.HiCardImageVO;
 import com.shinhan.maahproject.vo.MemberAccountMultikey;
+import com.shinhan.maahproject.vo.MemberCardByVO;
 import com.shinhan.maahproject.vo.MemberCardHiVO;
 
 @Service
@@ -37,6 +39,9 @@ public class CardApplicationService {
 	
 	@Autowired
 	MemberCardHiRepository hicardRepo;
+	
+	@Autowired
+	MemberCardByRepository memberByRepo;
 	
 	@Autowired
 	ByCardRepository bycardRepo;
@@ -103,7 +108,6 @@ public class CardApplicationService {
 			cal.setTime(expdate);
 			cal.add(Calendar.YEAR, 5);
 			expdate.setTime(cal.getTime().getTime());
-			System.out.println(expdate);
 			
 			// 카드번호 생성
 			boolean isNum = true;
@@ -140,10 +144,61 @@ public class CardApplicationService {
 					.build();
 			
 			hicardRepo.save(card);
-			
 			return imgCode;
+			
+		} else if(cardApply.getType().equals("by")) {
+			// 만료일 계산
+			Calendar cal = Calendar.getInstance();
+			Timestamp expdate = (Timestamp) applyInfo.getCardApplyDate().clone();
+			cal.setTime(expdate);
+			cal.add(Calendar.YEAR, 5);
+			expdate.setTime(cal.getTime().getTime());
+			
+			// 카드번호 생성
+			boolean isNum = true;
+			String cardNumber = "";
+			while(isNum) {
+				cardNumber = Integer.toString((int) (Math.random() * 9999999));
+				for(int i = 0; i < 7 - cardNumber.length(); i++) {
+					cardNumber = "0" + cardNumber;
+				}
+				cardNumber = (2 + (Integer.parseInt(cardApply.getCard()) % 8)) + cardNumber;
+				isNum = !memberByRepo.findById(cardNumber).isEmpty();
+			}
+			
+			// CVC 생성
+			String cvc = Integer.toString((int) (Math.random() * 999));
+			for(int i = 0; i < 3 - cvc.length(); i++) {
+				cvc = "0" + cvc;
+			}
+			
+			MemberCardByVO card = MemberCardByVO.builder()
+					.memberByNumber(cardNumber)
+					.memberByPassword(applyInfo.getCardApplyPassword())
+					.memberByLimit(cardApply.getCardApplyLimitAmount() * 10000)
+					.member(applyInfo.getMember())
+					.memberAccountKey(applyInfo.getMemberAccountKey())
+					.memberByStatus(0)
+					.byCard(bycardRepo.findById(Integer.parseInt(cardApply.getCard())).get())
+					.memberByRegdate(applyInfo.getCardApplyDate())
+					.memberByExpdate(expdate)
+					.memberByPaydate(applyInfo.getCardApplyPaydate())
+					.memberByCvc(cvc)
+					.applyCode(applyInfo)
+					.memberByRank(10)
+					.memberByIsTransport(applyInfo.getCardApplyIsTransport())
+					.memberCardByNickname(applyInfo.getMember().getMemberName() + "님" + bycardRepo.findById(Integer.parseInt(cardApply.getCard())).get().getByName())
+					.build();
+			
+			memberByRepo.save(card);
+			HiCardImageVO cardImg = HiCardImageVO.builder()
+					.hiCardImageFrontPath(bycardRepo.findById(Integer.parseInt(cardApply.getCard())).get().getByImagePath())
+					.hiCardImageName(bycardRepo.findById(Integer.parseInt(cardApply.getCard())).get().getByName())
+					.build();
+			return cardImg;
+		} else {
+			return null;
 		}
-		return null;
 	}
 	
 	public List<BankVO> getCardApplyBankCode() {
