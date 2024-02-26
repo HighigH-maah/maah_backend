@@ -39,6 +39,8 @@ public class ByCardDetailDTO {
 	private String pointByMonth; //byCard pointmonth
 	private int pointByAmount; //byCard 포인트
 	private int byBenefitMinCondition; //byCard 전월실적
+	private int byMinLimit;
+	private boolean byIsTransport;
 	private String connectHiCard;
 	private int memberByPointGoal;
 	private int memberByRank;
