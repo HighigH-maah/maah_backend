@@ -182,7 +182,7 @@ public class HICardDetailService {
  		if (member != null) {
  	        for (MemberCardHiVO hicard : mhRepo.findByMemberHiOwnerAndMemberHiStatus(member, 0)) {
  	        	mhicard = hicard;
- 	        	totalLimit = mhRepo.sumHiCardTotalLimitByMemberBYOwner(member,mhicard);
+ 	        	totalLimit = mhRepo.sumHiCardTotalLimitByMemberBYOwner(member,mhicard) == null ? 0 : mhRepo.sumHiCardTotalLimitByMemberBYOwner(member,mhicard);
 	        	
  	        	if (hicard.getMemberHiStatus() == 0) {
  	                // 하이카드 정보 설정
