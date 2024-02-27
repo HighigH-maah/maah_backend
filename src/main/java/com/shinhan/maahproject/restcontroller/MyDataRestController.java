@@ -67,8 +67,8 @@ public class MyDataRestController {
 		myData.setMyAvg(chService.getMonthAvg(HiNumber)); // 월 평균 사용
 
 		Long diff = 0L;
-		diff = Math.abs((chService.getHistory(HiNumber, byCardInfo)).getHistoryAmount()
-				- (chService.getLastMonthHistory(HiNumber, byCardInfo)));
+		diff =(chService.getHistory(HiNumber, byCardInfo)).getHistoryAmount()
+				- (chService.getLastMonthHistory(HiNumber, byCardInfo));
 		myData.setMyCompare(chService.getCompare(HiNumber, diff)); // 지난달 VS 이번달
 		myData.setMyCardForMonth(chService.cardForMonth(byCardInfo)); // 카드 별 포인트
 		return myData;
