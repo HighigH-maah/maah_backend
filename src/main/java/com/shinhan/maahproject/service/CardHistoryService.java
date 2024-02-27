@@ -159,7 +159,7 @@ public class CardHistoryService {
 	    myCompare.setPfirst(firstSumPreviousMonth);
 	    myCompare.setPmiddle(middleSumPreviousMonth);
 	    myCompare.setPlast(lastSumPreviousMonth);
-	    myCompare.setMoreThanUsed(diff);
+	    myCompare.setMoreThanUsed(diff); //?
 
 	    return myCompare;
 	}
@@ -191,7 +191,7 @@ public class CardHistoryService {
 			historyAmount += amount.getCardHistoryAmount();
 		}
 
-		return monthsDifference != 0 ? historyAmount / monthsDifference : 0L;
+		return monthsDifference != 0 ? historyAmount / (monthsDifference+1) : 0L;
 	}
 
 	// Hi와 By 한도 현황 및 남은 금액
