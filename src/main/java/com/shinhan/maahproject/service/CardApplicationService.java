@@ -206,6 +206,11 @@ public class CardApplicationService {
 	}
 	
 	private CardApplyVO changeDTO(CardApplyDTO cardApply) {
+		System.out.println("은행코드"+cardApply.getBankCode());
+		
+		BankVO bank = bankRepo.findById(cardApply.getBankCode()).orElse(null);
+		System.out.println("은행222"+bank.getBankCode());
+		
 		return CardApplyVO.builder()
 				.member(memberRepo.findById(cardApply.getMemberId()).get())
 				.cardApplyMemberSocialNumber(cardApply.getCardApplyMemberSocialNumber())
@@ -227,7 +232,7 @@ public class CardApplicationService {
 				.cardApplyIsTransport(cardApply.getCardApplyIsTransport())
 				.memberAccountKey(accountRepo.findById(MemberAccountMultikey.builder()
 						.memberAccountNumber(cardApply.getAccountNumber())
-						.bank(cardApply.getBankCode()).build()).get())
+						.bank(bank.getBankCode()).build()).get())
 				.build();
 	}
 
