@@ -79,6 +79,7 @@ public class ShareService {
 		List<MemberBenefitVO> mbhvoList = mbhRepo.findByMemberBenefitMemberIdMemberId(memberId);
 		for (MemberBenefitVO mbh : mbhvoList) {
 			MemberBenefitDTO mbhdto = mapper.map(mbh, MemberBenefitDTO.class);
+			mbhdto.setIntByBenefitCode(mbh.getMemberBenefitByBenefitCode().getByBenefitCategory().getBenefitCode());
 			mbhList.add(mbhdto);
 		}
 
