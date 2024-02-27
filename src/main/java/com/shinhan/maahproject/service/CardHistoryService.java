@@ -133,16 +133,15 @@ public class CardHistoryService {
 	                lastSumCurrentMonth += amountValue;
 	            }
 	            moreThanUsedSumCurrentMonth += amountValue;
-	        } else if (historyDate.isAfter(firstDayPreviousMonth) && historyDate.isBefore(firstDayCurrentMonth)) {
+	        } else if (historyDate.isAfter(firstDayPreviousMonth.minusDays(1)) && historyDate.isBefore(firstDayCurrentMonth)) {
 	            // 전달
-	        	
 	            if (historyDate.getDayOfMonth() == 1) {
 	                firstSumPreviousMonth += amountValue;
 	            }
-	            if (historyDate.getDayOfMonth() == 15) {
+	            if (historyDate.isAfter(firstDayPreviousMonth) && historyDate.isBefore(firstDayPreviousMonth.plusDays(14))) {
 	                middleSumPreviousMonth += amountValue;
 	            }
-	            if (historyDate.getDayOfMonth() == 30 || historyDate.getDayOfMonth() == historyDate.toLocalDate().lengthOfMonth()) {
+	            if (historyDate.isAfter(firstDayPreviousMonth.plusDays(14)) && historyDate.isBefore(firstDayPreviousMonth.plusDays(30))) {
 	                lastSumPreviousMonth += amountValue;
 	            }
 	            moreThanUsedSumPreviousMonth += amountValue;
