@@ -97,7 +97,8 @@ public class ByCardService {
 	        ByCardDetailDTO bDto = mapper.map(byCardVO, ByCardDetailDTO.class);
 	        bDto.setBenefitList(blist); // 혜택을 다음과 같이 세팅
 	        bDto.setByCategoryList(categoryToDesc);
-
+	        bDto.setByMinLimit(bRepo.findById(byCardVO.getByCode()).get().getByMinLimit());
+	        bDto.setByIsTransport(bRepo.findById(byCardVO.getByCode()).get().getByIsTransport());
 	        ByCardList.add(bDto);
 	        // log.info(ByCardList.toString());
 	    }

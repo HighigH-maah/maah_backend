@@ -226,6 +226,7 @@ public class ByCardDetailService {
 		Map<Integer, List<ByCardDetailDTO>> byCardDetaildtoMap = new HashMap<>();
 		if (member != null) {
 			for(MemberCardByVO bycard : mbRepo.findByMemberAndMemberByStatus(member, 0)) {
+				
 				if(bycard.getMemberByStatus() == 0) {
 					String memberByNumber = bycard.getMemberByNumber(); 
 					int byCode = bycard.getByCard().getByCode(); //byCode
@@ -282,6 +283,7 @@ public class ByCardDetailService {
 		
 		return byCardDetaildtoMap;
 	}
+	
 	
 	public Map<Integer, List<ByCardBenefitsDTO>> getAllByCardBenefits(String memberId){
 		

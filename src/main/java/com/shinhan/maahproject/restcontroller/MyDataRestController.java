@@ -48,7 +48,8 @@ public class MyDataRestController {
 
 	@Autowired
 	ByCardDetailService bdService;
-
+	
+	
 	@PostMapping(value = "/getMyData.do", consumes = "application/json")
 	public MyDataDTO getMyData(@RequestBody MemberDTO memberId) {
 		String memId = memberId.getMemberId();
@@ -57,7 +58,9 @@ public class MyDataRestController {
 		HiCardDetailDTO hiCardInfo = hdService.getHiCardInfo(memId); // 멤버의 하이카드 정보
 		String HiNumber = hiCardInfo.getMemberHiNumber(); // 해당 유저의 하이카드 번호
 		
+	
 		Map<Integer, List<ByCardDetailDTO>> byCardInfo = bdService.getAllByCardInfo(memId);
+		
 
 		MyDataLimitDTO mylimit = chService.getHistory(HiNumber, byCardInfo);
 		myData.setMyLimit(mylimit); // 한도
@@ -66,10 +69,7 @@ public class MyDataRestController {
 		myData.setMyCategoryView(chService.getCategoryView(HiNumber, byCardInfo)); // 카테고리 비율 설정
 		myData.setMyAvg(chService.getMonthAvg(HiNumber)); // 월 평균 사용
 
-		Long diff = 0L;
-		diff = Math.abs((chService.getHistory(HiNumber, byCardInfo)).getHistoryAmount()
-				- (chService.getLastMonthHistory(HiNumber, byCardInfo)));
-		myData.setMyCompare(chService.getCompare(HiNumber, diff)); // 지난달 VS 이번달
+		myData.setMyCompare(chService.getCompare(HiNumber,byCardInfo)); // 지난달 VS 이번달
 		myData.setMyCardForMonth(chService.cardForMonth(byCardInfo)); // 카드 별 포인트
 		return myData;
 	}
