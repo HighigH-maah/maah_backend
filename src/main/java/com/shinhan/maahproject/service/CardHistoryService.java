@@ -100,7 +100,7 @@ public class CardHistoryService {
 	}
 
 	// 저번달 VS 이번달
-	public MyDataCompareDTO getCompare(String memberHiNumber, Long diff) {
+	public MyDataCompareDTO getCompare(String memberHiNumber,Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
 	    Long firstSumCurrentMonth = 0L;
 	    Long middleSumCurrentMonth = 0L;
 	    Long lastSumCurrentMonth = 0L;
@@ -117,6 +117,19 @@ public class CardHistoryService {
 
 	    List<CardHistoryVO> chList = chRepo.findByMemberCardHiMemberHiNumber(memberHiNumber);
 
+	    //바이카드 리스트 가져오는 부분
+		for (Map.Entry<Integer, List<ByCardDetailDTO>> entry : byCardInfo.entrySet()) {
+			for (ByCardDetailDTO cardDetailDTO : entry.getValue()) {
+				String ByNumber = cardDetailDTO.getMemberByNumber(); // 바이카드 넘버를 가져옴
+				MemberCardByVO mbvo = mcbRepo.findById(ByNumber).orElse(null); // 멤버카드VO 가져옴
+				chList.addAll(chRepo.findByMemberCardhistoryB(ByNumber));				
+//				List<CardHistoryVO> chByHistory = chRepo.findByMemberCardhistoryB(ByNumber); // 이제 history에 접근
+//				historyAmount += CalculateAmountByPrevious(currentDate, chByHistory);
+			}
+		}
+	    log.info("chList"+chList.toString());
+	    //
+	    
 	    for (CardHistoryVO amount : chList) {
 	        LocalDateTime historyDate = amount.getCardHistoryDate().toLocalDateTime();
 	        Long amountValue = (long) amount.getCardHistoryAmount();
@@ -138,10 +151,10 @@ public class CardHistoryService {
 	            if (historyDate.getDayOfMonth() == 1) {
 	                firstSumPreviousMonth += amountValue;
 	            }
-	            if (historyDate.isAfter(firstDayPreviousMonth) && historyDate.isBefore(firstDayPreviousMonth.plusDays(14))) {
+	            if (historyDate.isAfter(firstDayPreviousMonth) && historyDate.isBefore(firstDayPreviousMonth.plusDays(15))) {
 	                middleSumPreviousMonth += amountValue;
 	            }
-	            if (historyDate.isAfter(firstDayPreviousMonth.plusDays(14)) && historyDate.isBefore(firstDayPreviousMonth.plusDays(30))) {
+	            if (historyDate.isAfter(firstDayPreviousMonth) && historyDate.isBefore(firstDayCurrentMonth)) {
 	                lastSumPreviousMonth += amountValue;
 	            }
 	            moreThanUsedSumPreviousMonth += amountValue;
@@ -149,16 +162,16 @@ public class CardHistoryService {
 	    }
 
 
+	
 	    MyDataCompareDTO myCompare = new MyDataCompareDTO();
 	    myCompare.setFirst(firstSumCurrentMonth);
 	    myCompare.setMiddle(middleSumCurrentMonth);
 	    myCompare.setLast(lastSumCurrentMonth);
-	    myCompare.setMoreThanUsed(moreThanUsedSumCurrentMonth);
-
+	  
 	    myCompare.setPfirst(firstSumPreviousMonth);
 	    myCompare.setPmiddle(middleSumPreviousMonth);
 	    myCompare.setPlast(lastSumPreviousMonth);
-	    myCompare.setMoreThanUsed(diff); //?
+	    myCompare.setMoreThanUsed(lastSumCurrentMonth-lastSumPreviousMonth); //?
 
 	    return myCompare;
 	}
@@ -251,6 +264,8 @@ public class CardHistoryService {
 	public Long getLastMonthHistory(String memberHiNumber, Map<Integer, List<ByCardDetailDTO>> byCardInfo) {
 		Long historyAmount = 0L; // actual usage
 		LocalDate currentDate = LocalDate.now();
+		
+		log.info("바이카드 리스트 길이"+byCardInfo.toString());
 		// 바이카드 이용 내역 축적
 		for (Map.Entry<Integer, List<ByCardDetailDTO>> entry : byCardInfo.entrySet()) {
 			for (ByCardDetailDTO cardDetailDTO : entry.getValue()) {

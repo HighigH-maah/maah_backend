@@ -23,7 +23,7 @@ public interface MemberCardByRepository extends CrudRepository<MemberCardByVO, S
 			+ "AND mb.memberByStatus = 0")
 	List<MemberCardByVO> findByConnectHiCard(@Param("connectedHiCard") MemberCardHiVO connectHiCard);
 	
-	
+
 	List<MemberCardByVO> findByMemberAndMemberByStatusAndConnectHiCardNotNullOrderByMemberByRank(MemberVO member, int memberByStatus);
 
 
