@@ -96,6 +96,7 @@ public class CardHistoryService {
 				cardForMonth.add(cardFor);
 			}
 		}
+		cardForMonth.sort((o1, o2) -> o2.getPoint() - o1.getPoint());
 		return cardForMonth;
 	}
 
