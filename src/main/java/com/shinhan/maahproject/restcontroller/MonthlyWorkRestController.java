@@ -16,4 +16,9 @@ public class MonthlyWorkRestController {
 	public void getMonthRemainTest() {
 		mtService.remainPointShare("user3");
 	}
+	
+	@GetMapping("/getMemberBenefitChange.do")
+	public void getMemberBenefitChange() {
+		mtService.memberBenefitChange("user4");
+	}
 }

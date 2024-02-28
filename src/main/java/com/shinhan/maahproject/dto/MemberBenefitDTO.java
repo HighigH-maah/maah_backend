@@ -11,4 +11,5 @@ public class MemberBenefitDTO {
 	private int memberBenefitUsedAmount;
 	private Boolean memberBenefitIsComplete;
 	private Integer memberBenefitPriorityRange;
+	private Integer intByBenefitCode;
 }

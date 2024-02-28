@@ -132,7 +132,8 @@ public class MonthlyService {
 		mbnRepo.deleteBenefitByMember(member);
 		
 		List<MemberCardByVO> mbycards = mbRepo.findByMemberAndMemberByStatusAndConnectHiCardNotNullOrderByMemberByRank(member, 0);
-		String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+//		String currentYearMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+		String currentYearMonth = "202401";
 		List<PointByVO> pbList = pbRepo.findByMemberByNumberListAndPointByMonth(mbycards, currentYearMonth);
 		MemberCardByVO mbycard = null;
 		
@@ -147,6 +148,7 @@ public class MonthlyService {
 			for(ByRelationBenefitVO bnb:bnbList) {
 				benefitList.add(bnb.getBenefits());
 			}
+			log.info("혜택 리스트"+benefitList.toString());
 			benefitCheckProcess(benefitList, pointby, member);
 		}
 	}

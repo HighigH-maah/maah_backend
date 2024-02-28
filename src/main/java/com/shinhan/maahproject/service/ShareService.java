@@ -79,6 +79,7 @@ public class ShareService {
 		List<MemberBenefitVO> mbhvoList = mbhRepo.findByMemberBenefitMemberIdMemberId(memberId);
 		for (MemberBenefitVO mbh : mbhvoList) {
 			MemberBenefitDTO mbhdto = mapper.map(mbh, MemberBenefitDTO.class);
+			mbhdto.setIntByBenefitCode(mbh.getMemberBenefitByBenefitCode().getByBenefitCategory().getBenefitCode());
 			mbhList.add(mbhdto);
 		}
 
@@ -88,6 +89,7 @@ public class ShareService {
 				.memberBenefitList(mbhList).memberHiNumber(hicard.getMemberHiNumber()).build();
 
 		List<MemberCardByDTO> byCardDtoList = getMemberByCard(hicard);
+		byCardDtoList.sort((o1, o2) -> o1.getMemberByRank() - o2.getMemberByRank());
 //		log.info("찾아온 사이즈"+byCardDtoList.size());
 
 		HashMap<String, Object> hiAndBy = new HashMap<>();
